@@ -39,6 +39,7 @@ deck_working_dir: "{project-root}/.slide-builder/deck"
 # 1. Match against template `id` field (exact match)
 # 2. Fall back to `use_cases` array matching
 # 3. Fall back to custom generation via frontend-design skill
+# 4. For diagram content types, use technical-svg-diagrams skill (agent decides SVG vs HTML)
 #
 # Legacy mappings below are kept for backward compatibility only
 # They are used as fallback if slide-templates.json is missing
@@ -78,6 +79,11 @@ checkpoint:
 # These fields are stored at decks.{deck_slug} level:
 #   last_slide_template: "template-id"
 #   last_slide_background: "dark" | "light"
+
+# Skills used
+skills:
+  - frontend-design           # Custom slide generation (Phase 3B)
+  - technical-svg-diagrams    # SVG diagram generation for architecture/flow/process slides (Phase 3C)
 
 template: false
 standalone: true

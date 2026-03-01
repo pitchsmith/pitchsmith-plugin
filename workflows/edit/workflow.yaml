@@ -68,7 +68,8 @@ variables:
 
 # Skills used
 skills:
-  - frontend-design  # Used for layout regeneration (Story 4.2)
+  - frontend-design           # Used for layout regeneration (Story 4.2)
+  - technical-svg-diagrams    # Used for diagram slide regeneration (SVG content)
 
 # Workflow phases (Story 4.2 enhanced)
 # Phase 1: Mode Detection and Slide Targeting

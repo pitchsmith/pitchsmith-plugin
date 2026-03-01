@@ -248,7 +248,9 @@ This phase generates the slide HTML inline. Follow build-one patterns.
    - Find template in catalog where id == `{{suggested_template}}`
    - Read template HTML from catalog file
    - If template has `instructions` field → Use as PRIMARY build guidance (instructions describe exact layout technique, element hierarchy, decorative patterns - they take precedence over generic inference)
-6. If no template match or null → Use frontend-design skill for custom layout
+6. If no template match or null:
+   - If `content_type == "diagram"` → evaluate via `determineDiagramMethod()` (see build-one Phase 3C); use technical-svg-diagrams skill for SVG-appropriate diagrams, frontend-design skill for HTML-appropriate content
+   - Otherwise → Use frontend-design skill for custom layout
 7. Generate complete HTML slide following requirements below
 8. Map theme.json to CSS custom properties
 9. Apply colors based on `{{background_mode}}`
@@ -443,7 +445,7 @@ After building the new slide, run the shared visual audit protocol to catch rend
 | Invalid position (< 1 or > total_slides) | Re-prompt with valid range |
 | Theme missing | Stop → tell user to run `/sb-brand:setup` |
 | Catalog missing | Stop → report missing catalog path |
-| Invalid template reference | Fall back to frontend-design skill for custom build |
+| Invalid template reference | Fall back to frontend-design skill for custom build (or technical-svg-diagrams for diagram content) |
 </reference>
 
 <critical>

@@ -35,6 +35,10 @@ required_skills:
     trigger: phase-2  # Load at start of Phase 2 (Brand Primitive Extraction)
     reason: "Professional design expertise for color theory, typography, and visual design decisions"
     blocking: true    # Do not proceed without this skill loaded
+  - skill: technical-svg-diagrams
+    trigger: phase-2  # Available for diagram-type sample slides
+    reason: "SVG diagram generation for architecture, flow, and process diagrams"
+    blocking: false   # Optional — only used if sample slides include diagrams
 
 # This workflow is standalone (creates theme.json, not a document)
 template: false

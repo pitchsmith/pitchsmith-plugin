@@ -530,6 +530,8 @@ Would you like to use one of these templates, or generate a fully custom slide?"
 | "code", "technical", "snippet" | technical |
 | "timeline", "chronological", "phases" | timeline |
 | "grid", "cards", "tiles" | grid |
+
+**Diagram Routing Override:** When `content_type == "diagram"`, run `determineDiagramMethod()` (see Phase 3C) BEFORE template matching. If SVG is determined to be the best fit, route directly to Phase 3C. Otherwise, proceed with normal template matching or Phase 3B fallback.
 </reference>
 
 <reference title="Legacy Catalog Matching Algorithm">
@@ -1617,6 +1619,190 @@ This ensures custom slides feel cohesive with template-based slides in the same 
 If compliance score is below 80% (fewer than 80% of checks passed), warn user:
 "⚠️ Custom slide has pattern compliance issues. Consider reviewing against template examples."
 </important>
+
+→ Continue to Phase 4
+
+---
+
+## Phase 3C: Diagram Build (technical-svg-diagrams Skill)
+
+<critical>
+Automatically invoked when the agent determines SVG is the best rendering format for a diagram slide.
+This phase is an ALTERNATIVE to Phase 3B — the agent routes here instead of frontend-design when
+the slide content is primarily a visual diagram (architecture, flow, process, network, component).
+</critical>
+
+### Diagram Method Decision Heuristic
+
+<reference title="determineDiagramMethod Algorithm">
+```
+determineDiagramMethod(plan_entry):
+  details = plan_entry.content_type_details.toLowerCase()
+
+  svg_signals = ["architecture", "flow", "process", "system", "network",
+                 "components", "connections", "nodes", "boxes", "arrows",
+                 "topology", "pipeline", "microservices", "layers"]
+
+  html_signals = ["interactive", "editable table", "rich text",
+                  "data visualization", "chart", "graph with axes"]
+
+  svg_score = count(signal in details for signal in svg_signals)
+  html_score = count(signal in details for signal in html_signals)
+
+  if html_score > 0: return "frontend-design"    # Rich content needs HTML
+  if svg_score >= 2: return "technical-svg-diagrams"
+  if svg_score == 1: return "technical-svg-diagrams"
+  return "frontend-design"                        # Default to HTML for ambiguous cases
+```
+</reference>
+
+### When to Route Here
+
+- Plan specifies `content_type: "diagram"` AND `determineDiagramMethod()` returns `"technical-svg-diagrams"`
+- Content describes architecture, flow, process, system, network, or component diagrams
+- Diagram is primarily structural (boxes + connections) rather than data-driven
+
+### SVG-Appropriate Signals (route here)
+- Architecture diagrams (boxes + connections)
+- Flow diagrams (process steps + decisions)
+- System/component diagrams (nested containers)
+- Network topology diagrams
+- Pipeline/microservice diagrams
+
+### HTML-Appropriate Signals (route to Phase 3B instead)
+- Rich data visualizations with interactive elements
+- Timeline slides with lots of text content
+- Comparison layouts that are more tabular than diagrammatic
+- Charts with axes, legends, and data points
+
+### Diagram Build Steps
+
+<steps>
+1. Read `.slide-builder/config/theme.json` for brand colors
+2. Read plan entry for diagram components and connections from `{{content_type_details}}`
+3. Determine diagram subtype from content:
+   - **Architecture:** horizontal left-to-right, system components (800x350-400)
+   - **Flow:** vertical top-to-bottom, process steps with decisions (600x700+)
+   - **Component:** focused view of internals, nested elements (varies)
+4. Map brand theme colors to SVG palette:
+   - `theme.colors.primary` → SVG primary accent
+   - `theme.colors.secondary` → SVG secondary elements
+   - `theme.colors.accent` → SVG highlights
+   - Keep SVG design system defaults for grid, borders, and text
+5. Invoke technical-svg-diagrams skill with diagram specification
+6. Embed the generated SVG inline in a slide HTML container
+7. Wrap in standard slide template:
+   - 1920x1080 viewport
+   - Contenteditable title and subtitle above/below the SVG
+   - CSS variables from theme in :root
+   - saveEdits() auto-save function
+8. Validate against slide compliance checklist (same as Phase 3B)
+</steps>
+
+<important>
+Invoke the skill using the **Skill tool** with `skill: "technical-svg-diagrams"`.
+</important>
+
+<reference title="Prompt for technical-svg-diagrams skill">
+```
+Create a technical SVG diagram for a presentation slide.
+
+DIAGRAM TYPE: {{diagram_subtype}} (architecture | flow | component)
+
+COMPONENTS AND CONNECTIONS:
+{{content_type_details}}
+
+BRAND COLOR MAPPING:
+- Primary accent: {{resolved_colors.primary}}
+- Secondary: {{resolved_colors.secondary}}
+- Background: Use default #fafafa grid (SVG design system standard)
+
+REQUIREMENTS:
+- Follow the established SVG design system (grid background, monospace fonts, muted colors)
+- Read references/svg-patterns.md for copy-ready pattern templates
+- Dimensions appropriate for diagram type (will be scaled to fit 1920x1080 slide)
+- Title with bracketed tag at top
+- Bottom summary note
+- All components properly connected with arrows
+- Use semantic colors: green for success/positive, red for error, blue for primary, orange for warning, purple for process
+
+Output only the complete SVG element (no wrapping HTML).
+```
+</reference>
+
+<reference title="Slide HTML Wrapper Template for SVG Diagrams">
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --color-accent: {{theme.colors.accent}};
+      --color-bg-default: {{resolved_colors.background}};
+      --color-text-heading: {{resolved_colors.textHeading}};
+      --color-text-body: {{resolved_colors.textBody}};
+      --font-heading: {{theme.typography.headingFont}};
+      --font-body: {{theme.typography.bodyFont}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 1920px; height: 1080px; overflow: hidden; }
+    .slide {
+      width: 1920px; height: 1080px;
+      background: var(--color-bg-default);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 60px 80px;
+      gap: 32px;
+    }
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: 48px; color: var(--color-text-heading);
+      text-align: center;
+    }
+    .diagram-container {
+      flex: 1; display: flex;
+      align-items: center; justify-content: center;
+      width: 100%; max-height: 800px;
+    }
+    .diagram-container svg {
+      max-width: 100%; max-height: 100%;
+      width: auto; height: auto;
+    }
+    .slide-subtitle {
+      font-family: var(--font-body);
+      font-size: 24px; color: var(--color-text-body);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="slide-title" contenteditable="true" data-field="title">{{slide.title}}</div>
+    <div class="diagram-container">
+      <!-- SVG diagram inserted here -->
+    </div>
+    <div class="slide-subtitle" contenteditable="true" data-field="subtitle">{{slide.subtitle_or_description}}</div>
+  </div>
+  <script>
+    function saveEdits() {
+      const edits = {};
+      document.querySelectorAll('[contenteditable][data-field]').forEach(el => {
+        edits[el.dataset.field] = el.innerHTML;
+      });
+      window.parent?.postMessage({ type: 'saveEdits', edits }, '*');
+    }
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.addEventListener('blur', saveEdits);
+    });
+  </script>
+</body>
+</html>
+```
+</reference>
 
 → Continue to Phase 4
 

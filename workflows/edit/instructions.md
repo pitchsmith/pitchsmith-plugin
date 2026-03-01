@@ -307,8 +307,15 @@ No problem. Let's try again.
             - "Preserve all existing data-build-id attributes — these are used by all three viewers (PresentServer, VS Code Catalog, standalone browser) for build animation targeting"
     </action>
 
-    <!-- AC4.2.3: Invoke frontend-design skill -->
-    <action>Invoke frontend-design skill with edit_context:
+    <!-- AC4.2.3: Invoke appropriate skill for layout regeneration -->
+    <!-- For diagram slides (containing inline SVG with class diagram-container), use technical-svg-diagrams skill -->
+    <!-- For all other slides, use frontend-design skill -->
+    <action>Determine regeneration skill:
+      - If current_slide_html contains a `.diagram-container` with inline SVG content → use technical-svg-diagrams skill
+      - Otherwise → use frontend-design skill
+    </action>
+
+    <action>Invoke the selected skill with edit_context:
       - Pass current HTML as reference for structure
       - Pass edit instruction for layout modification
       - Pass theme for style consistency
@@ -316,9 +323,10 @@ No problem. Let's try again.
       - Instruct skill to preserve existing data-field names where semantically equivalent
       - If the current HTML has elements with `data-build-id` attributes, preserve those attributes on any elements that remain semantically equivalent in the regenerated output
       - Request new HTML layout that implements the edit instruction
+      - For technical-svg-diagrams: pass component list and connection changes from edit instruction
     </action>
 
-    <action>Receive new HTML layout from frontend-design skill as regenerated_html</action>
+    <action>Receive new HTML layout from selected skill as regenerated_html</action>
 
     <!-- AC4.2.5: Validate regenerated HTML -->
     <action>Validate regenerated_html:

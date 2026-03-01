@@ -118,8 +118,9 @@ What slide do you need?
 
     <!-- Targeted Follow-up Questions by Content Type -->
     <check if="detected_content_type == 'diagram'">
-      <ask>List the main components and how they connect</ask>
+      <ask>List the main components and how they connect (e.g., "Client → API Gateway → Service → Database")</ask>
       <action>Store response as {{content_type_details}}</action>
+      <action>The build-one workflow will use {{content_type_details}} to autonomously determine whether to generate an SVG diagram (via technical-svg-diagrams skill) or an HTML layout (via frontend-design skill) based on the structural nature of the content</action>
     </check>
 
     <check if="detected_content_type == 'comparison'">
