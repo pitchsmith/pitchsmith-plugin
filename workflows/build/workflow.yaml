@@ -1,0 +1,29 @@
+# Build Workflow - Slide Generation
+# Generates slides from plans (supports both single and deck modes)
+name: build
+description: "Build slides from plan - supports both single slide (plan-one) and deck mode (plan-deck)"
+author: "Slide Builder"
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/build"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# State and plan files
+status_file: "{project-root}/.slide-builder/status.yaml"
+theme_file: "{project-root}/.slide-builder/theme.json"
+single_plan: "{project-root}/output/singles/plan.yaml"
+# deck_plan is dynamic: output/{deck_slug}/plan.yaml (read deck_slug from status.yaml)
+
+# Output locations
+single_output: "{project-root}/output/singles"
+deck_output: "{project-root}/output"  # Deck slides at output/{slug}/slides/
+templates: "{project-root}/.slide-builder/templates"
+
+# Variables
+variables:
+  workflow_version: "1.0"
+
+template: false
+standalone: true

@@ -1,0 +1,30 @@
+---
+description: 'Generate animation build groups for a slide using AI analysis of content structure'
+---
+
+# Slide Builder - Animate Command
+
+Generate intelligent animation groups for a slide based on its content structure, template type, and narrative flow.
+
+**Usage:**
+- `/sb:animate [slide_number]` - Generate animations for the specified slide
+- When invoked from the viewer's "Animate with AI" button, the deck context (`Deck: {slug}`) is automatically included in the prompt, skipping deck selection
+
+<steps CRITICAL="TRUE">
+1. **Resolve workflow path** (override-first pattern):
+   - Check if @.slide-builder/workflows/animate/instructions.md exists
+   - If yes: Use @.slide-builder/workflows/animate/ as workflow root
+   - If no: Use @${CLAUDE_PLUGIN_ROOT}/workflows/animate/ as workflow root
+   - If neither exists: Display error "Workflow 'animate' not found in plugin or user overrides"
+2. Read the workflow configuration at {workflow_root}/workflow.yaml
+3. Read the instructions at {workflow_root}/instructions.md
+4. Parse the argument (if provided) as slide_number: $ARGUMENTS
+5. Execute the workflow steps following instructions.md EXACTLY:
+   - Step 1: Read status.yaml for deck detection and validate slide number
+   - Step 2: Load slide HTML, plan.yaml context, and check existing animations
+   - Step 3: Analyze DOM structure, classify elements, generate animation groups
+   - Step 4: Present animation plan to user for approval
+   - Step 5: Apply animations (build IDs, manifest, regenerate viewer)
+   - Step 6: Open browser and report results
+6. Update .slide-builder/status.yaml with the action
+</steps>

@@ -1,0 +1,64 @@
+# Plan Deck Workflow - Full Deck Planning
+# Captures narrative structure for a complete presentation
+# Version 2.0 - Enhanced for Story 5.1 ACs
+name: plan-deck
+description: "Plan a full presentation deck with narrative structure, audience context, and slide-by-slide breakdown"
+author: "Slide Builder"
+version: "2.0"
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/plan-deck"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# Config paths (shareable brand assets)
+config_path: "{project-root}/.slide-builder/config"
+theme_file: "{config_path}/theme.json"
+
+# Catalog paths (template discovery)
+catalog_path: "{config_path}/catalog"
+catalog_manifest: "{catalog_path}/slide-templates.json"
+
+# State management
+status_file: "{project-root}/.slide-builder/status.yaml"
+
+# Output locations - plans live with their output, not in working directory
+output_root: "{project-root}/output"
+# plan_file and slides_dir are dynamic based on deck_slug:
+#   plan_file: output/{deck_slug}/plan.yaml
+#   slides_dir: output/{deck_slug}/slides/
+
+# Input variables (collected from user)
+variables:
+  workflow_version: "2.1"
+  # Collected during workflow
+  purpose: ""
+  audience: ""
+  audience_knowledge_level: "intermediate"
+  key_points: []
+  desired_length: "6-10"
+  deck_name: ""
+  # Generated - Step 2.5 (Epic 13: Enhanced Planning)
+  proposed_agenda: []      # Generated agenda sections before user selection
+  agenda_sections: []      # User-confirmed agenda sections with discovery goals
+  # Generated - Step 3+
+  storyline: {}
+  slides: []               # Each slide: number, status, storyline_role, agenda_section_id, tone, description
+  # Note: slides do NOT have template, design_plan, or background_mode fields — these decisions are deferred to build time
+  # Section discovery stores goals (communication_objective, audience_takeaway, narrative_advancement, content_requirements, suggested_slide_count)
+
+# Template matching is deferred to build-time (build-one/build-all workflows)
+# Planning phase focuses only on narrative structure, not visual design
+# Legacy mappings below kept for builder fallback if catalog is unavailable
+legacy_template_mapping:
+  title: ["title", "intro", "opening", "welcome"]
+  agenda: ["list", "bullets", "points", "agenda"]
+  process-flow: ["flow", "process", "timeline", "steps", "journey"]
+  comparison: ["compare", "vs", "versus", "two", "split"]
+  callout: ["key", "insight", "callout", "cta", "highlight", "quote"]
+  technical: ["code", "technical", "api", "demo"]
+
+# Output configuration
+template: false
+standalone: true

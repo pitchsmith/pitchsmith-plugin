@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "logos": [
+    {
+      "id": "pitchsmith-logo",
+      "name": "Pitchsmith Logo",
+      "description": "Primary Pitchsmith brand logo with wordmark, derived from the Sticky Note Vision brand guidelines",
+      "variants": [
+        {
+          "variant_id": "dark",
+          "file": "pitchsmith-logo-dark.svg"
+        },
+        {
+          "variant_id": "white",
+          "file": "pitchsmith-logo-white.svg"
+        }
+      ],
+      "tags": ["brand", "pitchsmith", "logo", "primary", "wordmark"]
+    }
+  ]
+}

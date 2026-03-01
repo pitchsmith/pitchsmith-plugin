@@ -1,0 +1,83 @@
+# Build One Workflow - Single or Deck Slide Generation
+# Generates a slide from plan.yaml using a matching template or frontend-design skill
+name: build-one
+description: "Build the next slide (or single planned slide) from plan using theme"
+author: "Slide Builder"
+version: "2.0"
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/build-one"
+
+# Config paths (shareable brand assets)
+config_path: "{project-root}/.slide-builder/config"
+theme_file: "{config_path}/theme.json"
+templates_dir: "{config_path}/templates"
+samples_dir: "{config_path}/samples"
+
+# Catalog paths (template discovery)
+catalog_path: "{config_path}/catalog"
+catalog_manifest: "{catalog_path}/slide-templates.json"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# State and plan files
+status_file: "{project-root}/.slide-builder/status.yaml"
+single_plan: "{project-root}/output/singles/plan.yaml"
+# deck_plan is dynamic: output/{deck_slug}/plan.yaml (read deck_slug from status.yaml)
+
+# Output locations - now uses project-root/output/ for clean separation
+output_root: "{project-root}/output"
+single_output_dir: "{output_root}/singles"
+deck_output_dir: "{output_root}"  # Deck slides go to output/{slug}/slides/
+
+# Legacy paths (for deck working files only)
+deck_working_dir: "{project-root}/.slide-builder/deck"
+
+# Template discovery is now catalog-driven
+# Read slide-templates.json for template matching:
+# 1. Match against template `id` field (exact match)
+# 2. Fall back to `use_cases` array matching
+# 3. Fall back to custom generation via frontend-design skill
+#
+# Legacy mappings below are kept for backward compatibility only
+# They are used as fallback if slide-templates.json is missing
+legacy_template_mapping:
+  title: "title.html"
+  agenda: "agenda.html"
+  process-flow: "process-flow.html"
+  comparison: "comparison.html"
+  callout: "callout.html"
+  technical: "technical.html"
+
+# Slide status enum
+slide_status:
+  - "pending"
+  - "built"
+  - "failed"
+
+# State file schema for deck slides
+state_file_schema:
+  slide: "number"
+  edits: "[]"
+  lastModified: "null"
+
+# Variables
+variables:
+  workflow_version: "2.1"
+
+# Design Checkpoint configuration
+checkpoint:
+  enabled: true  # Set to false to skip checkpoints by default
+  skip_for_batch: true  # Skip checkpoints when invoked from build-all
+  session_flags:
+    skip_all_checkpoints: false  # Set true after user selects "Skip All Checkpoints"
+    yolo_batch: false  # Set true when running in batch mode
+
+# Previous slide tracking (populated per-deck in status.yaml)
+# These fields are stored at decks.{deck_slug} level:
+#   last_slide_template: "template-id"
+#   last_slide_background: "dark" | "light"
+
+template: false
+standalone: true

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "title",
+    "name": "Title Slide",
+    "description": "Bold opening or closing slide with full-bleed image panel and prominent headline. Ideal for first impressions and final takeaways.",
+    "use_cases": ["opening", "closing", "section-divider"],
+    "background_mode": "dark",
+    "instructions": "Two-column CSS Grid: left panel is a full-bleed image area (with crosshatch placeholder if no image), right panel holds logo (160x48), eyebrow, serif title (64px), gradient accent bar, and subtitle. Add gradient accent stripe on left edge of content panel. Dark background with radial glow in image area."
+  },
+  {
+    "id": "content",
+    "name": "Content Slide",
+    "description": "Versatile two-column layout with headline, body text, and visual placeholder. The workhorse template for presenting ideas with supporting imagery.",
+    "use_cases": ["general", "informational", "text-heavy"],
+    "background_mode": "light",
+    "instructions": "Two-column CSS Grid with gap: left column has eyebrow, title (48px), and body text paragraph; right column has a visual placeholder card with icon and label. Gradient accent stripe at top. Light background. Visual card gets subtle corner accent gradient and box shadow."
+  },
+  {
+    "id": "callout",
+    "name": "Callout Slide",
+    "description": "Dramatic single-statistic or quote spotlight on a dark canvas. Designed to make one number or statement impossible to ignore.",
+    "use_cases": ["statistic", "quote", "key-takeaway"],
+    "background_mode": "dark",
+    "instructions": "Single centered Flexbox column. Content block contains: eyebrow, decorative top rule, large stat number (128px), bottom rule, context text, and source attribution. Radial glow bloom behind content (ellipse gradient). Dark background with high-contrast text. Stat is the dominant visual element."
+  },
+  {
+    "id": "agenda",
+    "name": "Agenda Slide",
+    "description": "Structured overview with numbered sections, clear hierarchy, and descriptions. Perfect for setting expectations and guiding the audience through the presentation.",
+    "use_cases": ["agenda", "overview", "table-of-contents"],
+    "background_mode": "light",
+    "instructions": "Two-column CSS Grid (400px | 1fr): left panel has eyebrow, title (52px), and accent bar; right panel lists numbered agenda items. Each item uses a nested grid (56px number | content) with title and description. Items separated by horizontal dividers. Gradient accent stripe at top. Light background."
+  },
+  {
+    "id": "comparison",
+    "name": "Comparison Slide",
+    "description": "Side-by-side two-column layout with distinct headers, bullet points, and a visual separator. Ideal for contrasting options, before-after scenarios, or pros-cons analysis.",
+    "use_cases": ["comparison", "pros-cons", "before-after"],
+    "background_mode": "light",
+    "instructions": "Flexbox column with nested 3-column CSS Grid (1fr auto 1fr): centered header with eyebrow and title, then left column (primary-colored icon badge, title, bulleted items), center VS divider with badge, right column (accent-colored icon badge, title, bulleted items). Bullet dots match column color. Gradient accent stripe at top. Light background."
+  },
+  {
+    "id": "process-flow",
+    "name": "Process Flow Slide",
+    "description": "Horizontal step progression with numbered stages, connecting elements, and accent-colored indicators on a dark canvas. Built for timelines, workflows, and sequential processes.",
+    "use_cases": ["process", "timeline", "steps", "workflow"],
+    "background_mode": "dark",
+    "instructions": "Header with eyebrow and title (48px), then 4-column CSS Grid of step cards. Each card has a numbered circle (80px) with colored border and glow, step title (22px), and description. Horizontal connecting line spans all steps with gradient. Arrow indicators between steps using rotated borders. Alternating accent/primary colors on step numbers. Radial glow behind steps. Dark background."
+  }
+]

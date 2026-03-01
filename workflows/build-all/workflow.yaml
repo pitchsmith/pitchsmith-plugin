@@ -1,0 +1,37 @@
+# Build All Workflow - Batch Slide Generation
+# Thin wrapper that delegates to build-one for each pending slide
+name: build-all
+description: "Build all remaining slides by delegating to build-one with progress tracking and error continuation"
+author: "Slide Builder"
+version: "2.0"
+
+# Dependencies - build-one handles all slide generation logic
+dependencies:
+  - build-one
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/build-all"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# State files
+status_file: "{project-root}/.slide-builder/status.yaml"
+# deck_plan is dynamic: output/{deck_slug}/plan.yaml (read deck_slug from status.yaml)
+
+# Output locations
+output_root: "{project-root}/output"
+
+# Slide status enum
+slide_status:
+  - "pending"
+  - "built"
+  - "failed"
+
+# Variables
+variables:
+  workflow_version: "2.1"
+  build_mode: ""  # User selection: "interactive" or "yolo" — controls checkpoint behavior in build-one
+
+template: false
+standalone: true

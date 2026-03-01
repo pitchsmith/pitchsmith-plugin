@@ -1,0 +1,44 @@
+# Plan One Workflow - Single Slide Planning
+# Captures intent for a single slide through 5 phases
+name: plan-one
+description: "Plan a single slide by capturing user intent and content requirements"
+author: "Slide Builder"
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/plan-one"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# Config paths (shareable brand assets)
+config_path: "{project-root}/.slide-builder/config"
+theme_file: "{config_path}/theme.json"
+
+# Catalog paths (template discovery)
+catalog_path: "{config_path}/catalog"
+catalog_manifest: "{catalog_path}/slide-templates.json"
+
+# State management
+status_file: "{project-root}/.slide-builder/status.yaml"
+
+# Output location - single slides go to output/singles/
+output_dir: "{project-root}/output/singles"
+plan_file: "{output_dir}/plan.yaml"
+
+# Template matching is now catalog-driven
+# Read use_cases from slide-templates.json for intelligent template suggestions
+# Legacy keywords below kept for fallback if catalog is unavailable
+legacy_template_keywords:
+  title: [title, intro, opening, welcome, cover]
+  agenda: [list, bullets, points, agenda, items, features]
+  process-flow: [flow, process, timeline, steps, sequence, pipeline, workflow]
+  comparison: [compare, vs, versus, two, side-by-side, before, after, pros, cons]
+  callout: [key, insight, callout, cta, highlight, quote, stat, metric]
+  technical: [code, technical, api, snippet, demo, terminal]
+
+# Variables
+variables:
+  workflow_version: "1.0"
+
+template: false
+standalone: true

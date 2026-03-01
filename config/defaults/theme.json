@@ -1,0 +1,254 @@
+{
+  "name": "Neutral Professional",
+  "version": "1.0",
+  "colors": {
+    "primary": "#1a1a2e",
+    "secondary": "#475569",
+    "accent": "#2563eb",
+    "background": {
+      "default": "#ffffff",
+      "alt": "#f8fafc",
+      "dark": "#1a1a2e",
+      "light": "#ffffff",
+      "darkAlt": "#0f172a"
+    },
+    "text": {
+      "heading": "#1a1a2e",
+      "body": "#475569",
+      "muted": "#64748b",
+      "onDark": "#f1f5f9",
+      "onLight": "#1a1a2e",
+      "onPrimary": "#ffffff"
+    },
+    "brand": {
+      "primary": "#1a1a2e",
+      "accent": "#2563eb",
+      "dark": "#1a1a2e",
+      "surface": "#ffffff",
+      "surfaceDark": "#0f172a",
+      "border": "#e2e8f0",
+      "borderDark": "#334155",
+      "bgSubtle": "#f8fafc",
+      "bgSubtleDark": "#1e293b",
+      "surfaceElevated": "#ffffff",
+      "surfaceElevatedDark": "#1e293b"
+    },
+    "dataViz": {
+      "palette": ["#2563eb", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"],
+      "positive": "#10b981",
+      "negative": "#ef4444",
+      "neutral": "#64748b",
+      "highlight": "#2563eb"
+    },
+    "semantic": {
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "error": "#ef4444",
+      "info": "#2563eb"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+      "body": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+      "mono": "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace"
+    },
+    "scale": {
+      "hero": "72px",
+      "h1": "48px",
+      "h2": "36px",
+      "h3": "24px",
+      "h4": "20px",
+      "body": "16px",
+      "caption": "14px",
+      "small": "12px"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.1,
+      "normal": 1.6,
+      "relaxed": 1.8
+    }
+  },
+  "shapes": {
+    "borderRadius": {
+      "none": "0",
+      "small": "8px",
+      "medium": "10px",
+      "large": "12px",
+      "full": "9999px"
+    },
+    "shadow": {
+      "small": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+      "medium": "0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06)",
+      "large": "0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)"
+    },
+    "border": {
+      "thin": "1px solid #e2e8f0",
+      "medium": "2px solid #e2e8f0",
+      "thick": "3px solid #e2e8f0"
+    }
+  },
+  "components": {
+    "box": {
+      "default": {
+        "background": "#ffffff",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      },
+      "outlined": {
+        "background": "transparent",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      },
+      "callout": {
+        "background": "#f8fafc",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      },
+      "elevated": {
+        "background": "#ffffff",
+        "border": "none",
+        "radius": "12px",
+        "padding": "24px",
+        "shadow": "0 4px 12px rgba(0,0,0,0.10)"
+      }
+    },
+    "button": {
+      "primary": {
+        "background": "#2563eb",
+        "color": "#ffffff",
+        "radius": "8px",
+        "padding": "12px 24px"
+      },
+      "secondary": {
+        "background": "transparent",
+        "color": "#2563eb",
+        "radius": "8px",
+        "border": "1px solid #2563eb",
+        "padding": "12px 24px"
+      },
+      "destructive": {
+        "background": "#ef4444",
+        "color": "#ffffff",
+        "radius": "8px",
+        "padding": "12px 24px"
+      }
+    }
+  },
+  "gradients": {
+    "brandGradient": "linear-gradient(135deg, #1a1a2e, #2563eb)",
+    "darkOverlay": "linear-gradient(180deg, rgba(26,26,46,0) 0%, rgba(26,26,46,0.8) 100%)",
+    "lightOverlay": "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 100%)"
+  },
+  "workflowRules": {
+    "rhythm": {
+      "defaultMode": "mixed",
+      "maxConsecutiveDark": 2,
+      "maxConsecutiveLight": 3,
+      "forceBreakAfter": 3,
+      "roleOverrides": {
+        "title": { "backgroundMode": "dark" },
+        "section-divider": { "backgroundMode": "dark" },
+        "content": { "backgroundMode": "light" },
+        "data": { "backgroundMode": "light" },
+        "comparison": { "backgroundMode": "light" },
+        "callout": { "backgroundMode": "dark" },
+        "closing": { "backgroundMode": "dark" },
+        "agenda": { "backgroundMode": "light" },
+        "process-flow": { "backgroundMode": "light" }
+      }
+    },
+    "colorSchemes": {
+      "dark": {
+        "background": "#1a1a2e",
+        "backgroundAlt": "#0f172a",
+        "surface": "#1e293b",
+        "text": "#f1f5f9",
+        "textSecondary": "#cbd5e1",
+        "textMuted": "#94a3b8",
+        "border": "#334155"
+      },
+      "light": {
+        "background": "#ffffff",
+        "backgroundAlt": "#f8fafc",
+        "surface": "#ffffff",
+        "text": "#1a1a2e",
+        "textSecondary": "#475569",
+        "textMuted": "#64748b",
+        "border": "#e2e8f0"
+      }
+    },
+    "narrativeDefaults": {
+      "openingSlideMode": "dark",
+      "closingSlideMode": "dark",
+      "dataSlideMode": "light",
+      "contentSlideMode": "light"
+    }
+  },
+  "personality": {
+    "classification": "neutral",
+    "traits": [
+      "clear",
+      "accessible",
+      "minimal",
+      "professional",
+      "readable",
+      "structured"
+    ],
+    "guidance": {
+      "do": [
+        "Use clear, direct language that respects the audience's intelligence",
+        "Maintain consistent visual hierarchy throughout presentations",
+        "Ensure all text meets WCAG AA contrast standards (4.5:1 for body, 3:1 for large text)",
+        "Use the Inter font family for optimal readability across devices",
+        "Apply generous whitespace to create breathing room for content",
+        "Use the accent blue sparingly for emphasis and calls to action",
+        "Alternate between light and dark slides to maintain visual rhythm",
+        "Keep slides focused with one key message per slide",
+        "Use data visualization colors consistently for positive/negative values",
+        "Maintain professional tone suitable for business presentations"
+      ],
+      "dont": [
+        "Never use all-caps for body text or long headings",
+        "Never place low-contrast text combinations (check WCAG standards)",
+        "Never use more than two font families in a single slide",
+        "Never use font sizes below 14px for presentation content",
+        "Never introduce colors outside the neutral palette",
+        "Never create slides with too much content (respect the one-message rule)",
+        "Never use decorative elements that distract from the message",
+        "Never mix different border radius values on the same slide",
+        "Never use shadows on light backgrounds without purpose",
+        "Never compromise readability for visual effect"
+      ]
+    }
+  },
+  "meta": {
+    "extractedFrom": {
+      "reference": "neutral-professional-defaults"
+    },
+    "brandDescription": "Neutral Professional is a clean, accessible default theme designed for immediate use without brand setup. It uses a timeless dark navy and blue color palette with the Inter font family for maximum readability and wide device compatibility.",
+    "confidence": 1.0,
+    "locked": false,
+    "changeNotes": [
+      "Initial neutral default theme created (2026-02-27)",
+      "Designed for zero-config experience with professional quality output",
+      "WCAG AA compliant color contrasts throughout"
+    ]
+  },
+  "brandContext": {
+    "voice": "Clear, professional, and accessible. Direct without being cold. Structured without being rigid. We communicate with clarity and respect for the audience's time and intelligence.",
+    "designPhilosophy": "Minimal, functional design that prioritizes readability and accessibility. The neutral color palette—dark navy, white, and accent blue—works across all industries without feeling brand-specific. Inter font family ensures consistent rendering across platforms. Generous whitespace and clear visual hierarchy guide the eye naturally. Every design choice serves the content, never competes with it.",
+    "colorUsage": "Primary dark navy (#1a1a2e) establishes authority and professionalism for dark slides and headings. Accent blue (#2563eb) draws attention to key actions and interactive elements—use sparingly for maximum impact. Light backgrounds (#ffffff, #f8fafc) provide clean canvases for content and data. Maintain 4.5:1 contrast ratio for all body text, 3:1 for large text. Use semantic colors consistently: green for positive/success, red for negative/error, amber for warnings.",
+    "typographyNotes": "Inter is a carefully crafted typeface designed for screen readability with excellent legibility at small sizes. Use it for all text—headings, body, captions, and UI elements. The single font family creates visual cohesion while the weight scale (300-700) provides sufficient hierarchy. Maintain line-height of 1.6+ for body text for comfortable reading. Keep line lengths between 50-80 characters for optimal readability."
+  }
+}

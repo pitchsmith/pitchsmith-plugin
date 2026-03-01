@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Ready to Start?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: var(--color-primary, #3a61ff);
+      --color-secondary: var(--color-secondary, #334155);
+      --color-accent: var(--color-accent, #8455ff);
+      --color-bg-default: var(--color-bg-default, #f8fafc);
+      --color-bg-alt: var(--color-bg-alt, #f1f5f9);
+      --color-bg-dark: var(--color-bg-dark, #131023);
+      --color-bg-light: var(--color-bg-light, #ffffff);
+      --color-text-heading: var(--color-text-heading, #131023);
+      --color-text-body: var(--color-text-body, #334155);
+      --color-text-on-dark: var(--color-text-on-dark, #f0eeff);
+      --color-text-on-light: var(--color-text-on-light, #131023);
+      --font-heading: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--color-bg-dark, #131023);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: var(--color-bg-dark, #131023);
+      position: relative;
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 200px;
+      overflow: hidden;
+    }
+
+    /* Radial light bloom behind the featured stat */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      width: 1000px;
+      height: 600px;
+      background: radial-gradient(
+        ellipse at center,
+        var(--color-accent, #8455ff) 0%,
+        transparent 65%
+      );
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .callout-block {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--color-accent, #8455ff);
+      margin-bottom: 48px;
+    }
+
+    /* Top decorative line — "stage" framing */
+    .rule-top {
+      width: 80px;
+      height: 2px;
+      background: var(--color-accent, #8455ff);
+      margin: 0 auto 56px;
+      opacity: 0.4;
+      border-radius: 1px;
+    }
+
+    .featured-stat {
+      font-family: var(--font-heading);
+      font-size: 96px;
+      font-weight: 600;
+      color: var(--color-accent, #8455ff);
+      line-height: 1.0;
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+    }
+
+    /* Bottom decorative line — closes the "stage" */
+    .rule-bottom {
+      width: 80px;
+      height: 2px;
+      background: var(--color-accent, #8455ff);
+      margin: 0 auto 48px;
+      opacity: 0.4;
+      border-radius: 1px;
+    }
+
+    .context-text {
+      font-family: var(--font-body);
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--color-text-on-dark, #f0eeff);
+      line-height: 1.6;
+      max-width: 720px;
+      margin: 0 auto;
+      opacity: 0.65;
+      letter-spacing: 0.01em;
+    }
+
+    .source-text {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-text-on-dark, #f0eeff);
+      opacity: 0.3;
+      margin-top: 48px;
+      letter-spacing: 0.02em;
+    }
+
+    [contenteditable]:focus {
+      outline: 2px solid var(--color-accent, #8455ff);
+      outline-offset: 4px;
+    }
+
+    [contenteditable]:hover {
+      outline: 1px dashed var(--color-accent, #8455ff);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" data-slide-id="welcome-slide-3">
+
+    <div class="callout-block" data-animatable="true">
+      <p class="eyebrow" contenteditable="true" data-field="eyebrow" data-animatable="true">Get Started</p>
+      <div class="rule-top" data-animatable="true"></div>
+      <h1 class="featured-stat" contenteditable="true" data-field="stat" data-animatable="true">Ready?</h1>
+      <div class="rule-bottom" data-animatable="true"></div>
+      <p class="context-text" contenteditable="true" data-field="context" data-animatable="true">Run <strong>/sb</strong> in Claude Code to plan your first deck. Describe your topic and audience, and watch your presentation come to life in minutes.</p>
+      <p class="source-text" contenteditable="true" data-field="source" data-animatable="true">Your first presentation in minutes</p>
+    </div>
+
+  </div>
+
+  <script>
+    const slideId = document.querySelector('.slide')?.dataset.slideId || 'unknown';
+
+    const saveEdits = () => {
+      try {
+        const edits = [];
+        document.querySelectorAll('[contenteditable]').forEach(el => {
+          const field = el.getAttribute('data-field');
+          if (field) {
+            edits.push({ field, content: el.innerHTML });
+          }
+        });
+        localStorage.setItem(`slide-${slideId}-edits`, JSON.stringify({
+          slide: slideId,
+          edits,
+          lastModified: new Date().toISOString()
+        }));
+      } catch (e) {
+        console.warn('Auto-save failed:', e.message);
+      }
+    };
+
+    const restoreEdits = () => {
+      try {
+        const stored = localStorage.getItem(`slide-${slideId}-edits`);
+        if (stored) {
+          const data = JSON.parse(stored);
+          data.edits?.forEach(edit => {
+            const el = document.querySelector(`[data-field="${edit.field}"]`);
+            if (el) el.innerHTML = edit.content;
+          });
+        }
+      } catch (e) {
+        console.warn('Restore failed:', e.message);
+      }
+    };
+
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.addEventListener('blur', saveEdits);
+      el.addEventListener('input', () => setTimeout(saveEdits, 500));
+    });
+
+    restoreEdits();
+
+    // Animation Builder support
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'getBuilderElements') {
+        const selectors = '[data-animatable], [contenteditable], h1, h2, h3, p, li, img, svg, [class*="-box"], [class*="-card"], [class*="-panel"], [class*="-window"], [class*="-item"]';
+        const elements = [];
+        let idCounter = 1;
+        document.querySelectorAll(selectors).forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.width < 10 || rect.height < 10) return;
+          if (rect.width > 1536 || rect.height > 864) return;
+          let buildId = el.getAttribute('data-build-id') || `build-${idCounter++}`;
+          el.setAttribute('data-build-id', buildId);
+          elements.push({
+            id: buildId,
+            rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+            tagName: el.tagName.toLowerCase(),
+            text: el.textContent?.substring(0, 30) || ''
+          });
+        });
+        window.parent.postMessage({ type: 'builderElements', elements }, '*');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Optimize Instructions Workflow
+# Transforms workflow instruction files using Anthropic prompt engineering best practices
+name: optimize-instructions
+description: "Transform instruction files into optimized v3 format using Anthropic best practices"
+author: "Slide Builder"
+version: "1.0"
+
+# Path variables
+installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/optimize-instructions"
+
+# Workflow components
+instructions: "{installed_path}/instructions.md"
+
+# Input/Output
+# User provides: path to instructions file to optimize
+# Output: new file with -optimized.md suffix (or user-specified name)
+
+# This workflow is local-only (not tracked in git)
+local_only: true
+
+variables:
+  workflow_version: "1.0"
+
+template: false
+standalone: true

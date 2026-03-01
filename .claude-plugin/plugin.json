@@ -1,0 +1,27 @@
+{
+  "name": "pitchsmith",
+  "description": "AI-powered slide builder — plan, build, and export brand-perfect presentations",
+  "version": "0.1.0",
+  "author": {
+    "name": "Pitchsmith",
+    "email": "support@pitchsmith.ai"
+  },
+  "homepage": "https://pitchsmith.ai",
+  "repository": "https://github.com/pitchsmith/pitchsmith-plugin",
+  "license": "ELv2",
+  "keywords": [
+    "slides",
+    "presentations",
+    "design",
+    "brand",
+    "ai"
+  ],
+  "commands": [
+    "./commands/sb/",
+    "./commands/sb-create/",
+    "./commands/sb-manage/",
+    "./commands/sb-brand/"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}
