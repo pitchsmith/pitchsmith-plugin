@@ -35,7 +35,7 @@ This workflow enables slide layout editing via natural language while preserving
 
 No slide exists in `output/singles/`.
 
-Run `/sb:build-one` first to create your slide.
+Run `/pitchsmith:build-one` first to create your slide.
         </output>
         <action>HALT</action>
       </check>
@@ -55,7 +55,7 @@ Run `/sb:build-one` first to create your slide.
 
 No decks exist in the registry.
 
-Run `/sb:plan-deck` first to create a deck plan, then `/sb:build-one` to build slides.
+Run `/pitchsmith:plan-deck` first to create a deck plan, then `/pitchsmith:build-one` to build slides.
         </output>
         <action>HALT</action>
       </check>
@@ -87,7 +87,7 @@ Run `/sb:plan-deck` first to create a deck plan, then `/sb:build-one` to build s
 
 Deck "{{deck.name}}" has no slides built yet.
 
-Run `/sb:build-one` first to create a slide, then come back to edit it.
+Run `/pitchsmith:build-one` first to create a slide, then come back to edit it.
         </output>
         <action>HALT</action>
       </check>
@@ -104,7 +104,7 @@ Slide {{slide_number}} doesn't exist.
 
 **Valid range:** 1-{{total_slides}}
 
-Try again with a valid slide number, e.g., `/sb:edit 1`
+Try again with a valid slide number, e.g., `/pitchsmith:edit 1`
           </output>
           <action>HALT</action>
         </check>
@@ -120,7 +120,7 @@ Try again with a valid slide number, e.g., `/sb:edit 1`
 
 Slide {{slide_number}} hasn't been built yet.
 
-Run `/sb:build-one` to build this slide first.
+Run `/pitchsmith:build-one` to build this slide first.
           </output>
           <action>HALT</action>
         </check>
@@ -443,7 +443,7 @@ See slide-state.json for full orphaned content.
       - Set last_action: "Layout edited: {{edit_request_summary}}"
       - Set last_modified: current ISO timestamp
       - Append to history array:
-          action: "Layout edited via /sb:edit: {{edit_request_summary}}"
+          action: "Layout edited via /pitchsmith:edit: {{edit_request_summary}}"
           timestamp: current ISO timestamp
           preserved_edits: {{applied_edits.length}}
           orphaned_edits: {{new_orphaned_edits.length}}
@@ -520,8 +520,8 @@ Any more edits? (describe another change, or "done" to finish)
 
 **Next steps:**
 - Preview slide in browser to verify changes
-- Run `/sb:edit` again for more layout changes
-- Run `/sb:export` when ready to export to Google Slides
+- Run `/pitchsmith:edit` again for more layout changes
+- Run `/pitchsmith:export` when ready to export to Google Slides
     </output>
   </step>
 
@@ -532,10 +532,10 @@ Any more edits? (describe another change, or "done" to finish)
 
 | Scenario | Error Message |
 |----------|---------------|
-| No slides exist | "No slides to edit yet. Run `/sb:build-one` first." |
+| No slides exist | "No slides to edit yet. Run `/pitchsmith:build-one` first." |
 | Invalid slide number | "Slide X doesn't exist. Valid range: 1-N" |
-| Slide not built (deck) | "Slide X hasn't been built yet. Run `/sb:build-one`." |
-| Single slide missing | "No slide at `.slide-builder/single/slide.html`. Run `/sb:build-one`." |
+| Slide not built (deck) | "Slide X hasn't been built yet. Run `/pitchsmith:build-one`." |
+| Single slide missing | "No slide at `.slide-builder/single/slide.html`. Run `/pitchsmith:build-one`." |
 | Orphaned edits | "Warning: X edit(s) couldn't be matched to the new layout. Preserved in state file." |
 
 ## Slide Info Display Format
@@ -655,7 +655,7 @@ Search regenerated HTML for element matching selector
 
 ```yaml
 history:
-  - action: "Layout edited via /sb:edit: Add a subtitle below the title"
+  - action: "Layout edited via /pitchsmith:edit: Add a subtitle below the title"
     timestamp: "2026-01-27T11:00:00Z"
     preserved_edits: 3
     orphaned_edits: 0

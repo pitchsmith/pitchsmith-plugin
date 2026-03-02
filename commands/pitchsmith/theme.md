@@ -24,7 +24,7 @@ This command displays your current theme summary with formatted sections and ANS
 ## Prerequisites
 
 - Theme must exist at `.slide-builder/theme.json`
-- If no theme exists, run `/sb:setup` first
+- If no theme exists, run `/pitchsmith:setup` first
 
 ## Example Output
 
@@ -60,7 +60,7 @@ Sources: amperity.com, 6 PDFs
 Full theme: .slide-builder/theme.json
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-To modify your theme, run `/sb:theme-edit`
+To modify your theme, run `/pitchsmith:theme-edit`
 ```
 
 ## Error Cases
@@ -73,11 +73,11 @@ To modify your theme, run `/sb:theme-edit`
 
 You haven't set up a brand theme yet.
 
-Run `/sb:setup` to create your theme from brand assets.
+Run `/pitchsmith:setup` to create your theme from brand assets.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ## Related Commands
 
-- `/sb:setup` - Create a new theme from brand assets
-- `/sb:theme-edit` - Modify existing theme via natural language
+- `/pitchsmith:setup` - Create a new theme from brand assets
+- `/pitchsmith:theme-edit` - Modify existing theme via natural language

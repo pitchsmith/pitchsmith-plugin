@@ -17,8 +17,8 @@ This command creates a narrative-first deck plan by collecting presentation cont
 
 **Usage:**
 ```
-/sb:plan-deck           # Start deck planning workflow
-/sb:plan-deck "Name"    # Start with deck name pre-filled
+/pitchsmith:plan-deck           # Start deck planning workflow
+/pitchsmith:plan-deck "Name"    # Start with deck name pre-filled
 ```
 
 <steps CRITICAL="TRUE">
@@ -30,7 +30,7 @@ This command creates a narrative-first deck plan by collecting presentation cont
 2. Read the workflow configuration at {workflow_root}/workflow.yaml
 3. Read the instructions at {workflow_root}/instructions.md
 4. Execute the workflow steps in EXACT ORDER:
-   - Step 1: Verify theme.json exists (HALT if missing with /sb:setup message)
+   - Step 1: Verify theme.json exists (HALT if missing with /pitchsmith:setup message)
    - Step 2: Collect inputs SEQUENTIALLY (purpose, audience, key points, length)
    - Step 3: Generate narrative structure with storyline and slide breakdown
    - Step 4: Allow plan modifications (add, remove, reorder, change slides)

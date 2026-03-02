@@ -8,9 +8,9 @@ Apply a targeted natural language edit to an existing deck plan (plan.yaml). Use
 
 **Usage:**
 ```
-/sb-create:edit-plan Make the opening more compelling
-/sb-create:edit-plan Add a slide about ROI after slide 3
-/sb-create:edit-plan Change the audience to technical decision-makers
+/pitchsmith:edit-plan Make the opening more compelling
+/pitchsmith:edit-plan Add a slide about ROI after slide 3
+/pitchsmith:edit-plan Change the audience to technical decision-makers
 ```
 
 <steps CRITICAL="TRUE">

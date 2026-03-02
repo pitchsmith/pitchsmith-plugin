@@ -29,7 +29,7 @@ output_root: "{project-root}/output"
 # Variables
 variables:
   workflow_version: "1.0"
-  # slide_number: passed as argument (e.g., /sb:animate 6)
+  # slide_number: passed as argument (e.g., /pitchsmith:animate 6)
   # Resolved at runtime:
   #   deck_slug: from status.yaml deck registry
   #   slide_path: output/{deck_slug}/slides/slide-{N}.html
@@ -37,7 +37,7 @@ variables:
   #   plan_path: output/{deck_slug}/plan.yaml
 
 # Command interface
-# Usage: /sb:animate [slide_number]
+# Usage: /pitchsmith:animate [slide_number]
 # - slide_number: which slide to generate animations for
 # - If multiple decks, user selects which deck
 

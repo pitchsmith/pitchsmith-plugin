@@ -97,8 +97,8 @@ Built: 8/8 slides
 
 Next Steps:
 - Review slides in output/{deck-slug}/slides/
-- Use /sb:edit {n} to refine any slide
-- Run /sb:export when ready to export to Google Slides
+- Use /pitchsmith:edit {n} to refine any slide
+- Run /pitchsmith:export when ready to export to Google Slides
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
@@ -112,11 +112,11 @@ Failed: 2 slides
 
 Failed Slides: 5, 7
 
-Retry failed slides individually with /sb:build-one
+Retry failed slides individually with /pitchsmith:build-one
 
 Next Steps:
 - Review successful slides in output/{deck-slug}/slides/
-- Run /sb:build-one to retry failed slides
+- Run /pitchsmith:build-one to retry failed slides
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 

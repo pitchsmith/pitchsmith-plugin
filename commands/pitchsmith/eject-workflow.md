@@ -6,14 +6,14 @@ description: 'Copy a workflow from the plugin to your local project for customiz
 
 This command copies a workflow directory from the plugin to your local `.slide-builder/workflows/` directory, allowing you to customize workflow behavior without forking the entire plugin.
 
-**Usage:** `/sb-manage:eject-workflow {workflow-name}`
+**Usage:** `/pitchsmith:eject-workflow {workflow-name}`
 
-**Example:** `/sb-manage:eject-workflow build-one`
+**Example:** `/pitchsmith:eject-workflow build-one`
 
 <steps CRITICAL="TRUE">
 1. **Parse Arguments**:
    - Extract workflow name from user input (first argument after command)
-   - If no workflow name provided: Display error "Usage: /sb-manage:eject-workflow {workflow-name}" and HALT
+   - If no workflow name provided: Display error "Usage: /pitchsmith:eject-workflow {workflow-name}" and HALT
    - Normalize workflow name (trim whitespace, convert to lowercase)
 
 2. **Validate Workflow Name** (path traversal prevention):
@@ -34,7 +34,7 @@ This command copies a workflow directory from the plugin to your local `.slide-b
      ```
      ❌ Workflow '{workflow-name}' not found in plugin
 
-     Available workflows (use /sb-manage:list-overrides to see all):
+     Available workflows (use /pitchsmith:list-overrides to see all):
      Run this command without arguments to see available workflows.
      ```
    - Verify workflow contains at least workflow.yaml file
@@ -80,13 +80,13 @@ This command copies a workflow directory from the plugin to your local `.slide-b
    📝 What's next:
    - Edit the workflow files to customize behavior
    - Future runs of this workflow will use your local copy
-   - Commands like /sb-create:{workflow-name} will load from local path
+   - Commands like /pitchsmith:{workflow-name} will load from local path
 
    ⚙️  To revert to plugin defaults:
    - Delete the local directory: .slide-builder/workflows/{workflow-name}/
    - Or run: rm -rf .slide-builder/workflows/{workflow-name}
 
-   💡 Use /sb-manage:list-overrides to see which workflows are ejected
+   💡 Use /pitchsmith:list-overrides to see which workflows are ejected
    ```
 
 8. **Error Handling**:

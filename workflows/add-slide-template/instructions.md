@@ -53,7 +53,7 @@ If the template name is "Metrics Dashboard", then `{{template_id}}` becomes `met
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| `theme.json` missing | Stop and tell user to run `/sb:setup` first |
+| `theme.json` missing | Stop and tell user to run `/pitchsmith:setup` first |
 | `catalog.json` missing | Create a new one with empty templates array |
 | User wants to start over | Return to Phase 1 discovery questions |
 | Generated HTML fails validation | Fix issues before saving — never save non-compliant output |
@@ -66,7 +66,7 @@ If the template name is "Metrics Dashboard", then `{{template_id}}` becomes `met
 
 <steps>
 1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
-   - If missing → stop and tell user to run `/sb:setup`
+   - If missing → stop and tell user to run `/pitchsmith:setup`
 2. Read `theme.json` to understand brand context (colors, typography, personality)
 3. Read `catalog.json` to see existing templates and their count
 4. Welcome the user and share:
@@ -242,7 +242,7 @@ If Chrome tools are unavailable, skip this phase silently and proceed to Phase 6
     - File path where it was saved
     - Updated template count in catalog
     - Use case keywords registered
-    - How to use it: mention `/sb-create:plan-one` or `/sb-create:build-one` can reference it
+    - How to use it: mention `/pitchsmith:plan-one` or `/pitchsmith:build-one` can reference it
     - Offer to open the template in browser for preview
     - Suggest next steps: create more templates, plan a slide, view theme
 </steps>

@@ -82,7 +82,7 @@ This command adds a new slide to an existing deck plan through a guided conversa
 
 ## Error Handling
 
-- **No decks exist:** Displays guidance to run `/sb:plan-deck` first
+- **No decks exist:** Displays guidance to run `/pitchsmith:plan-deck` first
 - **Invalid slug:** Shows error message with list of valid deck slugs
 - **Invalid position:** Prompts user to enter valid position (1 to total_slides or "end")
 - **Plan not found:** Shows error with expected file location

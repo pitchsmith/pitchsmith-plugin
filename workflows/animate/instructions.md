@@ -12,10 +12,10 @@
       <action>Extract the deck slug from the "Deck:" line and store as {deck_slug}</action>
       <action>Skip the status.yaml deck selection protocol below</action>
     </check>
-    <check if="no 'Deck:' context line found (e.g., manual /sb-create:animate invocation)">
+    <check if="no 'Deck:' context line found (e.g., manual /pitchsmith:animate invocation)">
       <action>Read .slide-builder/status.yaml to get the deck registry from the `decks` field</action>
       <action>Follow deck selection protocol:
-        - If zero decks registered: output "No decks found. Run /sb:plan-deck or /sb:plan-one first." and HALT
+        - If zero decks registered: output "No decks found. Run /pitchsmith:plan-deck or /pitchsmith:plan-one first." and HALT
         - If one deck registered: auto-select that deck slug
         - If multiple decks registered: present a numbered list and ask the user which deck to animate
       </action>
@@ -26,7 +26,7 @@
       - manifest_path = output/{deck_slug}/slides/manifest.json
       - plan_path = output/{deck_slug}/plan.yaml
     </action>
-    <action>Parse slide_number from command argument (e.g., /sb:animate 6 → slide_number = 6)</action>
+    <action>Parse slide_number from command argument (e.g., /pitchsmith:animate 6 → slide_number = 6)</action>
     <action>If no slide_number provided, ask: "Which slide number would you like to animate?"</action>
     <action>Read manifest.json from {manifest_path}</action>
     <action>Validate slide_number exists in the manifest slides array (number field must match)</action>
@@ -357,7 +357,7 @@ Viewer regenerated and opening in browser.
 - Navigate to slide {slide_number} in the viewer
 - Press **F** for fullscreen, then **→** to step through builds
 - Click **Build** button to enter builder mode for manual adjustments
-- Run `/sb:animate` on another slide to generate more animations
+- Run `/pitchsmith:animate` on another slide to generate more animations
     </output>
   </step>
 

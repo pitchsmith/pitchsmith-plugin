@@ -112,7 +112,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb-create:plan-deck` with test content | `plan.yaml` created in `output/{slug}/` | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith:plan-deck` with test content | `plan.yaml` created in `output/{slug}/` | MANUAL - Requires Claude Code CLI |
 | 2 | Verify deck appears in Catalog sidebar | Auto-update via FileWatcherService | MANUAL - Requires VS Code UI |
 | 3 | CatalogDataService discovers new deck | scanDecks returns new deck | VALIDATED VIA VITEST (mock) |
 
@@ -120,7 +120,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb-create:build-all {slug}` | HTML files created for all planned slides | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith:build-all {slug}` | HTML files created for all planned slides | MANUAL - Requires Claude Code CLI |
 | 2 | Verify `manifest.json` created | manifest.json in deck directory | MANUAL |
 | 3 | Verify `status.yaml` updated | Built count reflects slides | MANUAL |
 

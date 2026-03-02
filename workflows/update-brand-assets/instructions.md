@@ -535,7 +535,7 @@ Each icon entry uses v2.0 format:
    - File path written
    - Total asset count in catalog
    - List of assets added with name and tag preview
-   - Note that catalog is ready for use by `/sb-create:build-one`
+   - Note that catalog is ready for use by `/pitchsmith:build-one`
 </steps>
 
 ---

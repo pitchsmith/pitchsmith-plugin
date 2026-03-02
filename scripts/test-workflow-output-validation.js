@@ -70,7 +70,7 @@ if (!fs.existsSync(CONFIG_DIR)) {
   warn('No .slide-builder/config directory found - skipping workspace-specific tests');
   warn('This is expected if you haven\'t run workflows yet in this workspace');
   console.log('\n  To test workflow output:');
-  console.log('  1. Run a workflow (e.g., /sb-brand:setup or /sb-create:plan-deck)');
+  console.log('  1. Run a workflow (e.g., /pitchsmith:setup or /pitchsmith:plan-deck)');
   console.log('  2. Re-run this test script\n');
 }
 
@@ -187,7 +187,7 @@ if (fs.existsSync(OUTPUT_DIR)) {
 
   if (decks.length === 0) {
     warn('No decks found in output/ - cannot validate slide HTML');
-    warn('Create a deck using /sb-create:plan-deck and build it to test HTML output');
+    warn('Create a deck using /pitchsmith:plan-deck and build it to test HTML output');
   } else {
     const firstDeck = decks[0].name;
     const slidesDir = path.join(OUTPUT_DIR, firstDeck, 'slides');

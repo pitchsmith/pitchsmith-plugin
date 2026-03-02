@@ -84,17 +84,14 @@ test_condition "author.name equals 'Pitchsmith'" "test \"\$(jq -r .author.name p
 echo ""
 
 echo "=== P1-AC2: Directory Structure Completeness ==="
-test_condition "commands/sb/ subdirectory exists" "test -d pitchsmith-plugin/commands/sb"
-test_condition "commands/sb-brand/ subdirectory exists" "test -d pitchsmith-plugin/commands/sb-brand"
-test_condition "commands/sb-create/ subdirectory exists" "test -d pitchsmith-plugin/commands/sb-create"
-test_condition "commands/sb-manage/ subdirectory exists" "test -d pitchsmith-plugin/commands/sb-manage"
+test_condition "commands/pitchsmith/ subdirectory exists" "test -d pitchsmith-plugin/commands/pitchsmith"
 
 # Count command .md files (target: 24+)
 CMD_COUNT=$(find pitchsmith-plugin/commands -name "*.md" | wc -l | tr -d ' ')
 test_condition "command .md files >= 24 (found: $CMD_COUNT)" "test $CMD_COUNT -ge 24"
 
-test_condition "skills/sb/SKILL.md exists" "test -f pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md contains state detection" "grep -q 'NO_THEME\|NO_DECKS\|IN_PROGRESS\|ALL_COMPLETE' pitchsmith-plugin/skills/sb/SKILL.md"
+test_condition "skills/pitchsmith/SKILL.md exists" "test -f pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md contains state detection" "grep -q 'NO_THEME\|NO_DECKS\|IN_PROGRESS\|ALL_COMPLETE' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
 # Count workflow directories with workflow.yaml (target: 22)
 WF_COUNT=$(find pitchsmith-plugin/workflows -name "workflow.yaml" -maxdepth 2 | wc -l | tr -d ' ')

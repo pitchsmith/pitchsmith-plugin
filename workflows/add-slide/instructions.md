@@ -62,7 +62,7 @@ If `deck_slug` is `"q1-strategy"`, then `output/{{deck_slug}}/` becomes `output/
 **If no argument:**
 8. Count eligible decks (status = planned, building, or complete)
 9. Route based on count:
-   - **Zero decks** → Report error: "No decks available. Run `/sb:plan-deck` first.", HALT
+   - **Zero decks** → Report error: "No decks available. Run `/pitchsmith:plan-deck` first.", HALT
    - **Exactly one** → Auto-select that deck, continue to Phase 2
    - **Multiple** → Present numbered list, ask user to select by number
 </steps>
@@ -428,9 +428,9 @@ After building the new slide, run the shared visual audit protocol to catch rend
 - output/q1-strategy/slides/manifest.json (regenerated)
 
 **Next steps:**
-- `/sb:refresh q1-strategy` - Preview in viewer
-- `/sb:edit q1-strategy` - Edit any slide
-- `/sb:add-slide q1-strategy` - Add another slide
+- `/pitchsmith:refresh q1-strategy` - Preview in viewer
+- `/pitchsmith:edit q1-strategy` - Edit any slide
+- `/pitchsmith:add-slide q1-strategy` - Add another slide
 </example>
 
 ---
@@ -441,9 +441,9 @@ After building the new slide, run the shared visual audit protocol to catch rend
 | Problem | Action |
 |---------|--------|
 | Deck slug not found | Stop → list valid deck slugs from status.yaml |
-| Plan file missing | Stop → report expected path, suggest running `/sb:plan-deck` |
+| Plan file missing | Stop → report expected path, suggest running `/pitchsmith:plan-deck` |
 | Invalid position (< 1 or > total_slides) | Re-prompt with valid range |
-| Theme missing | Stop → tell user to run `/sb-brand:setup` |
+| Theme missing | Stop → tell user to run `/pitchsmith:setup` |
 | Catalog missing | Stop → report missing catalog path |
 | Invalid template reference | Fall back to frontend-design skill for custom build (or technical-svg-diagrams for diagram content) |
 </reference>

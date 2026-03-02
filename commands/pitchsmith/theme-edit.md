@@ -4,11 +4,11 @@ description: 'Modify existing theme via high-level feedback with visual validati
 
 # Slide Builder - Theme Edit Command
 
-Modify your existing theme using natural language feedback. This command uses the same gestalt feedback approach from `/sb:setup`, allowing you to refine your brand without starting over.
+Modify your existing theme using natural language feedback. This command uses the same gestalt feedback approach from `/pitchsmith:setup`, allowing you to refine your brand without starting over.
 
 ## Prerequisites
 
-- Theme must exist at `.slide-builder/theme.json` (run `/sb:setup` first if not)
+- Theme must exist at `.slide-builder/theme.json` (run `/pitchsmith:setup` first if not)
 - Browser available for sample preview
 
 ## How It Works
@@ -59,7 +59,7 @@ The system understands gestalt (high-level) feedback:
 ## Example Session
 
 ```
-/sb:theme-edit
+/pitchsmith:theme-edit
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   THEME EDIT: Amperity (v1.0)
@@ -95,7 +95,7 @@ Every edit automatically saves the previous version:
 - `theme-history/theme-v1-2026-01-27.json`
 - `theme-history/theme-v2-2026-01-28.json`
 
-Use `/sb:theme` to view current theme.
+Use `/pitchsmith:theme` to view current theme.
 Rollback coming in future update.
 
 ---

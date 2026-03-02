@@ -7,8 +7,8 @@ description: 'Edit slide layout via natural language prompts while preserving us
 Edit a slide's layout using natural language while preserving your text edits.
 
 **Usage:**
-- `/sb:edit` - Edit slide (single mode) or select slide (deck mode)
-- `/sb:edit [n]` - Edit slide number n (deck mode)
+- `/pitchsmith:edit` - Edit slide (single mode) or select slide (deck mode)
+- `/pitchsmith:edit [n]` - Edit slide number n (deck mode)
 
 <steps CRITICAL="TRUE">
 1. **Resolve workflow path** (override-first pattern):
@@ -35,4 +35,4 @@ Edit a slide's layout using natural language while preserving your text edits.
 - **AC4.1.3:** Invalid slide number shows "Valid range: 1-N" error
 - **AC4.1.4:** Displays slide info: layout type, field count, edit count
 - **AC4.1.5:** Prompts "Describe the layout change you want"
-- **AC4.1.6:** No slides shows "Run /sb:build-one first" error
+- **AC4.1.6:** No slides shows "Run /pitchsmith:build-one first" error

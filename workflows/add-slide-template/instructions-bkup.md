@@ -15,7 +15,7 @@
 **Theme Required**
 
 No theme found at `.slide-builder/config/theme.json`.
-Please run `/sb:setup` first to create your brand theme.
+Please run `/pitchsmith:setup` first to create your brand theme.
       </output>
       <action>HALT</action>
     </check>
@@ -282,7 +282,7 @@ File created: `.slide-builder/config/catalog/{{template_id}}.html`
 **File:** `.slide-builder/config/catalog/{{template_id}}.html`
 **Catalog:** Updated with {{new_template_count}} total templates
 
-Your new template is ready to use! When you run `/sb:plan-one` or `/sb:build-one`,
+Your new template is ready to use! When you run `/pitchsmith:plan-one` or `/pitchsmith:build-one`,
 you can request this template by name or any of its use cases: {{use_cases_array}}
     </output>
 
@@ -306,9 +306,9 @@ open .slide-builder/config/catalog/{{template_id}}.html
     <output>
 **What's Next?**
 
-- Run `/sb-manage:add-slide-template` again to create more templates
-- Run `/sb-create:plan-one` to plan a slide using your new template
-- Run `/sb-brand:theme` to see your current theme settings
+- Run `/pitchsmith:add-slide-template` again to create more templates
+- Run `/pitchsmith:plan-one` to plan a slide using your new template
+- Run `/pitchsmith:theme` to see your current theme settings
     </output>
   </step>
 

@@ -130,7 +130,7 @@ function main() {
         const decks = findDecks();
         if (decks.length === 0) {
             console.error('Error: No decks found in output/ directory.');
-            console.error('Run /sb:plan-deck to create a deck first.');
+            console.error('Run /pitchsmith:plan-deck to create a deck first.');
             process.exit(1);
         } else if (decks.length === 1) {
             deckSlug = decks[0].slug;

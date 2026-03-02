@@ -57,7 +57,7 @@ Verify ALL of these. These are acceptance criteria from Stories 5.1, 5.2, 13.2-1
 
 <steps>
 1. Check if `.slide-builder/config/theme.json` exists
-   - If missing → tell user to run `/sb-brand:setup` and **stop**
+   - If missing → tell user to run `/pitchsmith:setup` and **stop**
 2. **Validate workflowRules** — Check if `theme.workflowRules` section exists in theme.json:
    <check if="theme.workflowRules does not exist OR is missing required subsections (rhythm, colorSchemes, narrativeDefaults)">
      <output>
@@ -65,7 +65,7 @@ Verify ALL of these. These are acceptance criteria from Stories 5.1, 5.2, 13.2-1
 
 Your theme.json is missing the `workflowRules` section required for planning.
 
-Run `/sb-brand:setup` to create a complete theme, or `/sb-brand:theme-edit` to add rules to an existing theme.
+Run `/pitchsmith:setup` to create a complete theme, or `/pitchsmith:theme-edit` to add rules to an existing theme.
      </output>
      <action>HALT</action>
    </check>
@@ -1206,7 +1206,7 @@ Would you like to add an Agenda slide?"
 - Deck name, slug, slide count
 - Plan file location
 - Slides output directory
-- Next steps: `/sb:build-one` (recommended) or `/sb:build-all`
+- Next steps: `/pitchsmith:build-one` (recommended) or `/pitchsmith:build-all`
 
 ---
 
@@ -1293,7 +1293,7 @@ slides:
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| Theme missing | Tell user to run `/sb:setup` → stop |
+| Theme missing | Tell user to run `/pitchsmith:setup` → stop |
 | Invalid slide number (out of range) | Show valid range, ask to retry |
 | Cannot parse command | Show command format examples, ask to retry |
 | Fewer than 3 agenda sections | Warn, offer to add more or proceed |

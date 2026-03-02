@@ -141,7 +141,7 @@ For narrative edits:
 | Problem | Action |
 |---------|--------|
 | Context file missing | Tell user to open the Plan Editor first, then use "Edit with Claude" |
-| plan.yaml not found | Tell user to run `/sb-create:plan-deck` first |
+| plan.yaml not found | Tell user to run `/pitchsmith:plan-deck` first |
 | Cannot parse instruction | Ask user to clarify what they want to change |
 | Invalid slide number | Show valid range (1 to N), ask user to retry |
 | Would break schema | Show what validation failed, suggest corrected approach |

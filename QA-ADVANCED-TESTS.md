@@ -67,7 +67,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb-manage:eject-workflow build-one` | `.slide-builder/workflows/build-one/` created with `workflow.yaml` + `instructions.md` | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith:eject-workflow build-one` | `.slide-builder/workflows/build-one/` created with `workflow.yaml` + `instructions.md` | MANUAL - Requires Claude Code CLI |
 | 2 | Verify files are non-empty and parseable | `workflow.yaml` valid YAML, `instructions.md` non-empty markdown | VALIDATED VIA VITEST |
 | 3 | Verify `workflow.yaml` uses project-relative `installed_path` | Not `${CLAUDE_PLUGIN_ROOT}` | VALIDATED VIA VITEST |
 
@@ -93,7 +93,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
 | 1 | Add `<!-- CUSTOM QA TEST MARKER -->` to ejected `instructions.md` | File saved with marker | MANUAL - Requires file edit |
-| 2 | Run `/sb-create:build-one {deck-slug} 1` | Output indicates local override used | MANUAL - Requires Claude Code CLI |
+| 2 | Run `/pitchsmith:build-one {deck-slug} 1` | Output indicates local override used | MANUAL - Requires Claude Code CLI |
 | 3 | Verify custom marker visible in workflow execution | Custom marker in context | MANUAL - Requires Claude Code CLI |
 
 ---
@@ -118,7 +118,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb:status` with `build-one` ejected | "build-one" under "Using local customizations" | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith:status` with `build-one` ejected | "build-one" under "Using local customizations" | MANUAL - Requires Claude Code CLI |
 | 2 | Verify count shows "1 of 22 workflows customized" | Count displayed | MANUAL - Requires Claude Code CLI |
 
 ---
@@ -141,8 +141,8 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
 | 1 | Delete `.slide-builder/workflows/build-one/` | Directory removed | MANUAL |
-| 2 | Run `/sb-create:build-one {deck-slug} 1` | Plugin default used, no custom marker | MANUAL - Requires Claude Code CLI |
-| 3 | Run `/sb:status` | "All workflows using plugin defaults" | MANUAL - Requires Claude Code CLI |
+| 2 | Run `/pitchsmith:build-one {deck-slug} 1` | Plugin default used, no custom marker | MANUAL - Requires Claude Code CLI |
+| 3 | Run `/pitchsmith:status` | "All workflows using plugin defaults" | MANUAL - Requires Claude Code CLI |
 
 ---
 
@@ -170,7 +170,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
 | 1 | Ensure pdf-reader NOT in `~/.claude/mcp_settings.json` | MCP server absent | MANUAL - Requires config edit |
-| 2 | Run `/sb-brand:setup`, select PDF input | Workflow detects missing MCP | MANUAL - Requires Claude Code CLI |
+| 2 | Run `/pitchsmith:setup`, select PDF input | Workflow detects missing MCP | MANUAL - Requires Claude Code CLI |
 | 3 | Verify error message with config snippet | Clear, actionable error | MANUAL - Requires Claude Code CLI |
 | 4 | Verify no crash or unhandled exception | Graceful exit | MANUAL - Requires Claude Code CLI |
 
@@ -196,7 +196,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb-brand:setup`, select URL input | Workflow proceeds without MCP | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith:setup`, select URL input | Workflow proceeds without MCP | MANUAL - Requires Claude Code CLI |
 | 2 | Provide a test URL | Brand extraction completes | MANUAL - Requires Claude Code CLI |
 
 ---

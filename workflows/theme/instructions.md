@@ -20,7 +20,7 @@ This workflow displays the current theme summary with ANSI color swatches.
 
 You haven't set up a brand theme yet.
 
-Run `/sb:setup` to create your theme from brand assets.
+Run `/pitchsmith:setup` to create your theme from brand assets.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       </output>
       <action>HALT</action>
@@ -37,7 +37,7 @@ Run `/sb:setup` to create your theme from brand assets.
 
 Could not parse theme.json: {{error_details}}
 
-The theme file may be corrupted. Try running `/sb:setup` again.
+The theme file may be corrupted. Try running `/pitchsmith:setup` again.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       </output>
       <action>HALT</action>
@@ -115,7 +115,7 @@ Full theme: .slide-builder/config/theme.json
 VERSION HISTORY
   {{version_count}} version(s) saved in theme-history/
   Latest backup: v{{latest_version}} ({{latest_date}})
-  Use `/sb:theme-edit` to make changes (auto-saves version before edit)
+  Use `/pitchsmith:theme-edit` to make changes (auto-saves version before edit)
       </output>
     </check>
 
@@ -123,7 +123,7 @@ VERSION HISTORY
       <output>
 VERSION HISTORY
   No version history yet.
-  Versions are created when you edit the theme via `/sb:theme-edit`
+  Versions are created when you edit the theme via `/pitchsmith:theme-edit`
       </output>
     </check>
   </step>
@@ -139,7 +139,7 @@ VERSION HISTORY
     <action>Save status.yaml preserving existing structure</action>
 
     <output>
-To modify your theme, run `/sb:theme-edit`
+To modify your theme, run `/pitchsmith:theme-edit`
     </output>
   </step>
 

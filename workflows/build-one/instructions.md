@@ -50,7 +50,7 @@ Before writing any HTML file, verify your output satisfies ALL of these. These a
 
 | Attribute | Purpose | Set By |
 |-----------|---------|--------|
-| `data-build-id` | Unique identifier for build-animation targeting | `/sb:animate` workflow or viewer `assignBuildIds()` at runtime |
+| `data-build-id` | Unique identifier for build-animation targeting | `/pitchsmith:animate` workflow or viewer `assignBuildIds()` at runtime |
 | `data-animatable` | Marks structural elements eligible for animation | `build-one` (this workflow) |
 | `data-field` | Identifies editable text fields for save/restore | `build-one` (this workflow) |
 | `data-slide-id` | Stable hex ID for the slide container | `build-one` (this workflow) |
@@ -84,7 +84,7 @@ Build IDs follow the pattern: `build-{semantic-role}-{counter}`
 
 Examples: `build-title-1`, `build-card-2`, `build-icon-3`
 
-These IDs are **NOT** assigned by build-one. They are assigned later by the `/sb:animate` workflow or by viewer `assignBuildIds()` functions at runtime.
+These IDs are **NOT** assigned by build-one. They are assigned later by the `/pitchsmith:animate` workflow or by viewer `assignBuildIds()` functions at runtime.
 
 </reference>
 
@@ -204,7 +204,7 @@ This is the exact structure your output must follow. The catalog templates in `.
 </head>
 <body>
   <div class="slide" data-slide-id="a1b2c3d4">
-    <!-- data-build-id is assigned by /sb:animate workflow or by viewers at runtime via assignBuildIds() — NOT by build-one -->
+    <!-- data-build-id is assigned by /pitchsmith:animate workflow or by viewers at runtime via assignBuildIds() — NOT by build-one -->
     <p class="eyebrow" contenteditable="true" data-field="eyebrow" data-animatable="true">Category Label</p>
     <h1 class="title" contenteditable="true" data-field="title" data-animatable="true">Main Title Goes Here</h1>
     <p class="subtitle" contenteditable="true" data-field="subtitle" data-animatable="true">Supporting subtitle with additional context.</p>
@@ -296,7 +296,7 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 3. Route based on value:
    - `deck` → Continue to Phase 1A (Deck Mode)
    - `single` → Skip to Phase 1B (Single Mode)
-   - missing/invalid → Stop and inform user to run `/sb:plan-one` or `/sb:plan-deck`
+   - missing/invalid → Stop and inform user to run `/pitchsmith:plan-one` or `/pitchsmith:plan-deck`
 </steps>
 
 ---
@@ -307,7 +307,7 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 1. Read `decks:` registry from status.yaml
 2. Filter decks by eligible statuses: `planned` or `building`
 3. Deck selection:
-   - Zero eligible → Stop: "No decks available to build. Run `/sb:plan-deck` first."
+   - Zero eligible → Stop: "No decks available to build. Run `/pitchsmith:plan-deck` first."
    - One eligible → auto-select, report: "Working on deck: {{deck.name}}"
    - Multiple eligible → present numbered list, ask user to choose
 4. Set `{{deck_slug}}` from selected deck key
@@ -583,9 +583,9 @@ Theme must contain workflowRules section. No hardcoded fallbacks allowed.
 <reference title="workflowRules validation errors">
 | Missing | Error Message |
 |---------|---------------|
-| theme.json | "❌ theme.json not found. Run `/sb-brand:setup` to create your brand theme." |
-| workflowRules | "❌ theme.json is missing 'workflowRules' section. Run `/sb-brand:setup` or `/sb-brand:theme-edit` to add workflow rules." |
-| colorSchemes | "❌ theme.workflowRules is missing 'colorSchemes'. Run `/sb-brand:theme-edit` to fix." |
+| theme.json | "❌ theme.json not found. Run `/pitchsmith:setup` to create your brand theme." |
+| workflowRules | "❌ theme.json is missing 'workflowRules' section. Run `/pitchsmith:setup` or `/pitchsmith:theme-edit` to add workflow rules." |
+| colorSchemes | "❌ theme.workflowRules is missing 'colorSchemes'. Run `/pitchsmith:theme-edit` to fix." |
 | dark/light | "❌ colorSchemes must have both 'dark' and 'light' modes defined." |
 </reference>
 
@@ -607,7 +607,7 @@ If an icon concept has no catalog match, OMIT it entirely — never use emoji or
    - Set `{{icon_catalog_available}}` = true
    - Note: v2.0 schema — each icon variant is a separate entry with `backgroundAffinity`, `base_icon`, and direct `file` reference
 3. If missing:
-   - Warn user: "Icon catalog not found. Run `/sb-manage:add-icon` to set up."
+   - Warn user: "Icon catalog not found. Run `/pitchsmith:add-icon` to set up."
    - Set `{{icon_catalog_available}}` = false
    - Continue without icon constraints
 </steps>
@@ -1933,8 +1933,8 @@ If you skip this step, built slides will still appear as "pending" in the UI.
 
 **Report to user based on mode:**
 
-- **Deck mode**: Slide built (number + intent), progress (X of Y), remaining count, output path, next steps (`/sb:build-one`, `/sb:build-all`, `/sb:edit`)
-- **Single mode**: Confirmation, output path, features (editable, auto-save, themed), next steps (open browser, `/sb:edit`, `/sb:export`)
+- **Deck mode**: Slide built (number + intent), progress (X of Y), remaining count, output path, next steps (`/pitchsmith:build-one`, `/pitchsmith:build-all`, `/pitchsmith:edit`)
+- **Single mode**: Confirmation, output path, features (editable, auto-save, themed), next steps (open browser, `/pitchsmith:edit`, `/pitchsmith:export`)
 
 <optional>
 Ask if user wants browser preview. If yes, run platform-appropriate command:
@@ -1983,9 +1983,9 @@ Ask if user wants browser preview. If yes, run platform-appropriate command:
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| Plan file missing | Stop → tell user which `/sb:plan-*` to run |
-| Theme file missing | Stop → tell user to run `/sb:setup` |
-| No pending slides | Inform all built → suggest `/sb:edit` or `/sb:export` |
+| Plan file missing | Stop → tell user which `/pitchsmith:plan-*` to run |
+| Theme file missing | Stop → tell user to run `/pitchsmith:setup` |
+| No pending slides | Inform all built → suggest `/pitchsmith:edit` or `/pitchsmith:export` |
 | Template unknown | Fall back to custom build |
 | Skill output invalid | Fix issues rather than failing |
 </reference>

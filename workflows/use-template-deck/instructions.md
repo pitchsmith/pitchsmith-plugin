@@ -841,7 +841,7 @@ Examples:
 
 <step n="1" goal="Load deck template manifest and select template">
   <action>Read deck-templates.json from {{deck_templates_manifest}}</action>
-  <action>Parse template argument from user input (the argument passed to /sb:use-template)</action>
+  <action>Parse template argument from user input (the argument passed to /pitchsmith:use-template)</action>
 
   <action>Match template using this priority order:
     1. **Exact ID match**: Compare argument against template.id in manifest

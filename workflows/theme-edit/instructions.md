@@ -28,7 +28,7 @@ Version 3.0 implements the full 6-phase workflow per Epic 6 Tech Spec, plus roll
 
 You haven't set up a brand theme yet.
 
-Run `/sb:setup` to create your theme from brand assets.
+Run `/pitchsmith:setup` to create your theme from brand assets.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       </output>
       <action>HALT</action>
@@ -585,8 +585,8 @@ Changes applied:
 
 Your theme is ready for slide generation!
 
-To view your theme: `/sb:theme`
-To generate slides: `/sb:build-one` or `/sb:build-all`
+To view your theme: `/pitchsmith:theme`
+To generate slides: `/pitchsmith:build-one` or `/pitchsmith:build-all`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     </output>
   </step>
@@ -637,7 +637,7 @@ Backup still available: theme-history/theme-v{{backup_version}}-{{date}}.json
 
 There are no previous theme versions to restore.
 
-Version history is created when you edit themes via `/sb:theme-edit`.
+Version history is created when you edit themes via `/pitchsmith:theme-edit`.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       </output>
       <action>HALT</action>
@@ -988,8 +988,8 @@ Previous state saved as v{{backup_v}}
 
 **Version history preserved** - you can rollback again if needed.
 
-To view your theme: `/sb:theme`
-To generate slides: `/sb:build-one` or `/sb:build-all`
+To view your theme: `/pitchsmith:theme`
+To generate slides: `/pitchsmith:build-one` or `/pitchsmith:build-all`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     </output>
 

@@ -15,8 +15,8 @@ This workflow routes to the appropriate build workflow.
 **No Plan Found**
 
 You need to plan your slides first:
-- `/sb:plan-one` for a single slide
-- `/sb:plan-deck` for a full presentation
+- `/pitchsmith:plan-one` for a single slide
+- `/pitchsmith:plan-deck` for a full presentation
       </output>
       <action>HALT</action>
     </check>

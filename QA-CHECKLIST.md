@@ -37,12 +37,12 @@ Result: **34/34 checks passed**
 | Check | Result |
 |-------|--------|
 | Command files >= 24 (found 25) | PASS |
-| Command group directory commands/sb/ exists | PASS |
-| Command group directory commands/sb-create/ exists | PASS |
-| Command group directory commands/sb-manage/ exists | PASS |
-| Command group directory commands/sb-brand/ exists | PASS |
-| skills/sb/SKILL.md exists | PASS |
-| skills/sb/SKILL.md is non-empty | PASS |
+| Command group directory commands/pitchsmith/ exists | PASS |
+| Command group directory commands/pitchsmith/ exists | PASS |
+| Command group directory commands/pitchsmith/ exists | PASS |
+| Command group directory commands/pitchsmith/ exists | PASS |
+| skills/pitchsmith/SKILL.md exists | PASS |
+| skills/pitchsmith/SKILL.md is non-empty | PASS |
 | Workflow directories >= 22 (found 22) | PASS |
 | All workflows have workflow.yaml + instructions.md (22/22) | PASS |
 | config/defaults/ directory exists | PASS |
@@ -114,7 +114,7 @@ Result: **9/9 tests passed**
 | Plugin enabled in Claude Code settings | DEFERRED - requires manual execution |
 | Plugin appears in enabled plugins list | DEFERRED - requires manual execution |
 | /sb command recognized | DEFERRED - requires manual execution |
-| /sb-create:plan-deck command recognized | DEFERRED - requires manual execution |
+| /pitchsmith:plan-deck command recognized | DEFERRED - requires manual execution |
 
 ## Observations and Follow-up Items
 

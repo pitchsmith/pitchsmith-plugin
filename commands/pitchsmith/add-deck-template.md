@@ -6,7 +6,7 @@ description: 'Create new multi-slide deck templates via guided conversation and 
 
 This command creates a new multi-slide deck template through conversational discovery, scaffolding, and iterative slide creation.
 
-**Usage:** `/sb:add-deck-template`
+**Usage:** `/pitchsmith:add-deck-template`
 
 <steps CRITICAL="TRUE">
 1. **Resolve workflow path** (override-first pattern):
@@ -31,5 +31,5 @@ This command creates a new multi-slide deck template through conversational disc
      - Report completion with next steps
 5. Minimum 3 conversational exchanges before scaffolding
 6. Every slide must have constraint comments on all contenteditable elements
-7. Template must be consumable by /sb:use-template
+7. Template must be consumable by /pitchsmith:use-template
 </steps>

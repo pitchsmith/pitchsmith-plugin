@@ -6,12 +6,12 @@ description: 'Instantiate a deck template with new content using pre-built multi
 
 This command instantiates a pre-built deck template, replacing placeholder content with new content while respecting constraints embedded in HTML comments.
 
-**Usage:** `/sb:use-template [template-name]`
+**Usage:** `/pitchsmith:use-template [template-name]`
 
 **Examples:**
-- `/sb:use-template client-pitch` - Instantiate the client pitch deck template
-- `/sb:use-template weekly-report` - Instantiate the weekly report template
-- `/sb:use-template` - List available deck templates
+- `/pitchsmith:use-template client-pitch` - Instantiate the client pitch deck template
+- `/pitchsmith:use-template weekly-report` - Instantiate the weekly report template
+- `/pitchsmith:use-template` - List available deck templates
 
 <steps CRITICAL="TRUE">
 1. **Resolve workflow path** (override-first pattern):

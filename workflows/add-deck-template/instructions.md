@@ -1,7 +1,7 @@
 # Add Deck Template Workflow
 
 <context>
-You are a deck template creation agent for Slide Builder. You guide users through creating multi-slide deck templates — reusable presentation structures that can be instantiated with new content via `/sb:use-template`. You are an expert designer with meticulous attention to detail and deep knowledge of presentation design best practices.
+You are a deck template creation agent for Slide Builder. You guide users through creating multi-slide deck templates — reusable presentation structures that can be instantiated with new content via `/pitchsmith:use-template`. You are an expert designer with meticulous attention to detail and deep knowledge of presentation design best practices.
 
 You have access to the `frontend-design` skill for HTML generation and understand the deck template schema (template-config.yaml, constraint comments, deck-templates.json manifest).
 </context>
@@ -13,7 +13,7 @@ A successful run produces:
 3. An entry in `deck-templates.json` manifest
 4. One or more slide HTML files with constraint comments, passing all compliance checks
 5. The user had at least 3 conversational exchanges before scaffolding
-6. The template can be consumed by `/sb:use-template`
+6. The template can be consumed by `/pitchsmith:use-template`
 </success_criteria>
 
 ---
@@ -52,7 +52,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| `theme.json` missing | Stop and tell user to run `/sb:setup` first |
+| `theme.json` missing | Stop and tell user to run `/pitchsmith:setup` first |
 | `deck-templates.json` missing | Create a new one with empty templates array |
 | Duplicate template slug | Ask user to choose a different name |
 | User wants to start over | Return to Phase 1 discovery |
@@ -68,7 +68,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 
 <steps>
 1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
-   - If missing → stop and tell user to run `/sb:setup`
+   - If missing → stop and tell user to run `/pitchsmith:setup`
 2. Read `theme.json` to understand brand context (colors, typography, personality)
 3. Read `deck-templates.json` to see existing deck templates
 4. Read `catalog.json` to see available slide templates (for Path B later)
@@ -157,7 +157,7 @@ Adapt the conversation naturally. If the user provides rich detail, combine ques
 ## Phase 2: Iterative Slide Creation
 
 <critical>
-Create slides one at a time. After each slide, ask the user whether to continue or stop. If the user stops, note the progress — they can resume later via `/sb:edit-deck-template`.
+Create slides one at a time. After each slide, ask the user whether to continue or stop. If the user stops, note the progress — they can resume later via `/pitchsmith:edit-deck-template`.
 </critical>
 
 ### Step 4: For Each Slide in the Sequence
@@ -224,7 +224,7 @@ Create slides one at a time. After each slide, ask the user whether to continue 
 ### Step 6: Constraint Comment Injection
 
 <critical>
-Every contenteditable element MUST have a constraint comment. This is how the consumer workflow (`/sb:use-template`) knows how to handle content replacement.
+Every contenteditable element MUST have a constraint comment. This is how the consumer workflow (`/pitchsmith:use-template`) knows how to handle content replacement.
 </critical>
 
 <steps>
@@ -328,13 +328,13 @@ This is a DEDICATED step that happens ONLY after the slide design is complete an
 <steps>
 36. After each slide is completed, report which slide was finished and how many remain. Use the AskUserQuestion tool to offer:
     - **Continue** — Create the next slide now
-    - **Stop for now** — Save progress and resume later via `/sb:edit-deck-template`
+    - **Stop for now** — Save progress and resume later via `/pitchsmith:edit-deck-template`
 
 37. If **Continue** → return to Step 4 for the next slide
 38. If **Stop for now**:
     - Confirm all progress is saved (folder, config, manifest, completed slides)
     - Report which slides are done and which remain
-    - Tell user they can run `/sb:edit-deck-template {{slug}}` to resume
+    - Tell user they can run `/pitchsmith:edit-deck-template {{slug}}` to resume
     - Exit workflow
 </steps>
 
@@ -364,7 +364,7 @@ This is a DEDICATED step that happens ONLY after the slide design is complete an
     - Folder location
     - List of all files created (config + each slide HTML with its name)
     - Context requirements summary (required and optional)
-    - Suggested next steps: `/sb:use-template`, `/sb:edit-deck-template`, `/sb:add-deck-template`
+    - Suggested next steps: `/pitchsmith:use-template`, `/pitchsmith:edit-deck-template`, `/pitchsmith:add-deck-template`
 </steps>
 
 ---

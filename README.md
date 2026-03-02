@@ -13,10 +13,7 @@ pitchsmith-plugin/
 ├── .claude-plugin/          # Plugin metadata
 │   └── plugin.json          # Plugin manifest
 ├── commands/                # Slash commands (24+ commands)
-│   ├── sb/                  # Core commands (help, status)
-│   ├── sb-create/           # Creation commands (plan, build, export)
-│   ├── sb-manage/           # Management commands (templates, assets)
-│   └── sb-brand/            # Brand commands (setup, theme-edit)
+│   └── pitchsmith/          # All commands (plan, build, export, setup, templates)
 ├── skills/                  # Skills
 │   └── sb/                  # Smart router skill
 ├── workflows/               # Workflow definitions (22 workflows)
@@ -32,7 +29,7 @@ pitchsmith-plugin/
 ### Purpose of Each Directory
 
 - **`.claude-plugin/`**: Contains the plugin manifest (`plugin.json`) that declares the plugin to Claude Code's plugin system
-- **`commands/`**: Slash commands that users invoke via Claude Code CLI (e.g., `/sb-create:plan-deck`)
+- **`commands/`**: Slash commands that users invoke via Claude Code CLI (e.g., `/pitchsmith:plan-deck`)
 - **`skills/`**: Smart router skill (`/sb`) that detects workspace state and routes to appropriate workflows
 - **`workflows/`**: Complete workflow definitions with instructions and templates for multi-step operations
 - **`templates/`**: HTML templates used for rendering slides and presentations
@@ -111,29 +108,29 @@ Run `/sb` in your project. The smart router will:
 3. Copy default theme to your workspace
 4. Present deck creation options
 
-You can immediately start creating slides with the default theme. Brand customization is optional and can be done later via `/sb-brand:setup`.
+You can immediately start creating slides with the default theme. Brand customization is optional and can be done later via `/pitchsmith:setup`.
 
 ### Core Commands
 
 - **`/sb`** - Smart router (auto-detects state and presents context-aware options)
-- **`/sb-create:plan-deck`** - Plan a full presentation deck
-- **`/sb-create:build-one`** - Build a single slide
-- **`/sb-create:build-all`** - Build all planned slides
-- **`/sb-brand:setup`** - Extract brand from PDF or website
-- **`/sb-brand:theme-edit`** - Edit theme properties
-- **`/sb-manage:templates`** - Manage slide templates
+- **`/pitchsmith:plan-deck`** - Plan a full presentation deck
+- **`/pitchsmith:build-one`** - Build a single slide
+- **`/pitchsmith:build-all`** - Build all planned slides
+- **`/pitchsmith:setup`** - Extract brand from PDF or website
+- **`/pitchsmith:theme-edit`** - Edit theme properties
+- **`/pitchsmith:templates`** - Manage slide templates
 
 ### Workflow Override System
 
 To customize a workflow:
-1. Run `/sb-manage:eject-workflow {workflow-name}`
+1. Run `/pitchsmith:eject-workflow {workflow-name}`
 2. The workflow is copied to `.slide-builder/workflows/{workflow-name}/`
 3. Edit the ejected workflow as needed
 4. Future runs will use your local copy
 
 To see which workflows are ejected:
 ```
-/sb-manage:list-overrides
+/pitchsmith:list-overrides
 ```
 
 ## Prerequisites & Dependencies
@@ -208,8 +205,8 @@ If puppeteer is unavailable, the export workflow offers HTML-only export. HTML s
 #### PDF Brand Extraction
 
 **What requires this:**
-- `/sb-brand:setup` command when using PDF brand guidelines as input
-- `/sb-create:use-template` when template uses PDF content sources
+- `/pitchsmith:setup` command when using PDF brand guidelines as input
+- `/pitchsmith:use-template` when template uses PDF content sources
 
 **What works without:**
 - Brand setup with website URL or image files as input
@@ -222,7 +219,7 @@ If puppeteer is unavailable, the export workflow offers HTML-only export. HTML s
 **Alternatives (if Node.js is unavailable):**
 - **Website URL**: Provide your company website URL instead of PDF
 - **Image files**: Provide logo and screenshot images
-- **Manual entry**: Enter brand colors and fonts manually via `/sb-brand:theme-edit`
+- **Manual entry**: Enter brand colors and fonts manually via `/pitchsmith:theme-edit`
 
 ### Troubleshooting
 
@@ -293,7 +290,7 @@ If puppeteer is unavailable, the export workflow offers HTML-only export. HTML s
 ### Getting Help
 
 - **Documentation**: [https://pitchsmith.ai/docs](https://pitchsmith.ai/docs) *(coming soon)*
-- **Issues**: [https://github.com/pitchsmith/slide-builder/issues](https://github.com/pitchsmith/slide-builder/issues)
+- **Issues**: [https://github.com/pitchsmith/pitchsmith-deck/issues](https://github.com/pitchsmith/pitchsmith-deck/issues)
 - **Discord**: Community support *(coming soon)*
 
 ## Architecture Patterns
@@ -321,7 +318,7 @@ Elastic License v2 (ELv2)
 ## Links
 
 - Homepage: https://pitchsmith.ai
-- Repository: https://github.com/pitchsmith/slide-builder
+- Repository: https://github.com/pitchsmith/pitchsmith-deck
 - Documentation: (Coming soon)
 
 ## Version

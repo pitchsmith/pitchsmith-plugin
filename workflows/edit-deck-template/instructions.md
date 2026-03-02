@@ -13,7 +13,7 @@ A successful run:
 3. Keeps template-config.yaml, deck-templates.json, and slide HTML files consistent after every operation
 4. Every new or edited slide has constraint comments on all contenteditable elements
 5. File renumbering works correctly for add, remove, and reorder operations
-6. The modified template remains consumable by `/sb:use-template`
+6. The modified template remains consumable by `/pitchsmith:use-template`
 </success_criteria>
 
 ---
@@ -52,7 +52,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| `theme.json` missing | Stop and tell user to run `/sb:setup` first |
+| `theme.json` missing | Stop and tell user to run `/pitchsmith:setup` first |
 | Template slug not found | Show available templates and ask user to choose |
 | `deck-templates.json` missing | Create a new one with empty templates array |
 | Template folder missing | Halt: "Template folder not found at expected path" |
@@ -69,7 +69,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 
 <steps>
 1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
-   - If missing → stop and tell user to run `/sb:setup`
+   - If missing → stop and tell user to run `/pitchsmith:setup`
 
 2. Read these configuration files:
    - `theme.json` from `.slide-builder/config/theme.json` (brand context)
@@ -355,16 +355,16 @@ After EVERY operation (add, edit, remove, reorder, config), return to Phase 2 to
 - Final slide count with status indicators
 - List of all changes made during session
 - Suggested next steps:
-  - `/sb:use-template {{slug}}` to instantiate
-  - `/sb:edit-deck-template {{slug}}` to make more changes
-  - `/sb:add-deck-template` to create a new template
+  - `/pitchsmith:use-template {{slug}}` to instantiate
+  - `/pitchsmith:edit-deck-template {{slug}}` to make more changes
+  - `/pitchsmith:add-deck-template` to create a new template
 
 ---
 
 ## Constraint Comment Injection
 
 <critical>
-Every contenteditable element MUST have a constraint comment. This is how `/sb:use-template` knows how to handle content replacement.
+Every contenteditable element MUST have a constraint comment. This is how `/pitchsmith:use-template` knows how to handle content replacement.
 </critical>
 
 For each contenteditable element with a `data-field` attribute:

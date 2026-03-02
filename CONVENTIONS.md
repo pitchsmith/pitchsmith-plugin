@@ -6,61 +6,61 @@ This document defines the conventions and patterns used in Slide Builder.
 
 Slide Builder commands are organized into three namespaces by purpose:
 
-### Create Commands (/sb-create:)
+### Create Commands (/pitchsmith:)
 Day-to-day deck creation workflow
 
 | Command | Plugin Workflow | Override Location | Description |
 |---------|----------------|-------------------|-------------|
-| `/sb-create:plan` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan/` | `.slide-builder/workflows/plan/` | Smart router with context-aware routing (single, deck, or continue) |
-| `/sb-create:plan-one` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan-one/` | `.slide-builder/workflows/plan-one/` | Plan a single slide |
-| `/sb-create:plan-deck` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan-deck/` | `.slide-builder/workflows/plan-deck/` | Plan a full deck |
-| `/sb-create:build-one` | `${CLAUDE_PLUGIN_ROOT}/workflows/build-one/` | `.slide-builder/workflows/build-one/` | Build next/single slide |
-| `/sb-create:build-all` | `${CLAUDE_PLUGIN_ROOT}/workflows/build-all/` | `.slide-builder/workflows/build-all/` | Build all remaining slides |
-| `/sb-create:edit` | `${CLAUDE_PLUGIN_ROOT}/workflows/edit/` | `.slide-builder/workflows/edit/` | Edit slide layout |
-| `/sb-create:add-slide` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-slide/` | `.slide-builder/workflows/add-slide/` | Add a new slide to existing deck |
-| `/sb-create:animate` | `${CLAUDE_PLUGIN_ROOT}/workflows/animate/` | `.slide-builder/workflows/animate/` | Generate animation groups |
-| `/sb-create:use-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/use-template-deck/` | `.slide-builder/workflows/use-template-deck/` | Instantiate a deck template |
-| `/sb-create:refresh` | N/A (no workflow) | N/A | Regenerate viewer/manifest |
+| `/pitchsmith:plan` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan/` | `.slide-builder/workflows/plan/` | Smart router with context-aware routing (single, deck, or continue) |
+| `/pitchsmith:plan-one` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan-one/` | `.slide-builder/workflows/plan-one/` | Plan a single slide |
+| `/pitchsmith:plan-deck` | `${CLAUDE_PLUGIN_ROOT}/workflows/plan-deck/` | `.slide-builder/workflows/plan-deck/` | Plan a full deck |
+| `/pitchsmith:build-one` | `${CLAUDE_PLUGIN_ROOT}/workflows/build-one/` | `.slide-builder/workflows/build-one/` | Build next/single slide |
+| `/pitchsmith:build-all` | `${CLAUDE_PLUGIN_ROOT}/workflows/build-all/` | `.slide-builder/workflows/build-all/` | Build all remaining slides |
+| `/pitchsmith:edit` | `${CLAUDE_PLUGIN_ROOT}/workflows/edit/` | `.slide-builder/workflows/edit/` | Edit slide layout |
+| `/pitchsmith:add-slide` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-slide/` | `.slide-builder/workflows/add-slide/` | Add a new slide to existing deck |
+| `/pitchsmith:animate` | `${CLAUDE_PLUGIN_ROOT}/workflows/animate/` | `.slide-builder/workflows/animate/` | Generate animation groups |
+| `/pitchsmith:use-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/use-template-deck/` | `.slide-builder/workflows/use-template-deck/` | Instantiate a deck template |
+| `/pitchsmith:refresh` | N/A (no workflow) | N/A | Regenerate viewer/manifest |
 
-### Manage Commands (/sb-manage:)
+### Manage Commands (/pitchsmith:)
 Catalog and template management
 
 | Command | Plugin Workflow | Override Location | Description |
 |---------|----------------|-------------------|-------------|
-| `/sb-manage:add-slide-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-slide-template/` | `.slide-builder/workflows/add-slide-template/` | Create new slide template |
-| `/sb-manage:add-deck-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-deck-template/` | `.slide-builder/workflows/add-deck-template/` | Create new deck template |
-| `/sb-manage:edit-deck-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/edit-deck-template/` | `.slide-builder/workflows/edit-deck-template/` | Edit existing deck template |
-| `/sb-manage:update-brand-assets` | `${CLAUDE_PLUGIN_ROOT}/workflows/update-brand-assets/` | `.slide-builder/workflows/update-brand-assets/` | Manage brand asset catalog (icons, logos, images) |
-| `/sb-manage:delete-deck` | `${CLAUDE_PLUGIN_ROOT}/workflows/delete-deck/` | `.slide-builder/workflows/delete-deck/` | Delete a deck and files |
-| `/sb-manage:optimize-instructions` | `${CLAUDE_PLUGIN_ROOT}/workflows/optimize-instructions/` | `.slide-builder/workflows/optimize-instructions/` | Optimize workflow instructions |
-| `/sb-manage:eject-workflow` | `${CLAUDE_PLUGIN_ROOT}/workflows/eject-workflow/` | `.slide-builder/workflows/eject-workflow/` | Copy a plugin workflow to project for customization |
-| `/sb-manage:list-overrides` | `${CLAUDE_PLUGIN_ROOT}/workflows/list-overrides/` | `.slide-builder/workflows/list-overrides/` | Show which workflows use defaults vs local overrides |
+| `/pitchsmith:add-slide-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-slide-template/` | `.slide-builder/workflows/add-slide-template/` | Create new slide template |
+| `/pitchsmith:add-deck-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/add-deck-template/` | `.slide-builder/workflows/add-deck-template/` | Create new deck template |
+| `/pitchsmith:edit-deck-template` | `${CLAUDE_PLUGIN_ROOT}/workflows/edit-deck-template/` | `.slide-builder/workflows/edit-deck-template/` | Edit existing deck template |
+| `/pitchsmith:update-brand-assets` | `${CLAUDE_PLUGIN_ROOT}/workflows/update-brand-assets/` | `.slide-builder/workflows/update-brand-assets/` | Manage brand asset catalog (icons, logos, images) |
+| `/pitchsmith:delete-deck` | `${CLAUDE_PLUGIN_ROOT}/workflows/delete-deck/` | `.slide-builder/workflows/delete-deck/` | Delete a deck and files |
+| `/pitchsmith:optimize-instructions` | `${CLAUDE_PLUGIN_ROOT}/workflows/optimize-instructions/` | `.slide-builder/workflows/optimize-instructions/` | Optimize workflow instructions |
+| `/pitchsmith:eject-workflow` | `${CLAUDE_PLUGIN_ROOT}/workflows/eject-workflow/` | `.slide-builder/workflows/eject-workflow/` | Copy a plugin workflow to project for customization |
+| `/pitchsmith:list-overrides` | `${CLAUDE_PLUGIN_ROOT}/workflows/list-overrides/` | `.slide-builder/workflows/list-overrides/` | Show which workflows use defaults vs local overrides |
 
-### Brand Commands (/sb-brand:)
+### Brand Commands (/pitchsmith:)
 Theme and brand management
 
 | Command | Plugin Workflow | Override Location | Description |
 |---------|----------------|-------------------|-------------|
-| `/sb-brand:setup` | `${CLAUDE_PLUGIN_ROOT}/workflows/setup/` | `.slide-builder/workflows/setup/` | Create brand theme from assets |
-| `/sb-brand:theme` | `${CLAUDE_PLUGIN_ROOT}/workflows/theme/` | `.slide-builder/workflows/theme/` | Display current theme summary |
-| `/sb-brand:theme-edit` | `${CLAUDE_PLUGIN_ROOT}/workflows/theme-edit/` | `.slide-builder/workflows/theme-edit/` | Modify existing theme |
+| `/pitchsmith:setup` | `${CLAUDE_PLUGIN_ROOT}/workflows/setup/` | `.slide-builder/workflows/setup/` | Create brand theme from assets |
+| `/pitchsmith:theme` | `${CLAUDE_PLUGIN_ROOT}/workflows/theme/` | `.slide-builder/workflows/theme/` | Display current theme summary |
+| `/pitchsmith:theme-edit` | `${CLAUDE_PLUGIN_ROOT}/workflows/theme-edit/` | `.slide-builder/workflows/theme-edit/` | Modify existing theme |
 
-### Meta Commands (/sb:)
+### Meta Commands (/pitchsmith:)
 Help and discovery
 
 | Command | Plugin Workflow/Skill | Override Location | Description |
 |---------|----------------------|-------------------|-------------|
-| `/sb` | `${CLAUDE_PLUGIN_ROOT}/skills/sb/SKILL.md` | N/A | Smart entry point - detects context and routes to appropriate workflow |
-| `/sb:help` | `${CLAUDE_PLUGIN_ROOT}/commands/sb/help.md` | N/A | Show all commands organized by namespace |
-| `/sb:status` | `${CLAUDE_PLUGIN_ROOT}/workflows/status/` | `.slide-builder/workflows/status/` | Display unified slide queue status dashboard |
+| `/pitchsmith` | `${CLAUDE_PLUGIN_ROOT}/skills/pitchsmith/SKILL.md` | N/A | Smart entry point - detects context and routes to appropriate workflow |
+| `/pitchsmith:help` | `${CLAUDE_PLUGIN_ROOT}/commands/pitchsmith/help.md` | N/A | Show all commands organized by namespace |
+| `/pitchsmith:status` | `${CLAUDE_PLUGIN_ROOT}/workflows/status/` | `.slide-builder/workflows/status/` | Display unified slide queue status dashboard |
 
-**Smart Entry Point (`/sb`):**
-The `/sb` command is the recommended starting point for Slide Builder. It:
+**Smart Entry Point (`/pitchsmith`):**
+The `/pitchsmith` command is the recommended starting point for Slide Builder. It:
 1. Reads `status.yaml` to detect current state (no theme, no decks, in-progress, all complete)
 2. Presents context-aware options using AskUserQuestion
 3. Routes to the appropriate workflow based on user selection
 
-Use `/sb` when you're unsure which command to run - it will guide you based on your current project state.
+Use `/pitchsmith` when you're unsure which command to run - it will guide you based on your current project state.
 
 ## Override-First Workflow Resolution Pattern
 
@@ -92,7 +92,7 @@ When a command resolves a workflow path, the resolution source is communicated i
 ### Command File Example
 
 ```markdown
-<!-- In command file (e.g., commands/sb-create/build-one.md) -->
+<!-- In command file (e.g., commands/pitchsmith/build-one.md) -->
 1. Resolve workflow path (override-first pattern):
    - Check if @.slide-builder/workflows/build-one/instructions.md exists
    - If yes: Use @.slide-builder/workflows/build-one/ as workflow root
@@ -116,14 +116,14 @@ This separation ensures plugin updates never overwrite user state, and user cust
 
 ### Ejecting Workflows
 
-Use `/sb-manage:eject-workflow {workflow-name}` to copy a plugin workflow to your project for customization. Once ejected, your local version will be used for all future invocations due to the override-first resolution pattern.
+Use `/pitchsmith:eject-workflow {workflow-name}` to copy a plugin workflow to your project for customization. Once ejected, your local version will be used for all future invocations due to the override-first resolution pattern.
 
 To revert to plugin defaults, simply delete the local directory:
 ```bash
 rm -rf .slide-builder/workflows/{workflow-name}/
 ```
 
-Use `/sb-manage:list-overrides` to see which workflows are ejected vs using plugin defaults.
+Use `/pitchsmith:list-overrides` to see which workflows are ejected vs using plugin defaults.
 
 See also: Epic P1-3 Story 3.1 for the full eject workflow feature specification.
 
@@ -217,28 +217,29 @@ The design standards file (`.slide-builder/config/design-standards.md`) contains
 └── credentials/         # OAuth tokens (gitignored)
 
 .claude/commands/
-├── sb/                  # Meta commands (help)
-│   └── help.md          # Master help showing all namespaces
-├── sb-create/           # Day-to-day creation commands (11)
-│   ├── plan.md
-│   ├── plan-one.md
-│   ├── plan-deck.md
-│   ├── build-one.md
-│   ├── build-all.md
-│   ├── edit.md
-│   ├── add-slide.md
-│   ├── animate.md
-│   ├── export.md
-│   ├── use-template.md
-│   └── refresh.md
-├── sb-manage/           # Catalog/template management (6)
-│   ├── add-slide-template.md
-│   ├── add-deck-template.md
-│   ├── edit-deck-template.md
-│   ├── update-brand-assets.md
-│   ├── delete-deck.md
-│   └── optimize-instructions.md
-└── sb-brand/            # Brand/theme management (3)
+└── pitchsmith/          # All commands (25)
+    ├── help.md          # Master help showing all commands
+    ├── status.md
+    ├── plan.md
+    ├── plan-one.md
+    ├── plan-deck.md
+    ├── build-one.md
+    ├── build-all.md
+    ├── edit.md
+    ├── edit-plan.md
+    ├── add-slide.md
+    ├── animate.md
+    ├── export.md
+    ├── use-template.md
+    ├── refresh.md
+    ├── add-slide-template.md
+    ├── add-deck-template.md
+    ├── edit-deck-template.md
+    ├── update-brand-assets.md
+    ├── delete-deck.md
+    ├── optimize-instructions.md
+    ├── eject-workflow.md
+    ├── list-overrides.md
     ├── setup.md
     ├── theme.md
     └── theme-edit.md
@@ -249,20 +250,20 @@ The design standards file (`.slide-builder/config/design-standards.md`) contains
 To add a new command:
 
 1. **Determine the appropriate namespace:**
-   - `/sb-create:` - Day-to-day deck creation (planning, building, editing, exporting)
-   - `/sb-manage:` - Template and catalog management (power user operations)
-   - `/sb-brand:` - Brand theme setup and editing (one-time or occasional)
-   - `/sb:` - Meta commands only (help, discovery)
+   - `/pitchsmith:` - Day-to-day deck creation (planning, building, editing, exporting)
+   - `/pitchsmith:` - Template and catalog management (power user operations)
+   - `/pitchsmith:` - Brand theme setup and editing (one-time or occasional)
+   - `/pitchsmith:` - Meta commands only (help, discovery)
 
 2. **Create workflow directory:** `.slide-builder/workflows/{command-name}/`
 3. **Add `workflow.yaml`** with BMAD schema (name, description, instructions path)
 4. **Add `instructions.md`** with workflow steps
 5. **Create skill registration** in the appropriate namespace folder:
-   - `.claude/commands/sb-create/{command-name}.md` for create commands
-   - `.claude/commands/sb-manage/{command-name}.md` for manage commands
-   - `.claude/commands/sb-brand/{command-name}.md` for brand commands
+   - `.claude/commands/pitchsmith/{command-name}.md` for create commands
+   - `.claude/commands/pitchsmith/{command-name}.md` for manage commands
+   - `.claude/commands/pitchsmith/{command-name}.md` for brand commands
 6. **Update `reference/conventions.md`** with the new mapping in the appropriate section
-7. **Update `/sb:help`** to include the new command in its namespace section
+7. **Update `/pitchsmith:help`** to include the new command in its namespace section
 
 ## Workflow YAML Schema
 
@@ -344,7 +345,7 @@ decks:
 planned → building → complete
 ```
 
-- `planned`: Set when `/sb:plan-deck` creates the entry
+- `planned`: Set when `/pitchsmith:plan-deck` creates the entry
 - `building`: Set when first slide is built
 - `complete`: Set when `built_count == total_slides`
 
@@ -361,7 +362,7 @@ Workflows that operate on a deck follow this pattern:
 
 ### Plan Router Context-Aware Routing
 
-The `/sb-create:plan` command uses a context-aware router that reads the deck registry to determine available options. The routing behavior adapts based on whether in-progress decks exist.
+The `/pitchsmith:plan` command uses a context-aware router that reads the deck registry to determine available options. The routing behavior adapts based on whether in-progress decks exist.
 
 **Deck Registry Reading:**
 - Reads `.slide-builder/status.yaml` and parses the `decks:` section
@@ -467,7 +468,7 @@ The icon catalog system ensures brand-certified icons are used consistently acro
 
 ```
 .slide-builder/config/catalog/brand-assets/icons/
-├── icon-catalog.json   # Icon manifest (generated by /sb-manage:update-brand-assets)
+├── icon-catalog.json   # Icon manifest (generated by /pitchsmith:update-brand-assets)
 ├── dark/               # Dark icons for light backgrounds
 │   ├── icons8-{id}-50.png
 │   └── icons8-{id}-100.png
@@ -533,7 +534,7 @@ The icon catalog system ensures brand-certified icons are used consistently acro
 
 ### Managing Icons
 
-Use `/sb-manage:update-brand-assets` to manage icons:
+Use `/pitchsmith:update-brand-assets` to manage icons:
 - **Scan & Catalog**: Discover existing icons in the folder and add semantic tags
 - **Import New Icon**: Add new icon files with metadata
 - **View Catalog**: Display current icon inventory
@@ -544,7 +545,7 @@ See also the [Managing Brand Assets](#managing-brand-assets) section for unified
 
 The `build-one` workflow loads the icon catalog in Phase 2.6:
 - If catalog exists → enforce icon-only rules, no emoji/SVG generation
-- If catalog missing → warn user, recommend `/sb-manage:update-brand-assets`, proceed without constraints
+- If catalog missing → warn user, recommend `/pitchsmith:update-brand-assets`, proceed without constraints
 
 ## Logo Catalog
 
@@ -554,7 +555,7 @@ The logo catalog system ensures brand-certified logos are used consistently acro
 
 ```
 .slide-builder/config/catalog/brand-assets/logos/
-├── logo-catalog.json   # Logo manifest (generated by /sb-manage:update-brand-assets)
+├── logo-catalog.json   # Logo manifest (generated by /pitchsmith:update-brand-assets)
 ├── {logo-name}-dark.png    # Dark variant for light backgrounds
 └── {logo-name}-white.png   # Light/white variant for dark backgrounds
 ```
@@ -635,7 +636,7 @@ The images catalog system manages decorative images, hero images, and brand imag
 
 ```
 .slide-builder/config/catalog/brand-assets/images/
-├── images-catalog.json   # Images manifest (generated by /sb-manage:update-brand-assets)
+├── images-catalog.json   # Images manifest (generated by /pitchsmith:update-brand-assets)
 ├── {image-name}.png      # Individual image files
 └── ...
 ```
@@ -704,7 +705,7 @@ The `build-one` workflow loads the images catalog in Phase 2.8:
 
 ### Managing Brand Assets
 
-Use `/sb-manage:update-brand-assets` to:
+Use `/pitchsmith:update-brand-assets` to:
 - **Classify & Import**: Auto-detect asset type (icon, logo, image) and add to appropriate catalog
 - **Scan & Catalog**: Discover existing assets and add semantic metadata
 - **View Catalogs**: Display current icon, logo, and image inventories
@@ -1633,8 +1634,8 @@ Reusable text templates for design_plan generation in plan.yaml:
 
 Workflows MUST NOT contain fallback logic to hardcoded values. If theme.json is missing workflowRules:
 
-1. **plan-deck**: HALT with error directing user to run `/sb-brand:setup`
-2. **build-one**: HALT with error directing user to run `/sb-brand:theme-edit`
+1. **plan-deck**: HALT with error directing user to run `/pitchsmith:setup`
+2. **build-one**: HALT with error directing user to run `/pitchsmith:theme-edit`
 
 No hardcoded hex values or rhythm rules should exist in workflow instruction files.
 

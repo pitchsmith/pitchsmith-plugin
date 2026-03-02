@@ -188,19 +188,19 @@ if (VERBOSE) {
 }
 
 // Verify command group directories exist
-const expectedGroups = ['sb', 'sb-create', 'sb-manage', 'sb-brand'];
+const expectedGroups = ['pitchsmith'];
 for (const group of expectedGroups) {
   check(`Command group directory commands/${group}/ exists`, exists(path.join(COMMANDS_DIR, group)));
 }
 
 // --- Skills ---
 
-const skillPath = path.join(SKILLS_DIR, 'sb', 'SKILL.md');
-check('skills/sb/SKILL.md exists', exists(skillPath));
+const skillPath = path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md');
+check('skills/pitchsmith/SKILL.md exists', exists(skillPath));
 
 if (exists(skillPath)) {
   const skillContent = readFile(skillPath);
-  check('skills/sb/SKILL.md is non-empty', skillContent && skillContent.trim().length > 0);
+  check('skills/pitchsmith/SKILL.md is non-empty', skillContent && skillContent.trim().length > 0);
   verbose(`  SKILL.md size: ${skillContent ? skillContent.length : 0} bytes`);
 }
 

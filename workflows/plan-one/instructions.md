@@ -21,7 +21,7 @@ This workflow captures intent for a single slide through a 5-phase process.
 
 No theme found. You need a brand theme before creating slides.
 
-Run `/sb:setup` to create your theme from brand assets.
+Run `/pitchsmith:setup` to create your theme from brand assets.
       </output>
       <action>HALT - Cannot proceed without theme</action>
     </check>
@@ -510,7 +510,7 @@ Your slide plan is ready at `output/singles/plan.yaml`
 - Mode: single slide
 - Output will be: `output/singles/{{slide_slug}}.html`
 
-**Next step:** Run `/sb:build-one` to generate your slide.
+**Next step:** Run `/pitchsmith:build-one` to generate your slide.
     </output>
   </step>
 
@@ -529,4 +529,4 @@ Each template entry includes:
 
 The `custom` option is always available for novel layouts that don't match any catalog template. Custom slides are generated via the frontend-design skill.
 
-**Note:** Run `/sb:theme` to see current available templates with their descriptions.
+**Note:** Run `/pitchsmith:theme` to see current available templates with their descriptions.

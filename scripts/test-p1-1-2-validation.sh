@@ -35,17 +35,8 @@ CMD_COUNT=$(find pitchsmith-plugin/commands -name "*.md" | wc -l | tr -d ' ')
 test_condition "Total command count is 25 (found: $CMD_COUNT)" "test $CMD_COUNT -eq 25"
 
 # Per-namespace counts
-SB_COUNT=$(ls pitchsmith-plugin/commands/sb/*.md 2>/dev/null | wc -l | tr -d ' ')
-test_condition "commands/sb/ has 2 files (found: $SB_COUNT)" "test $SB_COUNT -eq 2"
-
-SB_BRAND_COUNT=$(ls pitchsmith-plugin/commands/sb-brand/*.md 2>/dev/null | wc -l | tr -d ' ')
-test_condition "commands/sb-brand/ has 3 files (found: $SB_BRAND_COUNT)" "test $SB_BRAND_COUNT -eq 3"
-
-SB_CREATE_COUNT=$(ls pitchsmith-plugin/commands/sb-create/*.md 2>/dev/null | wc -l | tr -d ' ')
-test_condition "commands/sb-create/ has 12 files (found: $SB_CREATE_COUNT)" "test $SB_CREATE_COUNT -ge 12"
-
-SB_MANAGE_COUNT=$(ls pitchsmith-plugin/commands/sb-manage/*.md 2>/dev/null | wc -l | tr -d ' ')
-test_condition "commands/sb-manage/ has 7+ files (found: $SB_MANAGE_COUNT)" "test $SB_MANAGE_COUNT -ge 7"
+PITCHSMITH_COUNT=$(ls pitchsmith-plugin/commands/pitchsmith/*.md 2>/dev/null | wc -l | tr -d ' ')
+test_condition "commands/pitchsmith/ has 25 files (found: $PITCHSMITH_COUNT)" "test $PITCHSMITH_COUNT -eq 25"
 
 echo ""
 
@@ -55,23 +46,23 @@ echo ""
 
 echo "=== AC2: Smart Router Skill Validation ==="
 
-test_condition "skills/sb/SKILL.md exists" "test -f pitchsmith-plugin/skills/sb/SKILL.md"
+test_condition "skills/pitchsmith/SKILL.md exists" "test -f pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
 # State detection logic
-test_condition "SKILL.md contains NO_THEME state" "grep -q 'NO_THEME' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md contains NO_DECKS state" "grep -q 'NO_DECKS' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md contains IN_PROGRESS state" "grep -q 'IN_PROGRESS' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md contains ALL_COMPLETE state" "grep -q 'ALL_COMPLETE' pitchsmith-plugin/skills/sb/SKILL.md"
+test_condition "SKILL.md contains NO_THEME state" "grep -q 'NO_THEME' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md contains NO_DECKS state" "grep -q 'NO_DECKS' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md contains IN_PROGRESS state" "grep -q 'IN_PROGRESS' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md contains ALL_COMPLETE state" "grep -q 'ALL_COMPLETE' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
 # Auto-init scaffolding logic
-test_condition "SKILL.md contains scaffold tag" "grep -q '<scaffold' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md references config/defaults/" "grep -q 'config/defaults' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md references theme.json copy" "grep -q 'theme.json' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md references catalog copy" "grep -q 'catalog' pitchsmith-plugin/skills/sb/SKILL.md"
-test_condition "SKILL.md references status.yaml copy" "grep -q 'status.yaml' pitchsmith-plugin/skills/sb/SKILL.md"
+test_condition "SKILL.md contains scaffold tag" "grep -q '<scaffold' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md references config/defaults/" "grep -q 'config/defaults' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md references theme.json copy" "grep -q 'theme.json' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md references catalog copy" "grep -q 'catalog' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
+test_condition "SKILL.md references status.yaml copy" "grep -q 'status.yaml' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
 # Idempotency check
-test_condition "SKILL.md contains idempotency check" "grep -q 'Do NOT overwrite\|already exist' pitchsmith-plugin/skills/sb/SKILL.md"
+test_condition "SKILL.md contains idempotency check" "grep -q 'Do NOT overwrite\|already exist' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
 echo ""
 

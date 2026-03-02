@@ -54,14 +54,10 @@ function section(title) {
 // ============================================================
 
 const COMMAND_GROUPS = {
-  'sb': {
+  'pitchsmith': {
     commands: {
       'help.md': { workflow: null, type: 'static-doc' },
-      'status.md': { workflow: 'status', type: 'workflow-command' }
-    }
-  },
-  'sb-create': {
-    commands: {
+      'status.md': { workflow: 'status', type: 'workflow-command' },
       'plan.md': { workflow: 'plan', type: 'workflow-command' },
       'plan-deck.md': { workflow: 'plan-deck', type: 'workflow-command' },
       'plan-one.md': { workflow: 'plan-one', type: 'workflow-command' },
@@ -73,11 +69,7 @@ const COMMAND_GROUPS = {
       'animate.md': { workflow: 'animate', type: 'workflow-command' },
       'refresh.md': { workflow: null, type: 'script-command' },
       'export.md': { workflow: 'export', type: 'workflow-command' },
-      'use-template.md': { workflow: 'use-template-deck', type: 'workflow-command' }
-    }
-  },
-  'sb-manage': {
-    commands: {
+      'use-template.md': { workflow: 'use-template-deck', type: 'workflow-command' },
       'add-slide-template.md': { workflow: 'add-slide-template', type: 'workflow-command' },
       'add-deck-template.md': { workflow: 'add-deck-template', type: 'workflow-command' },
       'edit-deck-template.md': { workflow: 'edit-deck-template', type: 'workflow-command' },
@@ -85,11 +77,7 @@ const COMMAND_GROUPS = {
       'delete-deck.md': { workflow: 'delete-deck', type: 'workflow-command' },
       'eject-workflow.md': { workflow: null, type: 'meta-command' },
       'list-overrides.md': { workflow: null, type: 'meta-command' },
-      'optimize-instructions.md': { workflow: 'optimize-instructions', type: 'workflow-command' }
-    }
-  },
-  'sb-brand': {
-    commands: {
+      'optimize-instructions.md': { workflow: 'optimize-instructions', type: 'workflow-command' },
       'setup.md': { workflow: 'setup', type: 'workflow-command' },
       'theme.md': { workflow: 'theme', type: 'workflow-command' },
       'theme-edit.md': { workflow: 'theme-edit', type: 'workflow-command' }
@@ -129,8 +117,8 @@ for (const [group, config] of Object.entries(COMMAND_GROUPS)) {
 test(`Expected 25 command files defined`, totalCommandFiles === 25);
 
 // Check skill file
-test('SKILL.md exists at skills/sb/SKILL.md',
-  fs.existsSync(path.join(SKILLS_DIR, 'sb', 'SKILL.md')));
+test('SKILL.md exists at skills/pitchsmith/SKILL.md',
+  fs.existsSync(path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md')));
 
 // Count workflow directories (should be 22 with workflow.yaml)
 const workflowDirs = fs.readdirSync(WORKFLOWS_DIR, { withFileTypes: true })
@@ -164,34 +152,32 @@ test('No old .claude/commands/ or .claude/skills/ paths in command files', oldPa
 // TASK 3: /sb Commands (3 interaction points)
 // ============================================================
 
-section('TASK 3: /sb Commands (3 interaction points)');
+section('TASK 3: /pitchsmith Commands (core interaction points)');
 
-// /sb:help
-const helpPath = path.join(COMMANDS_DIR, 'sb', 'help.md');
-test('/sb:help command file exists', fs.existsSync(helpPath));
+// /pitchsmith:help
+const helpPath = path.join(COMMANDS_DIR, 'pitchsmith', 'help.md');
+test('/pitchsmith:help command file exists', fs.existsSync(helpPath));
 if (fs.existsSync(helpPath)) {
   const helpContent = fs.readFileSync(helpPath, 'utf8');
-  test('/sb:help contains command listings', helpContent.includes('/sb-create:'));
-  test('/sb:help contains manage commands', helpContent.includes('/sb-manage:'));
-  test('/sb:help contains brand commands', helpContent.includes('/sb-brand:'));
+  test('/pitchsmith:help contains command listings', helpContent.includes('/pitchsmith:'));
 }
 
-// /sb:status
-const statusPath = path.join(COMMANDS_DIR, 'sb', 'status.md');
-test('/sb:status command file exists', fs.existsSync(statusPath));
+// /pitchsmith:status
+const statusPath = path.join(COMMANDS_DIR, 'pitchsmith', 'status.md');
+test('/pitchsmith:status command file exists', fs.existsSync(statusPath));
 if (fs.existsSync(statusPath)) {
   const statusContent = fs.readFileSync(statusPath, 'utf8');
-  test('/sb:status has override resolution pattern',
+  test('/pitchsmith:status has override resolution pattern',
     statusContent.includes('.slide-builder/workflows/status/') &&
     statusContent.includes('CLAUDE_PLUGIN_ROOT'));
 }
 
 // /sb skill router (SKILL.md)
-const skillPath = path.join(SKILLS_DIR, 'sb', 'SKILL.md');
-test('/sb skill router exists', fs.existsSync(skillPath));
+const skillPath = path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md');
+test('/pitchsmith skill router exists', fs.existsSync(skillPath));
 if (fs.existsSync(skillPath)) {
   const skillContent = fs.readFileSync(skillPath, 'utf8');
-  test('/sb skill router has state detection',
+  test('/pitchsmith skill router has state detection',
     skillContent.includes('NO_THEME') || skillContent.includes('no theme') ||
     skillContent.includes('NO_DECKS') || skillContent.includes('no deck') ||
     skillContent.toLowerCase().includes('state'));
@@ -204,103 +190,47 @@ test('status instructions.md exists',
   fs.existsSync(path.join(WORKFLOWS_DIR, 'status', 'instructions.md')));
 
 // ============================================================
-// TASK 4: /sb-create Commands (12 commands)
+// TASK 4: /pitchsmith Commands (25 commands)
 // ============================================================
 
-section('TASK 4: /sb-create Commands (12 commands)');
+section('TASK 4: /pitchsmith Commands (25 commands)');
 
-const createCommands = COMMAND_GROUPS['sb-create'].commands;
-for (const [cmdFile, config] of Object.entries(createCommands)) {
-  const filePath = path.join(COMMANDS_DIR, 'sb-create', cmdFile);
+const pitchsmithCommands = COMMAND_GROUPS['pitchsmith'].commands;
+for (const [cmdFile, config] of Object.entries(pitchsmithCommands)) {
+  const filePath = path.join(COMMANDS_DIR, 'pitchsmith', cmdFile);
   const cmdName = cmdFile.replace('.md', '');
 
-  test(`/sb-create:${cmdName} command file exists`, fs.existsSync(filePath));
+  test(`/pitchsmith:${cmdName} command file exists`, fs.existsSync(filePath));
 
   if (fs.existsSync(filePath) && config.type === 'workflow-command') {
     const content = fs.readFileSync(filePath, 'utf8');
 
     // Check override resolution pattern
-    test(`/sb-create:${cmdName} has override check (.slide-builder/workflows/${config.workflow}/)`,
+    test(`/pitchsmith:${cmdName} has override check (.slide-builder/workflows/${config.workflow}/)`,
       content.includes(`.slide-builder/workflows/${config.workflow}/`));
-    test(`/sb-create:${cmdName} has plugin fallback (CLAUDE_PLUGIN_ROOT/workflows/${config.workflow}/)`,
+    test(`/pitchsmith:${cmdName} has plugin fallback (CLAUDE_PLUGIN_ROOT/workflows/${config.workflow}/)`,
       content.includes(`CLAUDE_PLUGIN_ROOT}/workflows/${config.workflow}/`));
 
     // Check workflow exists in plugin
-    test(`/sb-create:${cmdName} -> workflow '${config.workflow}' exists in plugin`,
+    test(`/pitchsmith:${cmdName} -> workflow '${config.workflow}' exists in plugin`,
       fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'workflow.yaml')));
-    test(`/sb-create:${cmdName} -> workflow '${config.workflow}' has instructions.md`,
+    test(`/pitchsmith:${cmdName} -> workflow '${config.workflow}' has instructions.md`,
       fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'instructions.md')));
   }
 
   if (config.type === 'script-command') {
     // refresh.md uses a script directly
     const content = fs.readFileSync(filePath, 'utf8');
-    test(`/sb-create:${cmdName} references generate-manifest script`,
+    test(`/pitchsmith:${cmdName} references generate-manifest script`,
       content.includes('generate-manifest'));
-  }
-}
-
-// ============================================================
-// TASK 5: /sb-manage Commands (8 commands)
-// ============================================================
-
-section('TASK 5: /sb-manage Commands (8 commands)');
-
-const manageCommands = COMMAND_GROUPS['sb-manage'].commands;
-for (const [cmdFile, config] of Object.entries(manageCommands)) {
-  const filePath = path.join(COMMANDS_DIR, 'sb-manage', cmdFile);
-  const cmdName = cmdFile.replace('.md', '');
-
-  test(`/sb-manage:${cmdName} command file exists`, fs.existsSync(filePath));
-
-  if (fs.existsSync(filePath) && config.type === 'workflow-command') {
-    const content = fs.readFileSync(filePath, 'utf8');
-
-    test(`/sb-manage:${cmdName} has override check (.slide-builder/workflows/${config.workflow}/)`,
-      content.includes(`.slide-builder/workflows/${config.workflow}/`));
-    test(`/sb-manage:${cmdName} has plugin fallback (CLAUDE_PLUGIN_ROOT/workflows/${config.workflow}/)`,
-      content.includes(`CLAUDE_PLUGIN_ROOT}/workflows/${config.workflow}/`));
-
-    test(`/sb-manage:${cmdName} -> workflow '${config.workflow}' exists in plugin`,
-      fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'workflow.yaml')));
-    test(`/sb-manage:${cmdName} -> workflow '${config.workflow}' has instructions.md`,
-      fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'instructions.md')));
   }
 
   if (config.type === 'meta-command') {
     const content = fs.readFileSync(filePath, 'utf8');
-    test(`/sb-manage:${cmdName} references CLAUDE_PLUGIN_ROOT`,
+    test(`/pitchsmith:${cmdName} references CLAUDE_PLUGIN_ROOT`,
       content.includes('CLAUDE_PLUGIN_ROOT'));
-    test(`/sb-manage:${cmdName} references .slide-builder/workflows/`,
+    test(`/pitchsmith:${cmdName} references .slide-builder/workflows/`,
       content.includes('.slide-builder/workflows/'));
-  }
-}
-
-// ============================================================
-// TASK 6: /sb-brand Commands (3 commands)
-// ============================================================
-
-section('TASK 6: /sb-brand Commands (3 commands)');
-
-const brandCommands = COMMAND_GROUPS['sb-brand'].commands;
-for (const [cmdFile, config] of Object.entries(brandCommands)) {
-  const filePath = path.join(COMMANDS_DIR, 'sb-brand', cmdFile);
-  const cmdName = cmdFile.replace('.md', '');
-
-  test(`/sb-brand:${cmdName} command file exists`, fs.existsSync(filePath));
-
-  if (fs.existsSync(filePath) && config.type === 'workflow-command') {
-    const content = fs.readFileSync(filePath, 'utf8');
-
-    test(`/sb-brand:${cmdName} has override check (.slide-builder/workflows/${config.workflow}/)`,
-      content.includes(`.slide-builder/workflows/${config.workflow}/`));
-    test(`/sb-brand:${cmdName} has plugin fallback (CLAUDE_PLUGIN_ROOT/workflows/${config.workflow}/)`,
-      content.includes(`CLAUDE_PLUGIN_ROOT}/workflows/${config.workflow}/`));
-
-    test(`/sb-brand:${cmdName} -> workflow '${config.workflow}' exists in plugin`,
-      fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'workflow.yaml')));
-    test(`/sb-brand:${cmdName} -> workflow '${config.workflow}' has instructions.md`,
-      fs.existsSync(path.join(WORKFLOWS_DIR, config.workflow, 'instructions.md')));
   }
 }
 
@@ -339,14 +269,14 @@ test(`All ${overridePatternExpected} workflow commands implement override-first 
 console.log(`  INFO: ${overridePatternCount}/${overridePatternExpected} commands have complete override resolution`);
 
 // Verify eject-workflow and list-overrides reference both paths
-const ejectContent = fs.readFileSync(path.join(COMMANDS_DIR, 'sb-manage', 'eject-workflow.md'), 'utf8');
+const ejectContent = fs.readFileSync(path.join(COMMANDS_DIR, 'pitchsmith', 'eject-workflow.md'), 'utf8');
 test('eject-workflow references CLAUDE_PLUGIN_ROOT for source', ejectContent.includes('CLAUDE_PLUGIN_ROOT'));
 test('eject-workflow references .slide-builder/workflows/ for target', ejectContent.includes('.slide-builder/workflows/'));
 test('eject-workflow handles already-ejected case', ejectContent.includes('already ejected'));
 test('eject-workflow has error handling for invalid workflow',
   ejectContent.includes('not found') || ejectContent.includes('not found in plugin'));
 
-const listContent = fs.readFileSync(path.join(COMMANDS_DIR, 'sb-manage', 'list-overrides.md'), 'utf8');
+const listContent = fs.readFileSync(path.join(COMMANDS_DIR, 'pitchsmith', 'list-overrides.md'), 'utf8');
 test('list-overrides scans both plugin and local',
   listContent.includes('CLAUDE_PLUGIN_ROOT') && listContent.includes('.slide-builder/workflows/'));
 
@@ -427,8 +357,8 @@ test('list-overrides handles CLAUDE_PLUGIN_ROOT resolution failure',
   listContent.includes('Cannot resolve') || listContent.includes('cannot be resolved'));
 
 // Check dependency-checking commands reference dependency checks
-const exportContent = fs.readFileSync(path.join(COMMANDS_DIR, 'sb-create', 'export.md'), 'utf8');
-const setupContent = fs.readFileSync(path.join(COMMANDS_DIR, 'sb-brand', 'setup.md'), 'utf8');
+const exportContent = fs.readFileSync(path.join(COMMANDS_DIR, 'pitchsmith', 'export.md'), 'utf8');
+const setupContent = fs.readFileSync(path.join(COMMANDS_DIR, 'pitchsmith', 'setup.md'), 'utf8');
 
 // Verify workflow.yaml files for dependency-checking workflows contain dependency checks
 const exportWorkflowPath = path.join(WORKFLOWS_DIR, 'export', 'workflow.yaml');
@@ -468,9 +398,9 @@ console.log(`  ${'─'.repeat(55)}`);
 const commandResults = [];
 
 // /sb skill router
-const sbSkillExists = fs.existsSync(path.join(SKILLS_DIR, 'sb', 'SKILL.md'));
-commandResults.push({ name: '/sb (skill router)', pass: sbSkillExists });
-console.log(`  ${sbSkillExists ? 'PASS' : 'FAIL'} | /sb (skill router)`);
+const sbSkillExists = fs.existsSync(path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md'));
+commandResults.push({ name: '/pitchsmith (skill router)', pass: sbSkillExists });
+console.log(`  ${sbSkillExists ? 'PASS' : 'FAIL'} | /pitchsmith (skill router)`);
 
 for (const [group, config] of Object.entries(COMMAND_GROUPS)) {
   for (const [cmdFile, cmdConfig] of Object.entries(config.commands)) {

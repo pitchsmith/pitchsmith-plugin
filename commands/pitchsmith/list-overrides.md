@@ -6,7 +6,7 @@ description: 'Display which workflows are ejected (customized) vs using plugin d
 
 This command shows the status of all workflows: which ones are ejected to your local project for customization and which ones are using the plugin defaults.
 
-**Usage:** `/sb-manage:list-overrides`
+**Usage:** `/pitchsmith:list-overrides`
 
 <steps CRITICAL="TRUE">
 1. **Discover Available Workflows**:
@@ -63,7 +63,7 @@ This command shows the status of all workflows: which ones are ejected to your l
    📊 Total: {total_count} workflows available
 
    💡 Tips:
-   • Eject a workflow: /sb-manage:eject-workflow {workflow-name}
+   • Eject a workflow: /pitchsmith:eject-workflow {workflow-name}
    • Revert to plugin: Delete .slide-builder/workflows/{workflow-name}/
    • Override resolution: Local copies always take precedence
    ```

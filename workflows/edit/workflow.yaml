@@ -37,7 +37,7 @@ deck_working_dir: "{project-root}/.slide-builder/deck"
 # Variables
 variables:
   workflow_version: "2.2"
-  # slide_number: passed as argument (e.g., /sb:edit 3)
+  # slide_number: passed as argument (e.g., /pitchsmith:edit 3)
   # Resolved at runtime:
   #   mode: from status.yaml (single | deck)
   #   total_slides: from status.yaml
@@ -60,11 +60,11 @@ variables:
   #   merged_orphaned_edits: combined previous + new orphaned edits
 
 # Command interface
-# Usage: /sb:edit [slide_number?]
+# Usage: /pitchsmith:edit [slide_number?]
 # - In single mode: slide_number is optional (defaults to single slide)
 # - In deck mode: slide_number required or will prompt
-# - Supports immediate instruction: /sb:edit "make title bigger"
-# - Supports deck with instruction: /sb:edit 3 "add subtitle"
+# - Supports immediate instruction: /pitchsmith:edit "make title bigger"
+# - Supports deck with instruction: /pitchsmith:edit 3 "add subtitle"
 
 # Skills used
 skills:

@@ -17,7 +17,7 @@
       <output>
 **Slide Builder Status**
 
-No status.yaml found. Run `/sb-brand:setup` to initialize Slide Builder.
+No status.yaml found. Run `/pitchsmith:setup` to initialize Slide Builder.
       </output>
       <action>HALT</action>
     </check>
@@ -59,9 +59,9 @@ No status.yaml found. Run `/sb-brand:setup` to initialize Slide Builder.
 
 ---
 **Actions:**
-- `/sb-create:build-one` - Build the slide
-- `/sb-create:edit` - Edit the slide (if built)
-- `/sb-create:plan` - Plan a different slide or deck
+- `/pitchsmith:build-one` - Build the slide
+- `/pitchsmith:edit` - Edit the slide (if built)
+- `/pitchsmith:plan` - Plan a different slide or deck
         </output>
       </check>
 
@@ -71,7 +71,7 @@ No status.yaml found. Run `/sb-brand:setup` to initialize Slide Builder.
 
 **Single Slide Mode**
 
-No slide planned. Run `/sb-create:plan-one` to plan a single slide.
+No slide planned. Run `/pitchsmith:plan-one` to plan a single slide.
         </output>
       </check>
 
@@ -87,9 +87,9 @@ No slide planned. Run `/sb-create:plan-one` to plan a single slide.
 **No decks found.**
 
 Get started:
-- `/sb-create:plan-deck` - Plan a full presentation deck
-- `/sb-create:plan-one` - Plan a single slide
-- `/sb-create:use-template` - Create deck from template
+- `/pitchsmith:plan-deck` - Plan a full presentation deck
+- `/pitchsmith:plan-one` - Plan a single slide
+- `/pitchsmith:use-template` - Create deck from template
       </output>
       <action>HALT</action>
     </check>
@@ -143,7 +143,7 @@ Get started:
 **Workflow Configuration:**
 All workflows using plugin defaults.
 
-> **Tip:** Run `/sb-manage:eject-workflow {name}` to customize a workflow
+> **Tip:** Run `/pitchsmith:eject-workflow {name}` to customize a workflow
       </output>
     </check>
 
@@ -163,7 +163,7 @@ All workflows using plugin defaults.
 {{end for}}
 
 > **Tip:** To revert a workflow to defaults: Delete its `.slide-builder/workflows/{name}/` directory
-> **Tip:** Run `/sb-manage:eject-workflow {name}` to customize a workflow
+> **Tip:** Run `/pitchsmith:eject-workflow {name}` to customize a workflow
       </output>
     </check>
 
@@ -206,7 +206,7 @@ This may indicate the output folder was deleted or moved.
 
 **Options:**
 - Delete the orphaned entry: check status.yaml
-- Re-plan the deck: `/sb-create:plan-deck`
+- Re-plan the deck: `/pitchsmith:plan-deck`
       </output>
       <ask>Press Enter to return to overview:</ask>
       <goto step="4">Return to overview</goto>
@@ -243,10 +243,10 @@ This may indicate the output folder was deleted or moved.
 
 ---
 **Actions:**
-- `/sb-create:build-one` - Build next slide
-- `/sb-create:build-all` - Build all remaining slides
-- `/sb-create:edit` - Edit a slide
-- `/sb-create:add-slide` - Add a new slide to plan
+- `/pitchsmith:build-one` - Build next slide
+- `/pitchsmith:build-all` - Build all remaining slides
+- `/pitchsmith:edit` - Edit a slide
+- `/pitchsmith:add-slide` - Add a new slide to plan
     </output>
 
     <ask>Press Enter to return to overview:</ask>

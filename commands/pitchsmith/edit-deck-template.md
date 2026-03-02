@@ -6,7 +6,7 @@ description: 'Add, edit, remove, or reorder slides in an existing deck template'
 
 This command lets you modify an existing multi-slide deck template with full CRUD operations on slides.
 
-**Usage:** `/sb:edit-deck-template [template-slug]`
+**Usage:** `/pitchsmith:edit-deck-template [template-slug]`
 
 <steps CRITICAL="TRUE">
 1. **Resolve workflow path** (override-first pattern):

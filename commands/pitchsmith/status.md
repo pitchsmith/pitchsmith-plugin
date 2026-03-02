@@ -26,7 +26,7 @@ This command displays the unified slide queue status dashboard showing:
 ## Usage
 
 ```
-/sb:status
+/pitchsmith:status
 ```
 
 ## What You'll See

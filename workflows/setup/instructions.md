@@ -803,7 +803,7 @@ Write to `.slide-builder/config/theme.json` with 2-space indentation.
 <context>
 This phase replaces the default Pitchsmith brand assets with the user's own logos and icons before sample slides are generated. The default catalogs ship with Pitchsmith placeholder assets for the out-of-box experience — during brand setup, these are cleared and replaced with the user's brand.
 
-If the user has no assets to provide, catalogs are emptied (no placeholders left) and slides will render without brand marks. Assets can always be imported later via `/sb-manage:update-brand-assets`.
+If the user has no assets to provide, catalogs are emptied (no placeholders left) and slides will render without brand marks. Assets can always be imported later via `/pitchsmith:update-brand-assets`.
 </context>
 
 ### Step 3.5.0: Clear Default Brand Assets
@@ -825,7 +825,7 @@ Logos typically have dark and light variants for use on different slide backgrou
 
 Supported formats: PNG, JPG, SVG, WebP">
   <choice label="Yes, I have logos" description="Import logo files now (dark/light variants)" />
-  <choice label="Skip logos" description="Continue without logos — you can add them later with /sb-manage:update-brand-assets" />
+  <choice label="Skip logos" description="Continue without logos — you can add them later with /pitchsmith:update-brand-assets" />
 </ask>
 
 ### Step 3.5.2: Import Logos (if user has logos)
@@ -878,7 +878,7 @@ For best results, icons should have both dark (for light backgrounds) and white 
 
 Supported formats: PNG, SVG">
   <choice label="Yes, I have icons" description="Import icon files now" />
-  <choice label="Skip icons" description="Continue without icons — you can add them later with /sb-manage:update-brand-assets" />
+  <choice label="Skip icons" description="Continue without icons — you can add them later with /pitchsmith:update-brand-assets" />
 </ask>
 
 ### Step 3.5.4: Import Icons (if user has icons)
@@ -929,7 +929,7 @@ For each icon the user provides:
 Report to user:
 - Default Pitchsmith brand assets have been removed
 - Brand asset catalogs are now empty — sample slides will render without brand marks (no errors)
-- You can import your brand assets anytime later using `/sb-manage:update-brand-assets`
+- You can import your brand assets anytime later using `/pitchsmith:update-brand-assets`
 
 </check>
 
@@ -1130,7 +1130,7 @@ If iteration >= 3, offer escape hatch:
 You've provided {{iteration}} rounds of feedback. Would you like to continue refining, or move forward?"
      header="Next">
   <choice label="Continue" description="Provide more feedback" />
-  <choice label="Edit manually" description="Edit theme.json directly, then run /sb:theme-edit" />
+  <choice label="Edit manually" description="Edit theme.json directly, then run /pitchsmith:theme-edit" />
   <choice label="Approve" description="Approve current theme and finalize" />
 </ask>
 
@@ -1198,16 +1198,16 @@ Theme summary:
 Your existing decks in `output/` continue to use the previous theme. To update them with the new brand:
 
 **Option 1: Rebuild all decks**
-Run `/sb-create:build-all` to rebuild all slides with the new theme
+Run `/pitchsmith:build-all` to rebuild all slides with the new theme
 
 **Option 2: Rebuild specific slides**
-Run `/sb-create:build-one` to rebuild individual slides
+Run `/pitchsmith:build-one` to rebuild individual slides
 
 Next steps:
-- Test the new theme by creating a new slide: `/sb-create:plan-one`
-- Or rebuild existing decks: `/sb-create:build-all`
-- Edit theme if needed: `/sb-brand:theme-edit`
-- Add custom templates: `/sb-manage:add-slide-template`
+- Test the new theme by creating a new slide: `/pitchsmith:plan-one`
+- Or rebuild existing decks: `/pitchsmith:build-all`
+- Edit theme if needed: `/pitchsmith:theme-edit`
+- Add custom templates: `/pitchsmith:add-slide-template`
   </output>
 </check>
 
@@ -1227,10 +1227,10 @@ Theme summary:
 - Feedback rounds: {feedback_iteration}
 
 Next steps:
-- Create your first slide: `/sb-create:plan-one`
-- Or plan a full deck: `/sb-create:plan-deck`
-- Edit theme if needed: `/sb-brand:theme-edit`
-- Add custom templates: `/sb-manage:add-slide-template`
+- Create your first slide: `/pitchsmith:plan-one`
+- Or plan a full deck: `/pitchsmith:plan-deck`
+- Edit theme if needed: `/pitchsmith:theme-edit`
+- Add custom templates: `/pitchsmith:add-slide-template`
   </output>
 </check>
 

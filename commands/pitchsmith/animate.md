@@ -7,7 +7,7 @@ description: 'Generate animation build groups for a slide using AI analysis of c
 Generate intelligent animation groups for a slide based on its content structure, template type, and narrative flow.
 
 **Usage:**
-- `/sb:animate [slide_number]` - Generate animations for the specified slide
+- `/pitchsmith:animate [slide_number]` - Generate animations for the specified slide
 - When invoked from the viewer's "Animate with AI" button, the deck context (`Deck: {slug}`) is automatically included in the prompt, skipping deck selection
 
 <steps CRITICAL="TRUE">

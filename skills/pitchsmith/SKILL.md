@@ -1,5 +1,5 @@
 ---
-name: sb
+name: pitchsmith
 description: Smart entry point with context detection - routes to appropriate workflow based on current state
 ---
 
@@ -80,7 +80,7 @@ Then determine sub-state:
 ## Edge Cases
 
 - **status.yaml missing:** Treat as NO_THEME state
-- **Corrupted YAML:** Show error, suggest `/sb:help`
+- **Corrupted YAML:** Show error, suggest `/pitchsmith:help`
 - **Empty decks object `{}`:** Treat as NO_DECKS state
 - **Mixed deck states (some complete, some building):** IN_PROGRESS (filter to non-complete)
 - **Single deck with status `planned`:** IN_PROGRESS (single deck mode)
@@ -141,19 +141,19 @@ Ready to start creating slides?"
 </ask>
 
 <check if="user selected '[1] Plan Full Deck'">
-  <action>Use Skill tool: skill="sb-create:plan-deck"</action>
+  <action>Use Skill tool: skill="pitchsmith:plan-deck"</action>
 </check>
 <check if="user selected '[2] Plan Single Slide'">
-  <action>Use Skill tool: skill="sb-create:plan-one"</action>
+  <action>Use Skill tool: skill="pitchsmith:plan-one"</action>
 </check>
 <check if="user selected '[3] Use Template'">
-  <action>Use Skill tool: skill="sb-create:use-template"</action>
+  <action>Use Skill tool: skill="pitchsmith:use-template"</action>
 </check>
 <check if="user selected '[4] Customize Brand (optional)'">
-  <action>Use Skill tool: skill="sb-brand:setup"</action>
+  <action>Use Skill tool: skill="pitchsmith:setup"</action>
 </check>
 <check if="user selected 'Show All Commands'">
-  <action>Use Skill tool: skill="sb:help"</action>
+  <action>Use Skill tool: skill="pitchsmith:help"</action>
 </check>
 
 ## IN_PROGRESS State - Single Deck (AC #3)
@@ -176,16 +176,16 @@ Status: {{eligible_decks[0].status}}
 </ask>
 
 <check if="user selected 'Continue Building'">
-  <action>Use Skill tool: skill="sb-create:build-one", args="{{eligible_decks[0].slug}}"</action>
+  <action>Use Skill tool: skill="pitchsmith:build-one", args="{{eligible_decks[0].slug}}"</action>
 </check>
 <check if="user selected 'Build All Remaining'">
-  <action>Use Skill tool: skill="sb-create:build-all", args="{{eligible_decks[0].slug}}"</action>
+  <action>Use Skill tool: skill="pitchsmith:build-all", args="{{eligible_decks[0].slug}}"</action>
 </check>
 <check if="user selected 'Edit a Slide'">
-  <action>Use Skill tool: skill="sb-create:edit", args="{{eligible_decks[0].slug}}"</action>
+  <action>Use Skill tool: skill="pitchsmith:edit", args="{{eligible_decks[0].slug}}"</action>
 </check>
 <check if="user selected 'Plan New Deck'">
-  <action>Use Skill tool: skill="sb-create:plan-deck"</action>
+  <action>Use Skill tool: skill="pitchsmith:plan-deck"</action>
 </check>
 
 ## IN_PROGRESS State - Multiple Decks (AC #4)
@@ -213,7 +213,7 @@ Multiple decks in progress:
   <action>Store selected deck as selected_deck, then show IN_PROGRESS single-deck options for that deck</action>
 </check>
 <check if="user selected 'Plan New Deck'">
-  <action>Use Skill tool: skill="sb-create:plan-deck"</action>
+  <action>Use Skill tool: skill="pitchsmith:plan-deck"</action>
 </check>
 
 ## ALL_COMPLETE State (AC #5)
@@ -234,14 +234,14 @@ All decks complete! You have {{complete_decks.length}} finished deck(s):
 </ask>
 
 <check if="user selected 'Plan New Deck'">
-  <action>Use Skill tool: skill="sb-create:plan-deck"</action>
+  <action>Use Skill tool: skill="pitchsmith:plan-deck"</action>
 </check>
 <check if="user selected 'Edit Existing'">
   <!-- Show deck picker then route to edit -->
-  <action>Present deck picker from complete_decks, then use Skill tool: skill="sb-create:edit", args="{{selected_deck.slug}}"</action>
+  <action>Present deck picker from complete_decks, then use Skill tool: skill="pitchsmith:edit", args="{{selected_deck.slug}}"</action>
 </check>
 <check if="user selected 'Show All Commands'">
-  <action>Use Skill tool: skill="sb:help"</action>
+  <action>Use Skill tool: skill="pitchsmith:help"</action>
 </check>
 </state_handling>
 
@@ -250,14 +250,14 @@ All decks complete! You have {{complete_decks.length}} finished deck(s):
 
 | Selection | Target Skill | Arguments |
 |-----------|-------------|-----------|
-| Full Deck | sb-create:plan-deck | none |
-| Single Slide | sb-create:plan-one | none |
-| Use Template | sb-create:use-template | none |
-| Customize Brand | sb-brand:setup | none |
-| Continue Building | sb-create:build-one | deck_slug |
-| Build All Remaining | sb-create:build-all | deck_slug |
-| Edit a Slide | sb-create:edit | deck_slug |
-| Plan New Deck | sb-create:plan-deck | none |
-| Edit Existing | sb-create:edit | deck_slug (after picker) |
-| Show All Commands | sb:help | none |
+| Full Deck | pitchsmith:plan-deck | none |
+| Single Slide | pitchsmith:plan-one | none |
+| Use Template | pitchsmith:use-template | none |
+| Customize Brand | pitchsmith:setup | none |
+| Continue Building | pitchsmith:build-one | deck_slug |
+| Build All Remaining | pitchsmith:build-all | deck_slug |
+| Edit a Slide | pitchsmith:edit | deck_slug |
+| Plan New Deck | pitchsmith:plan-deck | none |
+| Edit Existing | pitchsmith:edit | deck_slug (after picker) |
+| Show All Commands | pitchsmith:help | none |
 </routing>

@@ -42,7 +42,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 
 <steps>
 1. Read `.slide-builder/status.yaml` to get mode and decks registry
-2. If `mode` is NOT `"deck"` → stop and tell user to run `/sb-create:plan-deck` first
+2. If `mode` is NOT `"deck"` → stop and tell user to run `/pitchsmith:plan-deck` first
 3. Filter decks by eligible statuses: `planned` or `building`
 4. Route based on eligible deck count:
    - Zero eligible → stop, tell user no decks available
@@ -169,8 +169,8 @@ Build-one handles: theme loading, template matching, HTML generation, viewer reg
 | Outcome | Report |
 |---------|--------|
 | All succeeded | "✓ Built {{built_count}} slides. Viewer at output/{{deck_slug}}/index.html" |
-| Partial success | "Built {{built_count}}, failed {{failed_count}}. Failed slides: {{failed_slides}}. Run `/sb-create:build-one` to retry individual slides." |
-| All failed | "❌ All slides failed. Run `/sb-create:build-one` to debug individual slides." |
+| Partial success | "Built {{built_count}}, failed {{failed_count}}. Failed slides: {{failed_slides}}. Run `/pitchsmith:build-one` to retry individual slides." |
+| All failed | "❌ All slides failed. Run `/pitchsmith:build-one` to debug individual slides." |
 
 ### Asset Compatibility Summary (Smart Asset Selection)
 
@@ -182,7 +182,7 @@ Build-one handles: theme loading, template matching, HTML generation, viewer reg
 • Slide {{this.slide}}: '{{this.asset}}' (affinity: {{this.affinity}}) on {{this.slide_bg}} background
 {{/each}}
 
-These assets may not display optimally. Run `/sb-manage:update-brand-assets` to review asset color metadata.
+These assets may not display optimally. Run `/pitchsmith:update-brand-assets` to review asset color metadata.
   </output>
 </check>
 <check if="{{asset_warnings}}.length == 0">
@@ -196,9 +196,9 @@ These assets may not display optimally. Run `/sb-manage:update-brand-assets` to 
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| Mode not "deck" | Stop → tell user to run `/sb-create:plan-deck` |
+| Mode not "deck" | Stop → tell user to run `/pitchsmith:plan-deck` |
 | No eligible decks | Stop → tell user to create a deck plan |
-| Plan.yaml missing | Stop → tell user to run `/sb-create:plan-deck` |
+| Plan.yaml missing | Stop → tell user to run `/pitchsmith:plan-deck` |
 | Zero pending slides | Stop → tell user all slides are built (success state) |
 | Single slide fails | Log error, mark as "failed", **continue to next slide** |
 | All slides fail | Complete batch, show troubleshooting in summary |

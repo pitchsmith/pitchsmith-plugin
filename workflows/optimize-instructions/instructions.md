@@ -290,8 +290,8 @@ Scattered error handling is easy to miss. Consolidate into a reference table.
 <reference title="Error responses">
 | Problem | Action |
 |---------|--------|
-| Plan file missing | Stop → tell user to run `/sb:plan` |
-| Theme missing | Stop → tell user to run `/sb:setup` |
+| Plan file missing | Stop → tell user to run `/pitchsmith:plan` |
+| Theme missing | Stop → tell user to run `/pitchsmith:setup` |
 | Invalid template | Fall back to custom build |
 </reference>
 
