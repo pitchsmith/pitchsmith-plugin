@@ -1,7 +1,7 @@
 {
   "name": "pitchsmith",
   "description": "AI-powered slide builder — plan, build, and export brand-perfect presentations",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": {
     "name": "Pitchsmith",
     "email": "support@pitchsmith.ai"
@@ -16,7 +16,9 @@
     "brand",
     "ai"
   ],
-  "commands": ["./commands/pitchsmith/"],
+  "commands": [
+    "./commands/pitchsmith/"
+  ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }
