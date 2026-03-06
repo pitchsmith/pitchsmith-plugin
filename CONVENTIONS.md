@@ -1039,6 +1039,14 @@ The AskUserQuestion tool enables structured user input during planning workflows
 - Use `multiSelect: true` for selections where multiple options can apply
 - Use `multiSelect: false` for single-choice decisions
 
+**Critical Rule - One Question at a Time:**
+- Each `<ask>` block MUST result in a SEPARATE interaction with the user
+- NEVER batch multiple `<ask>` blocks into a single AskUserQuestion call or single prompt
+- This applies to BOTH choice-based questions AND freeform questions
+- Process each `<ask>` sequentially: present question → wait for response → then proceed to next `<ask>`
+
+**Why this matters:** Batching questions creates cognitive overload and poor UX. Each question deserves focused attention, whether it's a choice selection or freeform input.
+
 **DSL Example (recommended):**
 ```xml
 <ask context="**Message Framing: {{section.title}}**

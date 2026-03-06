@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PROJECT_ROOT = path.join(__dirname, '..');
+const PROJECT_ROOT = process.cwd();
 
 function readYaml(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');

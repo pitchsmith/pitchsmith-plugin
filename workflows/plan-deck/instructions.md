@@ -762,6 +762,29 @@ For EACH agenda section, generate detailed section goals. Goals drive downstream
      <action>Proceed with standard goal generation (no research refs will be added)</action>
    </check>
 
+0.5. **Phase Flow Selection** — Before processing sections, offer user phase flow options:
+   <ask context="**Section Goals Mode**
+
+Phase 4 will generate detailed goals for all {{agenda_sections.length}} agenda sections.
+
+Choose how you'd like to proceed:"
+        header="Phase Mode">
+     <choice label="Walk-through" description="Review and approve each section's goals individually (default)" />
+     <choice label="Generate All" description="Generate all goals, then review a summary at the end" />
+     <choice label="YOLO Phase" description="Generate and auto-approve all goals without prompts (fastest)" />
+   </ask>
+
+   <check if="user selected 'Walk-through'">
+     <action>Set `{{phase4_yolo_mode}}` = "individual"</action>
+   </check>
+   <check if="user selected 'Generate All'">
+     <action>Set `{{phase4_yolo_mode}}` = "bulk-review"</action>
+   </check>
+   <check if="user selected 'YOLO Phase'">
+     <action>Set `{{phase4_yolo_mode}}` = "yolo"</action>
+     <output>🚀 YOLO mode activated for Phase 4. I'll generate and auto-approve all section goals.</output>
+   </check>
+
 1. For each section in `{{agenda_sections}}`:
    a. Display section header with progress (e.g., "Section 1 of 5: Opening Hook")
    b. Analyze the section's `narrative_role`, `purpose`, `description`, `{{audience}}`, `{{audience_knowledge_level}}`, `{{key_points}}`, and `{{discovery_context}}` (if available) to generate detailed section goals:
@@ -836,7 +859,13 @@ For EACH agenda section, generate detailed section goals. Goals drive downstream
         </check>
       </check>
    c. Present goals for approval:
-      <ask context="**Section Goals: {{section.title}} ({{section_index}} of {{total_sections}})**
+      <check if="{{phase4_yolo_mode}} == 'yolo'">
+        <action>Auto-approve goals — store directly in `{{section.discovery.goals}}` without prompting</action>
+        <action>Add to `{{yolo_approved_sections}}` array for final summary</action>
+        <output>✓ Section {{section_index}}/{{total_sections}}: {{section.title}} — goals auto-approved</output>
+      </check>
+      <check if="{{phase4_yolo_mode}} != 'yolo'">
+        <ask context="**Section Goals: {{section.title}} ({{section_index}} of {{total_sections}})**
 
 Generated goals for this section:
 
@@ -845,11 +874,18 @@ Generated goals for this section:
 **Narrative Advancement:** {{goals.narrative_advancement}}
 **Content Requirements:** {{goals.content_requirements}}
 **Suggested Slides:** {{goals.suggested_slide_count}}"
-           header="Goals">
-        <choice label="Approve" description="Goals are good — proceed to next section" />
-        <choice label="Refine" description="I have feedback to adjust these goals" />
-        <choice label="Custom" description="I'll write my own goals for this section" />
-      </ask>
+             header="Goals">
+          <choice label="Approve" description="Goals are good — proceed to next section" />
+          <choice label="Refine" description="I have feedback to adjust these goals" />
+          <choice label="Custom" description="I'll write my own goals for this section" />
+          <choice label="YOLO Remaining" description="Approve this + auto-approve all remaining sections" />
+        </ask>
+        <check if="user selected 'YOLO Remaining'">
+          <action>Set `{{phase4_yolo_mode}}` = "yolo"</action>
+          <action>Store current goals in `{{section.discovery.goals}}`</action>
+          <output>🚀 YOLO mode activated. Remaining sections will be auto-approved.</output>
+        </check>
+      </check>
    d. If user selects "Refine" → incorporate feedback, regenerate goals, present again
    e. If user selects "Custom" → accept user input as goals
    f. Store confirmed goals in `{{section.discovery.goals}}` with all five fields
@@ -883,6 +919,33 @@ Generated goals for this section:
       <check if="planning_research_refs was added to this section">
         <action>Include in the summary: "📊 Research references: {{count}} finding(s) linked to this section"</action>
       </check>
+
+2. **Phase 4 Summary** — Display all generated goals when bulk modes used:
+   <check if="{{phase4_yolo_mode}} == 'yolo' OR {{phase4_yolo_mode}} == 'bulk-review'">
+     <output>**📋 Phase 4 Complete — All Section Goals**
+
+{{#each agenda_sections}}
+**{{this.title}}** ({{this.narrative_role}})
+- Communication: {{this.discovery.goals.communication_objective}}
+- Takeaway: {{this.discovery.goals.audience_takeaway}}
+- Slides: {{this.discovery.goals.suggested_slide_count}}
+{{#if this.discovery.planning_research_refs}}📊 Research refs: {{this.discovery.planning_research_refs.length}}{{/if}}
+{{/each}}
+
+Total slides estimated: {{sum of suggested_slide_counts}}</output>
+
+     <check if="{{phase4_yolo_mode}} == 'bulk-review'">
+       <ask context="Review all section goals above. Any changes needed?"
+            header="Review">
+         <choice label="All good" description="Proceed to Phase 5" />
+         <choice label="Revise section" description="Go back and revise a specific section's goals" />
+       </ask>
+       <check if="user selected 'Revise section'">
+         <ask>Which section number would you like to revise? (1-{{agenda_sections.length}})</ask>
+         <action>Go back to step 1 for that specific section with {{phase4_yolo_mode}} = "individual"</action>
+       </check>
+     </check>
+   </check>
 </steps>
 
 <reference title="Section goal generation guidance">
@@ -1180,8 +1243,9 @@ Would you like to add an Agenda slide?"
    - Any other contextual data the LLM identified as gaps and the user provided
    Only include keys that have actual values. Do NOT write an empty `discovery_context: {}` object — omit the field entirely if no discovery context was captured.
 6. **Include planning research** — if `{{planning_research}}` exists and is not empty (from Phase 2.4), include it in plan.yaml at the top level. This persists research findings for downstream use. Do NOT write an empty `planning_research: []` array — omit the field entirely if research was skipped, all queries failed, or `{{planning_research}}` is empty.
-7. Write `plan.yaml` to `output/{deck_slug}/plan.yaml`
-8. Update `.slide-builder/status.yaml`:
+7. **Create marker for Plan Editor auto-open** — Use Bash tool: `touch .slide-builder/.enable-plan-editor-{{deck_slug}}`. This signals the VSCode extension to auto-open the Plan Editor when plan.yaml is written. Must be created BEFORE step 8.
+8. Write `plan.yaml` to `output/{deck_slug}/plan.yaml`
+9. Update `.slide-builder/status.yaml`:
    - Set mode: "deck"
    - Create (or overwrite) entry in `decks:` registry at `decks.{{deck_slug}}`:
      - name: `{{deck_name}}`

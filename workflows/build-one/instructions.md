@@ -44,6 +44,30 @@ Before writing any HTML file, verify your output satisfies ALL of these. These a
 
 ---
 
+## NON-NEGOTIABLE: Brand Asset Rules
+
+<critical enforcement="absolute">
+These rules CANNOT be bypassed under ANY circumstances. VIOLATION = BUILD FAILURE.
+
+1. **ICONS:** ONLY use icons from icon-catalog.json
+   - NEVER generate SVG icons inline
+   - NEVER use emoji characters as icon substitutes
+   - If no catalog match exists → OMIT the icon entirely
+
+2. **LOGOS:** ONLY use logos from logo-catalog.json
+   - NEVER draw, recreate, or generate logos
+   - If no catalog match exists → OMIT the logo entirely
+
+3. **IMAGES:** ONLY use images from images-catalog.json
+   - NEVER generate or substitute decorative images
+   - If no catalog match exists → OMIT the image entirely
+
+No exceptions. No substitutions. No fallbacks.
+If a catalog is not loaded (`{{catalog_available}}` = false), omit that asset type entirely.
+</critical>
+
+---
+
 <reference title="Viewer DOM Contract">
 
 ### Required Data Attributes
@@ -352,7 +376,7 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 If slide has no agenda_section_id or section not found, proceed with original slide context (backwards compatible).
 </note>
 
-→ Continue to Phase 2
+→ Continue to Phase 1C
 
 ---
 
@@ -366,6 +390,238 @@ If slide has no agenda_section_id or section not found, proceed with original sl
    - `output_folder` = `output/singles`
    - `output_path` = `output/singles/{{slug}}.html`
 </steps>
+
+→ Continue to Phase 1C
+
+---
+
+## Phase 1C: Load Brand Asset Catalogs
+
+<critical>
+Load ALL brand asset catalogs at workflow start so they are available throughout the build.
+See NON-NEGOTIABLE: Brand Asset Rules at the top of this document.
+Icons, logos, and images MUST come from catalogs — never generated or substituted.
+</critical>
+
+### Step 1: Load Icon Catalog
+
+<critical>
+Icons MUST come from the brand-certified icon catalog.
+If an icon concept has no catalog match, OMIT it entirely — never use emoji or generate SVG.
+</critical>
+
+<steps>
+1. Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists
+2. If exists:
+   - Load catalog, store as `{{icon_catalog}}`
+   - Set `{{icon_catalog_available}}` = true
+   - Note: v2.0 schema — each icon variant is a separate entry with `backgroundAffinity`, `base_icon`, and direct `file` reference
+3. If missing:
+   - Warn user: "Icon catalog not found. Run `/pitchsmith:add-icon` to set up."
+   - Set `{{icon_catalog_available}}` = false
+   - Continue without icon constraints
+</steps>
+
+<reference title="Icon selection algorithm (metadata-driven, v2.0 schema)">
+| Step | Action |
+|------|--------|
+| 1 | Find icons where `base_icon` matches concept (case-insensitive) |
+| 2 | If no `base_icon` match → search icon `tags` array for concept |
+| 3 | If no match → OMIT icon entirely |
+| 4 | Filter matched icons by `backgroundAffinity` == slide's `background_mode` |
+| 5 | If multiple matches remain → prefer larger `size` (e.g., 100 over 50) |
+| 6 | Use the icon's `file` field directly for path construction (no folder-based variant logic) |
+| 7 | If no variant matches the background → warn user and suggest alternatives |
+</reference>
+
+<reference title="Icon catalog v2.0 schema">
+Each icon variant is an individual entry with these fields:
+- `id`: Unique identifier (e.g., "accuracy-dark-100")
+- `base_icon`: Groups variants together (e.g., "accuracy")
+- `file`: Direct filename reference (e.g., "icons8-accuracy-100-dark.png")
+- `size`: Icon size in pixels (50 or 100)
+- `backgroundAffinity`: Which background this icon works on ("light" = dark icon, "dark" = white icon)
+- `tags`: Searchable keywords for concept matching
+All icon files are in the flat `icons/` directory (no variant subfolders).
+</reference>
+
+### Step 2: Load Logo Catalog
+
+<critical>
+Logos MUST come from the brand-certified logo catalog.
+If a logo concept has no catalog match, OMIT it entirely — never draw or recreate logos.
+</critical>
+
+<steps>
+1. Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists
+2. If exists:
+   - Load catalog, store as `{{logo_catalog}}`
+   - Set `{{logo_catalog_available}}` = true
+   - Note: Logos may have `colorMetadata` with backgroundAffinity for smart selection
+3. If missing:
+   - Set `{{logo_catalog_available}}` = false
+   - Continue (logos optional)
+</steps>
+
+<reference title="Logo variant selection by background">
+| Background Mode | Variant |
+|-----------------|---------|
+| `dark` | variant where usage contains "dark background" or variant_id="light" |
+| `light` | variant where usage contains "light background" or variant_id="dark" |
+</reference>
+
+<reference title="Logo selection algorithm with color intelligence">
+| Step | Action |
+|------|--------|
+| 1 | Match concept to logo.id (case-insensitive) |
+| 2 | Match concept to logo.tags array |
+| 3 | If no match → OMIT logo entirely |
+| 4 | **Smart Selection:** If matched logo has `colorMetadata.backgroundAffinity`, check compatibility with slide's `background_mode` (see Smart Asset Selection below) |
+| 5 | If incompatible → warn user and suggest alternatives |
+| 6 | If no `colorMetadata` → proceed with variant selection without warning (fallback behavior) |
+| 7 | Select variant based on background_mode |
+</reference>
+
+### Step 3: Load Images Catalog
+
+<critical>
+Decorative images and brand imagery MUST come from the images catalog when available.
+If a concept has no catalog match, OMIT it entirely — never generate or substitute images.
+</critical>
+
+<steps>
+1. Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists
+2. If exists:
+   - Load catalog, store as `{{images_catalog}}`
+   - Set `{{images_catalog_available}}` = true
+   - Note: Images may have `colorMetadata` with backgroundAffinity for smart selection
+3. If missing:
+   - Set `{{images_catalog_available}}` = false
+   - Continue (images optional)
+</steps>
+
+<reference title="Image selection algorithm with color intelligence">
+| Step | Action |
+|------|--------|
+| 1 | Match concept to image.id (case-insensitive) |
+| 2 | Match concept to image.category |
+| 3 | Match concept to image.tags array |
+| 4 | If no match → OMIT image entirely |
+| 5 | **Smart Selection:** If matched image has `colorMetadata.backgroundAffinity`, check compatibility with slide's `background_mode` (see Smart Asset Selection below) |
+| 6 | If incompatible → warn user and suggest alternatives |
+| 7 | If no `colorMetadata` → proceed without warning (fallback behavior) |
+</reference>
+
+<reference title="Image categories">
+| Category | Use Case |
+|----------|----------|
+| `decorative` | Visual elements for column layouts, accents |
+| `hero` | Large featured images for title slides |
+| `background` | Full-slide background imagery |
+| `diagram` | Pre-made diagrams and illustrations |
+| `photo` | Photography assets |
+| `illustration` | Custom illustrations |
+</reference>
+
+### Step 4: Smart Asset Selection (Color Intelligence)
+
+<critical>
+When selecting brand assets, use color metadata to ensure visual compatibility with the slide's background.
+This is advisory only — always proceed with user's request even if incompatible.
+</critical>
+
+#### ColorMetadata Schema
+
+Brand assets may include `colorMetadata` with the following fields:
+
+<reference title="ColorMetadata fields">
+| Field | Type | Description |
+|-------|------|-------------|
+| `backgroundAffinity` | `'light' \| 'dark' \| 'both' \| 'any'` | Which backgrounds this asset works best on |
+| `hasTransparency` | `boolean` | Whether asset has transparent regions |
+| `dominantColors` | `string[]` | Up to 5 hex color values dominant in the asset |
+| `contrastNeeds` | `'high' \| 'medium' \| 'low'` | How much contrast the asset needs to be visible |
+| `assetType` | `'logo' \| 'icon' \| 'photo' \| 'illustration' \| 'shape'` | Classification of the asset |
+| `manualOverride` | `boolean` | True if user manually verified this metadata |
+</reference>
+
+#### Compatibility Check Algorithm
+
+<steps>
+1. **Get slide background mode:** Extract `background_mode` from slide plan (default: "dark")
+2. **For each asset being placed on the slide:**
+   - Look up asset in its catalog (icons, logos, or images)
+   - Check if `colorMetadata` exists on the asset
+   - If `colorMetadata` exists:
+     - Check `backgroundAffinity` compatibility:
+       - `"any"` or `"both"` → Compatible with any background
+       - `"dark"` → Compatible only with dark backgrounds
+       - `"light"` → Compatible only with light backgrounds
+     - If `backgroundAffinity` matches `background_mode` → Proceed silently
+     - If incompatible → Show warning and suggest alternatives
+   - If `colorMetadata` does NOT exist → Proceed without warning (fallback)
+</steps>
+
+<reference title="Compatibility matrix">
+| Slide Background | backgroundAffinity | Compatible? |
+|------------------|-------------------|-------------|
+| `dark` | `"dark"` | Yes |
+| `dark` | `"light"` | No - warn |
+| `dark` | `"both"` | Yes |
+| `dark` | `"any"` | Yes |
+| `light` | `"light"` | Yes |
+| `light` | `"dark"` | No - warn |
+| `light` | `"both"` | Yes |
+| `light` | `"any"` | Yes |
+| any | (no metadata) | Yes (fallback) |
+</reference>
+
+#### Mismatch Warning Format
+
+When an asset has incompatible `backgroundAffinity`, display this warning:
+
+<reference title="Asset compatibility warning template">
+```
+Warning: Asset Compatibility
+
+The requested asset '{{asset_name}}' has backgroundAffinity='{{asset_affinity}}'
+but this slide has a {{slide_background_mode}} background.
+
+Consider these compatible alternatives:
+{{#each compatible_alternatives limit=3}}
+- {{this.name}}: {{this.description}} (affinity: {{this.backgroundAffinity}})
+{{/each}}
+
+Proceeding with original selection. The asset may not display optimally.
+```
+</reference>
+
+#### Finding Compatible Alternatives
+
+<steps>
+1. When mismatch detected, scan the same catalog (icons/logos/images) for alternatives
+2. Filter to assets where:
+   - `colorMetadata.backgroundAffinity` matches slide's `background_mode`, OR
+   - `colorMetadata.backgroundAffinity` is `"both"` or `"any"`
+3. Rank by semantic similarity to the original concept (tags, description)
+4. Return top 1-3 alternatives
+5. If no compatible alternatives exist, note: "No compatible alternatives available"
+</steps>
+
+#### Fallback Behavior
+
+<critical>
+Assets without `colorMetadata` MUST work unchanged for backwards compatibility.
+</critical>
+
+<reference title="Fallback rules">
+| Scenario | Behavior |
+|----------|----------|
+| Asset has no `colorMetadata` | Proceed without warning |
+| Asset has `colorMetadata` but no `backgroundAffinity` | Proceed without warning |
+| Catalog not loaded | Proceed with standard selection |
+| User explicitly requests incompatible asset | Warn, then proceed with their request |
+</reference>
 
 → Continue to Phase 2
 
@@ -588,255 +844,6 @@ Theme must contain workflowRules section. No hardcoded fallbacks allowed.
 | colorSchemes | "❌ theme.workflowRules is missing 'colorSchemes'. Run `/pitchsmith:theme-edit` to fix." |
 | dark/light | "❌ colorSchemes must have both 'dark' and 'light' modes defined." |
 </reference>
-
-→ Continue to Phase 2.6
-
----
-
-## Phase 2.6: Load Icon Catalog
-
-<critical>
-Icons MUST come from the brand-certified icon catalog.
-If an icon concept has no catalog match, OMIT it entirely — never use emoji or generate SVG.
-</critical>
-
-<steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists
-2. If exists:
-   - Load catalog, store as `{{icon_catalog}}`
-   - Set `{{icon_catalog_available}}` = true
-   - Note: v2.0 schema — each icon variant is a separate entry with `backgroundAffinity`, `base_icon`, and direct `file` reference
-3. If missing:
-   - Warn user: "Icon catalog not found. Run `/pitchsmith:add-icon` to set up."
-   - Set `{{icon_catalog_available}}` = false
-   - Continue without icon constraints
-</steps>
-
-<reference title="Icon selection algorithm (metadata-driven, v2.0 schema)">
-| Step | Action |
-|------|--------|
-| 1 | Find icons where `base_icon` matches concept (case-insensitive) |
-| 2 | If no `base_icon` match → search icon `tags` array for concept |
-| 3 | If no match → OMIT icon entirely |
-| 4 | Filter matched icons by `backgroundAffinity` == slide's `background_mode` |
-| 5 | If multiple matches remain → prefer larger `size` (e.g., 100 over 50) |
-| 6 | Use the icon's `file` field directly for path construction (no folder-based variant logic) |
-| 7 | If no variant matches the background → warn user and suggest alternatives |
-</reference>
-
-<reference title="Icon catalog v2.0 schema">
-Each icon variant is an individual entry with these fields:
-- `id`: Unique identifier (e.g., "accuracy-dark-100")
-- `base_icon`: Groups variants together (e.g., "accuracy")
-- `file`: Direct filename reference (e.g., "icons8-accuracy-100-dark.png")
-- `size`: Icon size in pixels (50 or 100)
-- `backgroundAffinity`: Which background this icon works on ("light" = dark icon, "dark" = white icon)
-- `tags`: Searchable keywords for concept matching
-All icon files are in the flat `icons/` directory (no variant subfolders).
-</reference>
-
-→ Continue to Phase 2.7
-
----
-
-## Phase 2.7: Load Logo Catalog
-
-<critical>
-Logos MUST come from the brand-certified logo catalog.
-If a logo concept has no catalog match, OMIT it entirely — never draw or recreate logos.
-</critical>
-
-<steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists
-2. If exists:
-   - Load catalog, store as `{{logo_catalog}}`
-   - Set `{{logo_catalog_available}}` = true
-   - Note: Logos may have `colorMetadata` with backgroundAffinity for smart selection
-3. If missing:
-   - Set `{{logo_catalog_available}}` = false
-   - Continue (logos optional)
-</steps>
-
-<reference title="Logo variant selection by background">
-| Background Mode | Variant |
-|-----------------|---------|
-| `dark` | variant where usage contains "dark background" or variant_id="light" |
-| `light` | variant where usage contains "light background" or variant_id="dark" |
-</reference>
-
-<reference title="Logo selection algorithm with color intelligence">
-| Step | Action |
-|------|--------|
-| 1 | Match concept to logo.id (case-insensitive) |
-| 2 | Match concept to logo.tags array |
-| 3 | If no match → OMIT logo entirely |
-| 4 | **Smart Selection:** If matched logo has `colorMetadata.backgroundAffinity`, check compatibility with slide's `background_mode` (see Smart Asset Selection below) |
-| 5 | If incompatible → warn user and suggest alternatives |
-| 6 | If no `colorMetadata` → proceed with variant selection without warning (fallback behavior) |
-| 7 | Select variant based on background_mode |
-</reference>
-
-→ Continue to Phase 2.8
-
----
-
-## Phase 2.8: Load Images Catalog
-
-<critical>
-Decorative images and brand imagery MUST come from the images catalog when available.
-If a concept has no catalog match, OMIT it entirely — never generate or substitute images.
-</critical>
-
-<steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists
-2. If exists:
-   - Load catalog, store as `{{images_catalog}}`
-   - Set `{{images_catalog_available}}` = true
-   - Note: Images may have `colorMetadata` with backgroundAffinity for smart selection
-3. If missing:
-   - Set `{{images_catalog_available}}` = false
-   - Continue (images optional)
-</steps>
-
-<reference title="Image selection algorithm with color intelligence">
-| Step | Action |
-|------|--------|
-| 1 | Match concept to image.id (case-insensitive) |
-| 2 | Match concept to image.category |
-| 3 | Match concept to image.tags array |
-| 4 | If no match → OMIT image entirely |
-| 5 | **Smart Selection:** If matched image has `colorMetadata.backgroundAffinity`, check compatibility with slide's `background_mode` (see Smart Asset Selection below) |
-| 6 | If incompatible → warn user and suggest alternatives |
-| 7 | If no `colorMetadata` → proceed without warning (fallback behavior) |
-</reference>
-
-<reference title="Image categories">
-| Category | Use Case |
-|----------|----------|
-| `decorative` | Visual elements for column layouts, accents |
-| `hero` | Large featured images for title slides |
-| `background` | Full-slide background imagery |
-| `diagram` | Pre-made diagrams and illustrations |
-| `photo` | Photography assets |
-| `illustration` | Custom illustrations |
-</reference>
-
-→ Continue to Phase 2.8.5
-
----
-
-## Phase 2.8.5: Smart Asset Selection (Color Intelligence)
-
-<critical>
-When selecting brand assets, use color metadata to ensure visual compatibility with the slide's background.
-This is advisory only — always proceed with user's request even if incompatible.
-</critical>
-
-### ColorMetadata Schema
-
-Brand assets may include `colorMetadata` with the following fields:
-
-<reference title="ColorMetadata fields">
-| Field | Type | Description |
-|-------|------|-------------|
-| `backgroundAffinity` | `'light' \| 'dark' \| 'both' \| 'any'` | Which backgrounds this asset works best on |
-| `hasTransparency` | `boolean` | Whether asset has transparent regions |
-| `dominantColors` | `string[]` | Up to 5 hex color values dominant in the asset |
-| `contrastNeeds` | `'high' \| 'medium' \| 'low'` | How much contrast the asset needs to be visible |
-| `assetType` | `'logo' \| 'icon' \| 'photo' \| 'illustration' \| 'shape'` | Classification of the asset |
-| `manualOverride` | `boolean` | True if user manually verified this metadata |
-</reference>
-
-### Compatibility Check Algorithm
-
-<steps>
-1. **Get slide background mode:** Extract `background_mode` from slide plan (default: "dark")
-2. **For each asset being placed on the slide:**
-   - Look up asset in its catalog (icons, logos, or images)
-   - Check if `colorMetadata` exists on the asset
-   - If `colorMetadata` exists:
-     - Check `backgroundAffinity` compatibility:
-       - `"any"` or `"both"` → Compatible with any background ✓
-       - `"dark"` → Compatible only with dark backgrounds
-       - `"light"` → Compatible only with light backgrounds
-     - If `backgroundAffinity` matches `background_mode` → Proceed silently ✓
-     - If incompatible → Show warning and suggest alternatives
-   - If `colorMetadata` does NOT exist → Proceed without warning (fallback)
-</steps>
-
-<reference title="Compatibility matrix">
-| Slide Background | backgroundAffinity | Compatible? |
-|------------------|-------------------|-------------|
-| `dark` | `"dark"` | ✓ Yes |
-| `dark` | `"light"` | ✗ No - warn |
-| `dark` | `"both"` | ✓ Yes |
-| `dark` | `"any"` | ✓ Yes |
-| `light` | `"light"` | ✓ Yes |
-| `light` | `"dark"` | ✗ No - warn |
-| `light` | `"both"` | ✓ Yes |
-| `light` | `"any"` | ✓ Yes |
-| any | (no metadata) | ✓ Yes (fallback) |
-</reference>
-
-### Mismatch Warning Format
-
-When an asset has incompatible `backgroundAffinity`, display this warning:
-
-<reference title="Asset compatibility warning template">
-```
-⚠️ Asset Compatibility Warning
-
-The requested asset '{{asset_name}}' has backgroundAffinity='{{asset_affinity}}'
-but this slide has a {{slide_background_mode}} background.
-
-Consider these compatible alternatives:
-{{#each compatible_alternatives limit=3}}
-• {{this.name}}: {{this.description}} (affinity: {{this.backgroundAffinity}})
-{{/each}}
-
-Proceeding with original selection. The asset may not display optimally.
-```
-</reference>
-
-### Finding Compatible Alternatives
-
-<steps>
-1. When mismatch detected, scan the same catalog (icons/logos/images) for alternatives
-2. Filter to assets where:
-   - `colorMetadata.backgroundAffinity` matches slide's `background_mode`, OR
-   - `colorMetadata.backgroundAffinity` is `"both"` or `"any"`
-3. Rank by semantic similarity to the original concept (tags, description)
-4. Return top 1-3 alternatives
-5. If no compatible alternatives exist, note: "No compatible alternatives available"
-</steps>
-
-### Fallback Behavior
-
-<critical>
-Assets without `colorMetadata` MUST work unchanged for backwards compatibility.
-</critical>
-
-<reference title="Fallback rules">
-| Scenario | Behavior |
-|----------|----------|
-| Asset has no `colorMetadata` | Proceed without warning |
-| Asset has `colorMetadata` but no `backgroundAffinity` | Proceed without warning |
-| Catalog not loaded | Proceed with standard selection |
-| User explicitly requests incompatible asset | Warn, then proceed with their request |
-</reference>
-
-### Integration with Phase 3A
-
-During template build (Phase 3A), apply smart selection when placing brand assets:
-
-<steps>
-1. For each icon/logo/image to be placed:
-   - Run compatibility check (above)
-   - If compatible → use asset silently
-   - If incompatible → display warning, suggest alternatives, then use original
-   - If no metadata → use asset silently (fallback)
-2. Log asset selection decisions: "Selected {{asset_name}} ({{compatibility_status}})"
-</steps>
 
 → Continue to Phase 2.9
 
@@ -1123,7 +1130,7 @@ Users approve or modify before generation proceeds.
    - `{{proposed_template}}` = `{{selected_template.id}}` from Phase 2 scoring
    - `{{proposed_background_mode}}` = `{{optimal_background_mode}}` from Step 4
    - `{{proposed_layout_approach}}` = summarize from `{{slide.design_plan}}` or generate brief description
-   - `{{proposed_assets}}` = list any icons/images identified in Phase 2.6-2.8 that match slide content
+   - `{{proposed_assets}}` = list any icons/images identified in Phase 1C catalogs that match slide content
 2. Generate confidence indicator:
    - Template confidence: `{{selected_template.score}}%`
    - Background mode: "Based on rhythm rules" or "Plan specified"
@@ -1263,18 +1270,113 @@ Rhythm impact: {{rhythm_impact_message}}"
 2. Proceed to appropriate build phase
 </steps>
 
+→ Continue to Phase 2.99 (Asset Resolution)
+
+---
+
+## Phase 2.99: Asset Resolution
+
+<critical>
+This step is MANDATORY before any HTML generation. You MUST resolve ALL asset references against the catalogs loaded in Phase 1C and create a definitive `{{resolved_assets}}` object. Phase 3A and 3B MUST use ONLY assets from this object — no inline catalog searching during HTML generation.
+</critical>
+
+### Step 1: Extract Asset References from Slide Plan
+
+<steps>
+1. Analyze the slide plan to identify all asset needs:
+   - **Icons**: Scan `description`, `design_plan`, `key_points`, and `visual_guidance` for icon concepts (e.g., "accuracy icon", "growth arrow", "security shield")
+   - **Logos**: Scan for logo references (e.g., "company logo", "brand mark", "partner logo")
+   - **Images**: Scan for image references (e.g., "hero image", "background photo", "decorative illustration")
+2. Also check template `instructions` field (if template selected) for required assets
+3. Store extracted references as `{{asset_references}}` list
+</steps>
+
+<reference title="Asset extraction patterns">
+| Source Field | Look For | Example |
+|-------------|----------|---------|
+| `description` / `intent` | Explicit asset mentions | "Show process with icons for each step" |
+| `design_plan` / `visual_guidance` | Layout-implied assets | "three columns with icons" |
+| `key_points` | Content-implied assets | Points about "accuracy", "speed" imply icon concepts |
+| template `instructions` | Required template elements | "Include icon for each column" |
+| `storyline_role` | Role-implied assets | "opener" may need logo |
+</reference>
+
+### Step 2: Resolve Each Asset Against Catalogs
+
+<critical>
+For every extracted asset reference, resolve it against the catalogs loaded in Phase 1C.
+Use the selection algorithms defined in Phase 1C (icon selection, logo selection, image selection).
+Apply Smart Asset Selection (Phase 1C Step 4) for background compatibility checks.
+</critical>
+
+<steps>
+1. For each asset reference in `{{asset_references}}`:
+   a. Determine asset type: icon, logo, or image
+   b. Check if the corresponding catalog is available (`{{icon_catalog_available}}`, `{{logo_catalog_available}}`, `{{images_catalog_available}}`)
+   c. If catalog not available → set action: "OMIT", reason: "Catalog not loaded"
+   d. If catalog available → search using the appropriate algorithm:
+      - **Icons**: Match `base_icon` (case-insensitive), then `tags` array. Filter by `backgroundAffinity` == `{{background_mode}}`. Prefer larger `size`.
+      - **Logos**: Match `id` or `tags`. Check `colorMetadata.backgroundAffinity` compatibility. Select variant by background_mode.
+      - **Images**: Match `id`, `category`, or `tags`. Check `colorMetadata.backgroundAffinity` compatibility.
+   e. If match found → set catalog_path using the asset's `file` field
+   f. If no match → set action: "OMIT", reason: "No catalog match"
+2. Store all resolutions in `{{resolved_assets}}`
+</steps>
+
+### Step 3: Build resolved_assets Object
+
+<reference title="resolved_assets schema">
+```yaml
+resolved_assets:
+  icons:
+    - concept: "accuracy"
+      type: "icon"
+      catalog_path: "brand-assets/icons/icons8-accuracy-100-dark.png"
+      backgroundAffinity: "dark"
+      size: 100
+    - concept: "speed"
+      type: "icon"
+      action: "OMIT"
+      reason: "No catalog match"
+  logos:
+    - concept: "company"
+      type: "logo"
+      catalog_path: "brand-assets/logos/company-white.svg"
+      variant: "light"
+  images:
+    - concept: "hero-photo"
+      type: "image"
+      catalog_path: "brand-assets/images/hero-office.jpg"
+      category: "hero"
+  summary:
+    total_requested: 4
+    resolved: 3
+    omitted: 1
+```
+</reference>
+
+<steps>
+1. Construct `{{resolved_assets}}` object with sections for icons, logos, and images
+2. Add summary counts: total_requested, resolved, omitted
+3. Log resolution results:
+   - "Asset Resolution: {{resolved}} of {{total_requested}} assets resolved from catalogs"
+   - For each OMIT: "OMIT: {{concept}} ({{type}}) — {{reason}}"
+4. If ALL assets are OMIT and slide needs visual elements, warn user:
+   - "No catalog assets matched this slide's needs. Visual elements will be omitted."
+</steps>
+
 → Continue to Phase 3A (if template selected) or Phase 3B (if custom generation needed)
 
 ---
 
 ## Phase 3A: Template Build
 
-<critical>
-Brand assets MUST come from approved catalogs when available.
-- Icons: ONLY from icon-catalog.json — NEVER emoji or generated SVG
-- Logos: ONLY from logo-catalog.json — NEVER draw or recreate
-- Images: ONLY from images-catalog.json when decorative elements needed
-If concept has no catalog match → OMIT element entirely. Do NOT substitute.
+<critical enforcement="reminder">
+REMINDER: Review the NON-NEGOTIABLE Brand Asset Rules at the top of this document BEFORE generating any HTML.
+- Icons: ONLY from {{icon_catalog}} — NEVER emoji, NEVER inline SVG. No match → OMIT.
+- Logos: ONLY from {{logo_catalog}} — NEVER draw or recreate. No match → OMIT.
+- Images: ONLY from {{images_catalog}} — NEVER generate or substitute. No match → OMIT.
+VIOLATION = BUILD FAILURE. Use catalogs loaded in Phase 1C. Use ONLY assets from {{resolved_assets}}.
 </critical>
 
 <steps>
@@ -1288,26 +1390,12 @@ If concept has no catalog match → OMIT element entirely. Do NOT substitute.
    - **New schema**: description → title/messaging, design_plan → layout, enriched_section_goals → content direction
    - **Legacy schema**: intent → title, key_points → body, enriched_key_message → headline guidance
    - Include `available_research` as supporting data if relevant
-7. Apply brand asset selection from catalogs with **Smart Asset Selection** (Phase 2.8.5):
-   **Icons** (if `{{icon_catalog_available}}`):
-   - Find icons where `base_icon` matches concept OR `tags` contain concept
-   - Filter by `backgroundAffinity` == slide's `background_mode`
-   - Prefer larger `size` if multiple matches
-   - Use icon's `file` field directly for path (flat directory, no variant subfolders)
-   - If no match → OMIT icon entirely (no emoji, no generated SVG)
-   **Logos** (if `{{logo_catalog_available}}`):
-   - Match concept against `{{logo_catalog}}` using id or tags
-   - **Color Intelligence:** Check `colorMetadata.backgroundAffinity` against slide's `background_mode`
-     - If compatible or no metadata → proceed silently
-     - If incompatible → warn user, suggest alternatives, then proceed
-   - Select variant based on `background_mode` (dark bg → light variant, light bg → dark variant)
-   - If no match → OMIT logo entirely (no drawing, no recreation)
-   **Images** (if `{{images_catalog_available}}`):
-   - Match concept against `{{images_catalog}}` using id, category, or tags
-   - **Color Intelligence:** Check `colorMetadata.backgroundAffinity` against slide's `background_mode`
-     - If compatible or no metadata → proceed silently
-     - If incompatible → warn user, suggest alternatives, then proceed
-   - If no match → OMIT image entirely (no generation, no substitution)
+7. **Place brand assets from `{{resolved_assets}}`** (created in Phase 2.99):
+   - For each asset placement in the template, look up the corresponding entry in `{{resolved_assets}}`
+   - If `catalog_path` exists → use that exact path for the `src` attribute
+   - If `action: "OMIT"` → do NOT place any element for that concept (no emoji, no SVG, no substitution)
+   - Do NOT search catalogs inline — all resolution was completed in Phase 2.99
+   - Apply Smart Asset Selection warnings from Phase 1C Step 4 if any compatibility issues were noted
 8. Apply `{{design_constraints}}`: font sizes, spacing, content density limits
 9. Assemble complete HTML following Authoritative Example structure
 10. **Verify compliance** against Critical Requirements table AND design standards
@@ -1399,6 +1487,14 @@ All color values must be resolved from theme - no hardcoded hex values in this w
 ---
 
 ## Phase 3B: Custom Build (Frontend Design Skill) — LAST RESORT
+
+<critical enforcement="reminder">
+REMINDER: Review the NON-NEGOTIABLE Brand Asset Rules at the top of this document BEFORE generating any HTML.
+- Icons: ONLY from {{icon_catalog}} — NEVER emoji, NEVER inline SVG. No match → OMIT.
+- Logos: ONLY from {{logo_catalog}} — NEVER draw or recreate. No match → OMIT.
+- Images: ONLY from {{images_catalog}} — NEVER generate or substitute. No match → OMIT.
+VIOLATION = BUILD FAILURE. Use catalogs loaded in Phase 1C. Use ONLY assets from {{resolved_assets}}.
+</critical>
 
 <critical>
 Custom builds should be rare. Only use this path when:
@@ -1504,24 +1600,13 @@ PATTERN REQUIREMENTS (non-negotiable):
 
 TECHNICAL: 1920x1080px, contenteditable on all text, unique data-field, CSS variables, auto-save script
 
-BRAND ASSET RULES (if catalogs available):
-Icons:
-- ONLY from icon-catalog.json (v2.0 schema), NEVER emoji or generated SVG
-- Select by: match `base_icon` or `tags`, filter by `backgroundAffinity` == slide's `background_mode`, prefer larger `size`
-- Use `file` field directly for path (flat icons/ directory, no variant subfolders)
-- If concept not in catalog → OMIT icon
-
-Logos:
-- ONLY from logo-catalog.json, NEVER draw or recreate
-- Variant: dark bg → light variant, light bg → dark variant
-- If concept not in catalog → OMIT logo
-
-Images:
-- ONLY from images-catalog.json for decorative elements
-- Match by id, category, or tags
-- If concept not in catalog → OMIT image
-
-CRITICAL: If ANY asset type has no catalog match → OMIT entirely. Do NOT substitute.
+BRAND ASSET RULES — Use ONLY pre-resolved assets from {{resolved_assets}} (Phase 2.99):
+- For each icon/logo/image placement, look up the entry in {{resolved_assets}}
+- If catalog_path exists → use that exact path for the src attribute
+- If action is "OMIT" → do NOT place any element for that concept
+- Do NOT search catalogs inline — all assets were resolved in Phase 2.99
+- NEVER use emoji, NEVER generate SVG icons, NEVER draw logos, NEVER substitute images
+CRITICAL: If ANY asset has action "OMIT" → leave that space empty. Do NOT substitute.
 
 ═══════════════════════════════════════
 PRE-OUTPUT CHECK:

@@ -86,6 +86,13 @@ Power users can "eject" specific workflows to customize behavior. Ejected workfl
 /sb
 ```
 
+**Alternative: Install from your terminal** without starting a Claude Code session:
+
+```bash
+claude plugin marketplace add pitchsmith/pitchsmith-marketplace
+claude plugin install pitchsmith@pitchsmith-marketplace
+```
+
 The plugin auto-initializes your workspace with a default theme, templates, and sample deck on first run. The pdf-reader MCP server is bundled and starts automatically — no manual configuration needed.
 
 ### Install for Development
@@ -323,7 +330,7 @@ Elastic License v2 (ELv2)
 
 ## Version
 
-Current version: 0.1.6
+Current version: 0.2.0
 
 ---
 
