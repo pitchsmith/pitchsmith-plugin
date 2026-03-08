@@ -405,11 +405,6 @@ Icons, logos, and images MUST come from catalogs — never generated or substitu
 
 ### Step 1: Load Icon Catalog
 
-<critical>
-Icons MUST come from the brand-certified icon catalog.
-If an icon concept has no catalog match, OMIT it entirely — never use emoji or generate SVG.
-</critical>
-
 <steps>
 1. Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists
 2. If exists:
@@ -447,11 +442,6 @@ All icon files are in the flat `icons/` directory (no variant subfolders).
 
 ### Step 2: Load Logo Catalog
 
-<critical>
-Logos MUST come from the brand-certified logo catalog.
-If a logo concept has no catalog match, OMIT it entirely — never draw or recreate logos.
-</critical>
-
 <steps>
 1. Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists
 2. If exists:
@@ -483,11 +473,6 @@ If a logo concept has no catalog match, OMIT it entirely — never draw or recre
 </reference>
 
 ### Step 3: Load Images Catalog
-
-<critical>
-Decorative images and brand imagery MUST come from the images catalog when available.
-If a concept has no catalog match, OMIT it entirely — never generate or substitute images.
-</critical>
 
 <steps>
 1. Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists
@@ -576,52 +561,13 @@ Brand assets may include `colorMetadata` with the following fields:
 | any | (no metadata) | Yes (fallback) |
 </reference>
 
-#### Mismatch Warning Format
+#### Mismatch Handling
 
-When an asset has incompatible `backgroundAffinity`, display this warning:
-
-<reference title="Asset compatibility warning template">
-```
-Warning: Asset Compatibility
-
-The requested asset '{{asset_name}}' has backgroundAffinity='{{asset_affinity}}'
-but this slide has a {{slide_background_mode}} background.
-
-Consider these compatible alternatives:
-{{#each compatible_alternatives limit=3}}
-- {{this.name}}: {{this.description}} (affinity: {{this.backgroundAffinity}})
-{{/each}}
-
-Proceeding with original selection. The asset may not display optimally.
-```
-</reference>
-
-#### Finding Compatible Alternatives
-
-<steps>
-1. When mismatch detected, scan the same catalog (icons/logos/images) for alternatives
-2. Filter to assets where:
-   - `colorMetadata.backgroundAffinity` matches slide's `background_mode`, OR
-   - `colorMetadata.backgroundAffinity` is `"both"` or `"any"`
-3. Rank by semantic similarity to the original concept (tags, description)
-4. Return top 1-3 alternatives
-5. If no compatible alternatives exist, note: "No compatible alternatives available"
-</steps>
+When an asset has incompatible `backgroundAffinity`: warn user, scan same catalog for compatible alternatives (matching background or affinity "both"/"any"), suggest top 1-3 alternatives ranked by semantic similarity, then proceed with original selection.
 
 #### Fallback Behavior
 
-<critical>
-Assets without `colorMetadata` MUST work unchanged for backwards compatibility.
-</critical>
-
-<reference title="Fallback rules">
-| Scenario | Behavior |
-|----------|----------|
-| Asset has no `colorMetadata` | Proceed without warning |
-| Asset has `colorMetadata` but no `backgroundAffinity` | Proceed without warning |
-| Catalog not loaded | Proceed with standard selection |
-| User explicitly requests incompatible asset | Warn, then proceed with their request |
-</reference>
+Assets without `colorMetadata` proceed without warning (backwards compatible). User-requested incompatible assets: warn, then proceed.
 
 → Continue to Phase 2
 
@@ -690,21 +636,7 @@ Score based on: layout type match, content structure fit, presentation purpose a
    - Otherwise → proceed to Phase 3A with `{{selected_template}}`
 </steps>
 
-<reference title="Template Selection Reasoning Output Format">
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 Template Selection for "{{slide.description || slide.intent}}"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Candidates evaluated:
-{{#each template_candidates}}
-{{#if @first}}▶ {{else}}  {{/if}}{{this.id}}: {{this.reasons.join(", ")}} → {{this.score}}% confidence
-{{/each}}
-
-✓ Selected: {{selected_template.id}} ({{selected_template.score}}% confidence)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-</reference>
+**Report to user:** Template selection reasoning — list top candidates with scores and match reasons. Highlight the selected template with confidence percentage.
 
 <reference title="Confidence Thresholds">
 | Threshold | Behavior |
@@ -732,18 +664,10 @@ After displaying template selection reasoning, present user with override option
   <choice label="Generate Custom" description="Create fully custom slide without template" />
 </ask>
 
-<check if="user selected Continue">
-  <action>Proceed to Phase 3A with {{selected_template}}</action>
-</check>
-<check if="user selected alternative template (template_candidates[1] or template_candidates[2])">
-  <action>Update {{selected_template}} to user's choice from {{template_candidates}}</action>
-  <action>Log: "User override: switched from {{top_candidate.id}} to {{selected_template.id}}"</action>
-  <action>Proceed to Phase 3A</action>
-</check>
-<check if="user selected Generate Custom">
-  <action>Log: "User selected custom generation over {{top_candidate.id}} ({{top_candidate.score}}%)"</action>
-  <action>Proceed to Phase 3B</action>
-</check>
+**Handle user selection:**
+- "Continue" → Proceed to Phase 3A with `{{selected_template}}`
+- Alternative template → Update `{{selected_template}}` to user's choice, log the override, proceed to Phase 3A
+- "Generate Custom" → Log custom selection, proceed to Phase 3B
 
 ### Fallback: Low Confidence or No Match
 
@@ -759,21 +683,7 @@ When LLM scoring returns low confidence (<50%) or no clear match:
    - User selects "Generate Custom" → proceed to Phase 3B
 </steps>
 
-<reference title="AskUserQuestion for Low Confidence">
-<ask context="Template selection confidence is low. The best matches found:
-
-{{#each template_candidates limit=3}}
-• {{this.id}} ({{this.score}}%): {{this.reasons.join(", ")}}
-{{/each}}
-
-Would you like to use one of these templates, or generate a fully custom slide?"
-     header="Template">
-  <choice label="{{template_candidates[0].id}}" description="Use top match ({{template_candidates[0].score}}% confidence)" />
-  <choice label="{{template_candidates[1].id}}" description="Use second match ({{template_candidates[1].score}}% confidence)" />
-  <choice label="{{template_candidates[2].id}}" description="Use third match ({{template_candidates[2].score}}% confidence)" />
-  <choice label="Generate Custom" description="Create fully custom slide without template (recommended for unique layouts)" />
-</ask>
-</reference>
+For low confidence: present top 3 templates with scores + "Generate Custom" option via AskUserQuestion. Prominently offer custom generation for low-confidence matches.
 
 <reference title="Design Plan Matching Algorithm (New Schema)">
 | Design Plan Keywords | Catalog Match |
@@ -911,23 +821,7 @@ These provide few-shot examples for custom generation in Phase 3B.
 3. Use LLM to rank templates by semantic similarity:
 
 <reference title="LLM Semantic Similarity Prompt">
-```
-Given this slide request:
-- Intent/Description: {{slide_description}}
-- Design Plan: {{design_plan}}
-- Storyline Role: {{storyline_role}}
-- Background Mode: {{background_mode}}
-
-Analyze these templates and rank by how well their PURPOSE matches the slide intent (1=best match):
-
-{{#each catalog.templates}}
-{{@index}}. {{this.id}}: {{this.description}}
-   Use cases: {{this.use_cases}}
-{{/each}}
-
-Return the top 3 most similar template IDs as a JSON array: ["id1", "id2", "id3"]
-Consider: layout type, content structure, presentation purpose, visual approach.
-```
+Rank catalog templates by how well their PURPOSE matches the slide intent (description, design_plan, storyline_role, background_mode). Return top 3 most similar template IDs as JSON array. Consider: layout type, content structure, presentation purpose, visual approach.
 </reference>
 
 4. Store result as `{{similar_templates}}` array (2-3 template IDs)
@@ -963,70 +857,18 @@ These excerpts provide concrete examples of CSS patterns, layout structure, and 
 3. Format each excerpt with clear structure:
 
 <reference title="Few-Shot Excerpt Format">
-```
-═══════════════════════════════════════
-TEMPLATE: {{template.id}}
-PURPOSE: {{template.description}}
-BACKGROUND MODE: {{template.background_mode}} (this excerpt)
-═══════════════════════════════════════
+For each similar template, extract an abbreviated structural excerpt containing:
+- Template ID, purpose, background mode
+- Color mode adaptation notes (dark→light or light→dark variable swaps)
+- CSS :root block (first 10-12 custom property declarations)
+- `.slide` CSS layout rules (display, grid/flex, padding)
 
-{{#if template.background_mode == "dark"}}
-For LIGHT mode slides using this pattern:
-- background: var(--color-bg-light) → #FFFFFF
-- text: var(--color-text-on-light) → #0C0C0C
-- accent: var(--color-accent-light) → #004b57 (Dusk)
-{{else}}
-For DARK mode slides using this pattern:
-- background: var(--color-bg-dark) → #0C0C0C
-- text: var(--color-text-on-dark) → #FFFFFF
-- accent: var(--color-accent) → #EAFF5F (Amp Yellow)
-{{/if}}
-
-CSS CUSTOM PROPERTIES:
-```css
-:root {
-  --color-primary: ...;
-  --color-secondary: ...;
-  /* First 10 variables */
-}
-```
-
-LAYOUT STRUCTURE:
-```css
-.slide {
-  /* Main container styles */
-}
-```
-
-PRIMARY COMPONENT (abbreviated):
-```html
-<div class="[main-component-class]">
-  <!-- First child structure only -->
-</div>
-```
-
-ATTRIBUTE PATTERN:
-```html
-<h1 class="title" contenteditable="true" data-field="title">...</h1>
-```
-═══════════════════════════════════════
-```
+- Primary component HTML structure (first major content container only)
+- Attribute pattern example (one contenteditable element with data-field)
 </reference>
 
 <reference title="Color Scheme Values for Mode Adaptation">
-When adapting a template to a different background mode, use these resolved values:
-
-DARK MODE (from theme.workflowRules.colorSchemes.dark):
-- background: #0C0C0C (colors.background.dark)
-- textHeading: #FFFFFF (colors.text.onDark)
-- textBody: #E8EDEF (colors.text.body)
-- accent: #EAFF5F (colors.accent / Amp Yellow)
-
-LIGHT MODE (from theme.workflowRules.colorSchemes.light):
-- background: #FFFFFF (colors.background.light)
-- textHeading: #0C0C0C (colors.text.onLight)
-- textBody: #0C0C0C (colors.text.onLight)
-- accent: #004b57 (colors.brand.dusk)
+Resolve colors from `theme.workflowRules.colorSchemes[background_mode]` at runtime. Each scheme maps to theme paths (e.g., dark: background→colors.background.dark, textHeading→colors.text.onDark, accent→colors.accent).
 </reference>
 
 4. Concatenate all excerpts into `{{few_shot_excerpts}}` variable
@@ -1139,48 +981,10 @@ Users approve or modify before generation proceeds.
 
 ### Step 6: Display Design Checkpoint
 
-<reference title="Checkpoint Display Format">
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎨 DESIGN CHECKPOINT — Slide {{slide.number}} of {{total_slides}}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📋 SLIDE INTENT
-───────────────────────────────────────────────────────────────────────────────
-{{slide.description || slide.intent}}
-
-Role: {{slide.storyline_role}}  |  Tone: {{slide.tone}}
-{{section_progress}}
-
-📊 CONTEXT (Previous Slide)
-───────────────────────────────────────────────────────────────────────────────
-{{#if is_first_slide}}
-This is the first slide — no previous context to reference.
-{{else}}
-Previous: Slide {{prev_number}} used **{{prev_template}}** template with **{{prev_background_mode}}** background
-{{#if consecutive_same_mode > 1}}
-⚠️ {{consecutive_same_mode}} consecutive {{prev_background_mode}} slides — consider rhythm break
-{{/if}}
-{{/if}}
-
-🎯 DESIGN PROPOSAL
-───────────────────────────────────────────────────────────────────────────────
-**Template:** {{proposed_template}} ({{selected_template.score}}% confidence)
-  → {{selected_template.reasons.join(", ")}}
-
-**Background:** {{proposed_background_mode}}
-  {{#if background_rhythm_note}}→ {{background_rhythm_note}}{{/if}}
-
-**Layout Approach:**
-  {{proposed_layout_approach}}
-
-**Suggested Assets:**
-  {{#each proposed_assets}}• {{this.type}}: {{this.name}} ({{this.path}}){{/each}}
-  {{#if proposed_assets.length == 0}}No specific assets identified — will use theme defaults{{/if}}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-</reference>
+**Report to user** a design checkpoint including:
+- Slide intent (description), role, tone, section progress
+- Previous slide context (template, background mode, rhythm warning if consecutive same mode)
+- Design proposal: template (with confidence %), background mode (with rhythm notes), layout approach, suggested assets from catalogs
 
 <steps>
 1. Output the formatted checkpoint display (above)
@@ -1198,67 +1002,12 @@ Previous: Slide {{prev_number}} used **{{prev_template}}** template with **{{pre
   <choice label="Skip All Checkpoints" description="Auto-approve all remaining slides (YOLO mode)" />
 </ask>
 
-<check if="user selected Approve">
-  <action>Log: "Design approved: {{proposed_template}}, {{proposed_background_mode}}"</action>
-  <action>Set `{{selected_template}}` = template from proposal</action>
-  <action>Set `{{background_mode}}` = `{{proposed_background_mode}}`</action>
-  <goto>Phase 3A or 3B based on template selection</goto>
-</check>
-
-<check if="user selected Change Template">
-  <action>Display filtered template matches (top 5 from Phase 2 scoring)</action>
-  <ask context="Available templates (sorted by match score):
-
-{{#each template_candidates limit=5}}
-{{@index + 1}}. **{{this.id}}** ({{this.score}}%): {{this.reasons.join(', ')}}
-{{/each}}
-
-Or type 'all' to see all {{catalog_total}} templates."
-       header="Template">
-    <choice label="{{template_candidates[0].id}}" description="{{template_candidates[0].score}}% match" />
-    <choice label="{{template_candidates[1].id}}" description="{{template_candidates[1].score}}% match" />
-    <choice label="{{template_candidates[2].id}}" description="{{template_candidates[2].score}}% match" />
-    <choice label="Show all templates..." description="Browse complete template catalog" />
-  </ask>
-  <check if="user selected 'Show all templates...'">
-    <action>List all templates from catalog with IDs and descriptions</action>
-    <action>Ask user to select by name or number</action>
-  </check>
-  <action>Update `{{selected_template}}` to user's choice</action>
-  <action>Log: "Template changed: {{previous_template}} → {{selected_template.id}}"</action>
-  <goto>Phase 3A with new template</goto>
-</check>
-
-<check if="user selected Change Background">
-  <action>Toggle background mode: dark ↔ light</action>
-  <action>Show rhythm impact: "Changing to {{new_mode}} would result in {{new_consecutive}} consecutive {{new_mode}} slides"</action>
-  <ask context="Background mode: **{{current_mode}}** → **{{new_mode}}**
-
-Rhythm impact: {{rhythm_impact_message}}"
-       header="Confirm">
-    <choice label="Confirm {{new_mode}}" description="Use {{new_mode}} background for this slide" />
-    <choice label="Keep {{current_mode}}" description="Stay with original background mode" />
-  </ask>
-  <action>Update `{{background_mode}}` to confirmed choice</action>
-  <action>Log: "Background changed: {{previous_mode}} → {{background_mode}}"</action>
-  <goto>Phase 3A or 3B with updated background</goto>
-</check>
-
-<check if="user selected Edit Layout">
-  <action>Accept freeform text input for layout adjustments</action>
-  <ask>Describe your layout adjustments (e.g., "Add a third column", "Use horizontal layout instead", "Include an icon for each point"):</ask>
-  <action>Store input as `{{layout_adjustments}}`</action>
-  <action>Merge adjustments with `{{slide.design_plan}}`</action>
-  <action>Log: "Layout customized: {{layout_adjustments}}"</action>
-  <goto>Phase 3A or 3B with merged design plan</goto>
-</check>
-
-<check if="user selected Skip All Checkpoints">
-  <action>Set `{{skip_all_checkpoints}}` = true (session flag)</action>
-  <action>Log: "YOLO mode activated — skipping all remaining checkpoints"</action>
-  <output>✅ **YOLO mode activated** — remaining slides will auto-approve with AI-proposed designs.</output>
-  <goto>Phase 3A or 3B with current proposal</goto>
-</check>
+**Handle user selection:**
+- **Approve** → Log approval, set `{{selected_template}}` and `{{background_mode}}` from proposal, proceed to Phase 3A/3B
+- **Change Template** → Display top 5 template matches from Phase 2 scoring via AskUserQuestion (include "Show all templates" option). Update `{{selected_template}}` to choice, log change, proceed to Phase 3A
+- **Change Background** → Toggle dark ↔ light, show rhythm impact ("Changing to X would result in Y consecutive X slides"), confirm with user via AskUserQuestion, update `{{background_mode}}`, proceed to Phase 3A/3B
+- **Edit Layout** → Accept freeform text input for layout adjustments, merge with `{{slide.design_plan}}`, proceed to Phase 3A/3B
+- **Skip All Checkpoints** → Set `{{skip_all_checkpoints}}` = true (session flag), inform user YOLO mode active, proceed with current proposal
 
 ### Step 8: Update Status with Design Choices
 
@@ -1371,14 +1120,6 @@ resolved_assets:
 
 ## Phase 3A: Template Build
 
-<critical enforcement="reminder">
-REMINDER: Review the NON-NEGOTIABLE Brand Asset Rules at the top of this document BEFORE generating any HTML.
-- Icons: ONLY from {{icon_catalog}} — NEVER emoji, NEVER inline SVG. No match → OMIT.
-- Logos: ONLY from {{logo_catalog}} — NEVER draw or recreate. No match → OMIT.
-- Images: ONLY from {{images_catalog}} — NEVER generate or substitute. No match → OMIT.
-VIOLATION = BUILD FAILURE. Use catalogs loaded in Phase 1C. Use ONLY assets from {{resolved_assets}}.
-</critical>
-
 <steps>
 1. Read matched template HTML from `.slide-builder/config/catalog/{{matched_template.file}}`
 2. Read theme from `.slide-builder/config/theme.json`
@@ -1488,14 +1229,6 @@ All color values must be resolved from theme - no hardcoded hex values in this w
 
 ## Phase 3B: Custom Build (Frontend Design Skill) — LAST RESORT
 
-<critical enforcement="reminder">
-REMINDER: Review the NON-NEGOTIABLE Brand Asset Rules at the top of this document BEFORE generating any HTML.
-- Icons: ONLY from {{icon_catalog}} — NEVER emoji, NEVER inline SVG. No match → OMIT.
-- Logos: ONLY from {{logo_catalog}} — NEVER draw or recreate. No match → OMIT.
-- Images: ONLY from {{images_catalog}} — NEVER generate or substitute. No match → OMIT.
-VIOLATION = BUILD FAILURE. Use catalogs loaded in Phase 1C. Use ONLY assets from {{resolved_assets}}.
-</critical>
-
 <critical>
 Custom builds should be rare. Only use this path when:
 1. `suggested_template` is explicitly `"custom"` in the plan, OR
@@ -1539,32 +1272,15 @@ BEFORE invoking the frontend-design skill, confirm ALL of the following.
 These are the most common failure points requiring post-generation fixes.
 </critical>
 
-<pre-generation-checklist>
-CONFIRM your generated HTML will include:
-
-[ ] CSS VARIABLES in :root:
-    --color-primary, --color-secondary, --color-accent
-    --color-bg-default, --color-bg-dark, --color-bg-light
-    --color-text-heading, --color-text-body
-    --font-heading, --font-body
-
-[ ] DATA-FIELD NAMING: lowercase-hyphenated
-    CORRECT: data-field="point-1", data-field="column-header"
-    WRONG: data-field="Point1", data-field="column_header"
-
-[ ] CONTENTEDITABLE on EVERY visible text element
-    Each with both contenteditable="true" AND unique data-field
-
-[ ] NESTING DEPTH: ≤ 4 levels from .slide to deepest text
-
-[ ] CSS COLORS: var(--color-*) for all values (no hardcoded hex in component CSS)
-
-[ ] VIEWPORT: width=1920, height=1080
-
-[ ] DIMENSIONS: body AND .slide = 1920px x 1080px
-
-[ ] AUTO-SAVE: saveEdits() function before </body>
-</pre-generation-checklist>
+<checklist title="Pre-generation confirmation (most common failure points)">
+- [ ] CSS variables in :root (--color-primary, --color-secondary, --color-accent, --color-bg-*, --color-text-*, --font-heading, --font-body)
+- [ ] data-field naming: lowercase-hyphenated (e.g., "point-1", NOT "Point1" or "point_1")
+- [ ] contenteditable="true" + unique data-field on EVERY visible text element
+- [ ] Nesting depth ≤ 4 levels from .slide to deepest text
+- [ ] No hardcoded hex colors in component CSS (use var(--color-*))
+- [ ] Viewport width=1920, height=1080; body AND .slide = 1920x1080px
+- [ ] saveEdits() function before `</body>`
+</checklist>
 
 <reference title="Prompt for frontend-design skill">
 ```
@@ -1600,13 +1316,8 @@ PATTERN REQUIREMENTS (non-negotiable):
 
 TECHNICAL: 1920x1080px, contenteditable on all text, unique data-field, CSS variables, auto-save script
 
-BRAND ASSET RULES — Use ONLY pre-resolved assets from {{resolved_assets}} (Phase 2.99):
-- For each icon/logo/image placement, look up the entry in {{resolved_assets}}
-- If catalog_path exists → use that exact path for the src attribute
-- If action is "OMIT" → do NOT place any element for that concept
-- Do NOT search catalogs inline — all assets were resolved in Phase 2.99
-- NEVER use emoji, NEVER generate SVG icons, NEVER draw logos, NEVER substitute images
-CRITICAL: If ANY asset has action "OMIT" → leave that space empty. Do NOT substitute.
+BRAND ASSETS: Use ONLY pre-resolved assets from {{resolved_assets}} (Phase 2.99).
+If catalog_path exists → use exact path. If action "OMIT" → leave empty. NEVER substitute.
 
 ═══════════════════════════════════════
 PRE-OUTPUT CHECK:
@@ -1621,89 +1332,24 @@ Output only complete HTML starting with <!DOCTYPE html>.
 ```
 </reference>
 
-<checklist title="Validate skill output">
-- [ ] All text elements have `contenteditable="true"`
-- [ ] All contenteditable elements have unique `data-field`
-- [ ] Viewport meta is `width=1920, height=1080`
-- [ ] Body and .slide are 1920x1080px
-- [ ] `saveEdits()` function exists
-- [ ] CSS uses `--color-*` variables
-- [ ] Background matches `background_mode`
-- [ ] Text colors appropriate for background
-- [ ] Icons use catalog paths only (no emoji, no generated SVG)
-- [ ] Logos use catalog paths only (no drawn or recreated logos)
-- [ ] Images use catalog paths only (no generated or substitute images)
-- [ ] Missing catalog assets are OMITTED, not substituted
+<checklist title="Validate skill output (in addition to pre-generation checklist above)">
+- [ ] Background matches `background_mode`; text colors appropriate for background
+- [ ] All brand assets from `{{resolved_assets}}` only — OMIT-flagged assets are absent (no substitutions)
 </checklist>
 
-→ Continue to Phase 3B.5
+### Post-Generation Quality Check
 
----
+After custom generation, validate output against `{{few_shot_excerpts}}` patterns. For each failed check, attempt automatic fix. Track compliance score and warn user if below 80%.
 
-## Phase 3B.5: Quality Validation (Few-Shot Pattern Compliance)
-
-<critical>
-After custom generation, validate that output matches the quality characteristics of the example templates.
-This ensures custom slides feel cohesive with template-based slides in the same deck.
-</critical>
-
-<steps>
-1. Compare generated HTML against `{{few_shot_excerpts}}` patterns
-2. Run through compliance checklist below
-3. For each failed check:
-   - Log the specific issue
-   - Attempt automatic fix if possible
-   - If unfixable, warn user and note in output
-4. Track compliance score: count passed checks / total checks
-5. Log: "Pattern compliance: {{passed}}/{{total}} checks passed"
-</steps>
-
-<checklist title="CSS Variable Naming Compliance">
-- [ ] :root block declares `--color-primary`
-- [ ] :root block declares `--color-secondary`
-- [ ] :root block declares `--color-accent`
-- [ ] :root block declares `--color-bg-default` or `--color-bg-dark`/`--color-bg-light`
-- [ ] :root block declares `--color-text-heading`
-- [ ] :root block declares `--color-text-body`
-- [ ] :root block declares `--font-heading`
-- [ ] :root block declares `--font-body`
-- [ ] No hardcoded color values in body/component CSS (use var(--color-*))
-- [ ] CSS variable names match example template conventions exactly
-</checklist>
-
-<checklist title="data-field Convention Compliance">
-- [ ] ALL contenteditable elements have unique `data-field` attributes
-- [ ] data-field values are lowercase (no uppercase letters)
-- [ ] data-field values use hyphens for multi-word names (e.g., "point-1", not "point1" or "point_1")
-- [ ] data-field naming follows semantic patterns: title, subtitle, eyebrow, body, point-N, stat-value, stat-label
-- [ ] No duplicate data-field values in the document
-- [ ] data-field coverage: every visible text element has a field identifier
-</checklist>
-
-<checklist title="Structural Similarity Compliance">
-- [ ] Layout uses similar approach as closest example (grid/flex, not absolute positioning)
-- [ ] Main content nesting depth ≤ 4 levels (count from .slide to deepest text element)
-- [ ] Component organization follows example patterns (header → content → footer flow)
-- [ ] Spacing values are within expected ranges: slide padding 60-80px, gaps 16-40px
-- [ ] Typography hierarchy is clear: headings > subheadings > body > captions
-- [ ] Visual weight distribution similar to examples (not top-heavy or unbalanced)
-</checklist>
-
-<reference title="Auto-fix Rules">
+<reference title="Auto-fix Rules for Common Issues">
 | Issue | Auto-fix Action |
 |-------|-----------------|
 | Missing CSS variable | Add to :root block with theme value |
 | Hardcoded color | Replace with appropriate var(--color-*) |
 | Missing data-field | Generate semantic field name from element context |
-| Uppercase in data-field | Convert to lowercase |
-| Underscore in data-field | Replace with hyphen |
+| Uppercase/underscore in data-field | Convert to lowercase-hyphenated |
 | Missing contenteditable | Add contenteditable="true" to text elements |
 </reference>
-
-<important>
-If compliance score is below 80% (fewer than 80% of checks passed), warn user:
-"⚠️ Custom slide has pattern compliance issues. Consider reviewing against template examples."
-</important>
 
 → Continue to Phase 4
 
@@ -1789,104 +1435,18 @@ Invoke the skill using the **Skill tool** with `skill: "technical-svg-diagrams"`
 </important>
 
 <reference title="Prompt for technical-svg-diagrams skill">
-```
-Create a technical SVG diagram for a presentation slide.
-
-DIAGRAM TYPE: {{diagram_subtype}} (architecture | flow | component)
-
-COMPONENTS AND CONNECTIONS:
-{{content_type_details}}
-
-BRAND COLOR MAPPING:
-- Primary accent: {{resolved_colors.primary}}
-- Secondary: {{resolved_colors.secondary}}
-- Background: Use default #fafafa grid (SVG design system standard)
-
-REQUIREMENTS:
-- Follow the established SVG design system (grid background, monospace fonts, muted colors)
-- Read references/svg-patterns.md for copy-ready pattern templates
-- Dimensions appropriate for diagram type (will be scaled to fit 1920x1080 slide)
-- Title with bracketed tag at top
-- Bottom summary note
-- All components properly connected with arrows
-- Use semantic colors: green for success/positive, red for error, blue for primary, orange for warning, purple for process
-
-Output only the complete SVG element (no wrapping HTML).
-```
+Create a technical SVG diagram. Type: {{diagram_subtype}} (architecture|flow|component). Components: {{content_type_details}}. Brand colors: primary={{resolved_colors.primary}}, secondary={{resolved_colors.secondary}}. Follow SVG design system (grid bg, monospace fonts). Title with bracketed tag, bottom summary, components connected with arrows. Output SVG only.
 </reference>
 
-<reference title="Slide HTML Wrapper Template for SVG Diagrams">
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=1920, height=1080">
-  <style>
-    :root {
-      --color-primary: {{theme.colors.primary}};
-      --color-secondary: {{theme.colors.secondary}};
-      --color-accent: {{theme.colors.accent}};
-      --color-bg-default: {{resolved_colors.background}};
-      --color-text-heading: {{resolved_colors.textHeading}};
-      --color-text-body: {{resolved_colors.textBody}};
-      --font-heading: {{theme.typography.headingFont}};
-      --font-body: {{theme.typography.bodyFont}};
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { width: 1920px; height: 1080px; overflow: hidden; }
-    .slide {
-      width: 1920px; height: 1080px;
-      background: var(--color-bg-default);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 60px 80px;
-      gap: 32px;
-    }
-    .slide-title {
-      font-family: var(--font-heading);
-      font-size: 48px; color: var(--color-text-heading);
-      text-align: center;
-    }
-    .diagram-container {
-      flex: 1; display: flex;
-      align-items: center; justify-content: center;
-      width: 100%; max-height: 800px;
-    }
-    .diagram-container svg {
-      max-width: 100%; max-height: 100%;
-      width: auto; height: auto;
-    }
-    .slide-subtitle {
-      font-family: var(--font-body);
-      font-size: 24px; color: var(--color-text-body);
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <div class="slide">
-    <div class="slide-title" contenteditable="true" data-field="title">{{slide.title}}</div>
-    <div class="diagram-container">
-      <!-- SVG diagram inserted here -->
-    </div>
-    <div class="slide-subtitle" contenteditable="true" data-field="subtitle">{{slide.subtitle_or_description}}</div>
-  </div>
-  <script>
-    function saveEdits() {
-      const edits = {};
-      document.querySelectorAll('[contenteditable][data-field]').forEach(el => {
-        edits[el.dataset.field] = el.innerHTML;
-      });
-      window.parent?.postMessage({ type: 'saveEdits', edits }, '*');
-    }
-    document.querySelectorAll('[contenteditable]').forEach(el => {
-      el.addEventListener('blur', saveEdits);
-    });
-  </script>
-</body>
-</html>
-```
+<reference title="SVG Diagram Slide Structure">
+Wrap the SVG in standard slide HTML following the Authoritative Example structure:
+- 1920x1080 viewport with CSS variables from theme in :root
+- `.slide` container with flex column layout, center alignment, 60-80px padding
+- Contenteditable title (data-field="title") above the diagram
+- `.diagram-container` div (flex: 1, centered) containing the SVG (max-width/height: 100%)
+- Contenteditable subtitle (data-field="subtitle") below the diagram
+- saveEdits() auto-save function before `</body>`
+- data-slide-id on `.slide` div
 </reference>
 
 → Continue to Phase 4
@@ -1934,41 +1494,12 @@ common issues (max 2 iterations), and reports findings. Non-blocking: always con
 
 ### Handle Audit Results
 
-<check if="{{visual_audit_skipped}} == true">
-  <goto>Phase 5</goto>
-</check>
-
-<check if="{{visual_audit_passed}} == true">
-  <output>Visual audit passed for slide {{slide_number}}</output>
-  <goto>Phase 5</goto>
-</check>
-
-<check if="{{visual_audit_passed}} == false">
-  <ask context="Visual audit found issues (see report above). How would you like to proceed?"
-       header="Validate">
-    <choice label="Accept" description="Continue to Phase 5 as-is" />
-    <choice label="Fix Issues" description="Return to Phase 3 to regenerate with corrections" />
-    <choice label="Skip" description="Ignore findings and continue to Phase 5" />
-  </ask>
-
-  <check if="user selected Accept">
-    <action>Log: "Validation accepted — proceeding to Phase 5"</action>
-    <goto>Phase 5</goto>
-  </check>
-
-  <check if="user selected Skip">
-    <action>Log: "Validation skipped by user — proceeding to Phase 5"</action>
-    <goto>Phase 5</goto>
-  </check>
-
-  <check if="user selected Fix Issues">
-    <action>Log: "User requested fixes — returning to Phase 3"</action>
-    <action>Compile remaining issues from `{{visual_audit_report}}` into `{{regeneration_context}}`</action>
-    <action>Set `{{fix_mode}}` = true to indicate regeneration with corrections</action>
-    <output>Returning to slide generation with corrections from visual audit findings.</output>
-    <goto>Phase 3A or 3B with {{regeneration_context}}</goto>
-  </check>
-</check>
+- If audit was skipped → proceed to Phase 5
+- If audit passed → report success, proceed to Phase 5
+- If audit failed → present options via AskUserQuestion:
+  - **Accept** → Log acceptance, proceed to Phase 5 as-is
+  - **Fix Issues** → Compile issues from `{{visual_audit_report}}` into `{{regeneration_context}}`, return to Phase 3A/3B with corrections
+  - **Skip** → Log skip, proceed to Phase 5
 
 → Continue to Phase 5
 
