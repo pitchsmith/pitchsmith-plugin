@@ -99,7 +99,7 @@ const pluginJson = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_DIR, '.claude-plugin', 'plugin.json'), 'utf8')
 );
 test('Plugin name is "pitchsmith"', pluginJson.name === 'pitchsmith');
-test('Plugin version is "0.2.8"', pluginJson.version === '0.2.8');
+test('Plugin version is "0.2.9"', pluginJson.version === '0.2.9');
 
 // Check all required directories
 const requiredDirs = ['.claude-plugin', 'commands', 'skills', 'workflows', 'templates', 'config/defaults', 'scripts'];

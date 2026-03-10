@@ -330,7 +330,7 @@ Elastic License v2 (ELv2)
 
 ## Version
 
-Current version: 0.2.8
+Current version: 0.2.9
 
 ---
 
