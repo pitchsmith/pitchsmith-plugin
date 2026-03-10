@@ -46,7 +46,7 @@ Before writing any HTML file, verify your output satisfies ALL of these. These a
 
 ## NON-NEGOTIABLE: Brand Asset Rules
 
-<critical>
+<critical enforcement="absolute">
 These rules CANNOT be bypassed under ANY circumstances. VIOLATION = BUILD FAILURE.
 
 1. **ICONS:** ONLY use icons from icon-catalog.json
@@ -110,31 +110,6 @@ Examples: `build-title-1`, `build-card-2`, `build-icon-3`
 
 These IDs are **NOT** assigned by build-one. They are assigned later by the `/pitchsmith:animate` workflow or by viewer `assignBuildIds()` functions at runtime.
 
-</reference>
-
----
-
-## Phase Map
-
-<reference title="Workflow phases (linear execution order)">
-| Phase | Name | Purpose |
-|-------|------|---------|
-| 1 | Determine Mode | Read status.yaml, route to deck or single mode |
-| 2A / 2B | Mode Setup | Load plan, select target slide (deck or single) |
-| 2A.1 | Section Context | Enrich slide with agenda section discovery data |
-| 3 | Load Brand Asset Catalogs | Load icon, logo, and image catalogs |
-| 4 | Determine Build Strategy | LLM-scored template matching with user override |
-| 5 | Design Standards & Theme | Load design constraints, validate workflowRules |
-| 6 | Content-Template Fit | Validate template can accommodate content structure |
-| 6A | Extract Few-Shot Patterns | Pull structural excerpts from similar templates |
-| 7 | Design Checkpoint | Present AI design proposal for user approval |
-| 8 | Asset Resolution | Resolve all brand assets against catalogs |
-| 9A / 9B / 9C | Build | Template build, custom build, or diagram build |
-| 10 | Save Output | Write HTML + state files |
-| 11 | Visual Audit | Browser-based validation (non-blocking) |
-| 12 | Update Viewer | Regenerate manifest.json (deck mode only) |
-| 13 | Update Status | Update plan.yaml and status.yaml |
-| 14 | Report Success | Summarize results, suggest next steps |
 </reference>
 
 ---
@@ -333,7 +308,7 @@ This is the exact structure your output must follow. The catalog templates in `.
 
 ---
 
-## Phase 1: Determine Mode
+## Phase 1: Determine Mode and Load Plan
 
 <critical>
 Read status.yaml FIRST. Do not proceed without knowing the mode.
@@ -343,14 +318,14 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 1. Read `.slide-builder/status.yaml`
 2. Extract the `mode` field
 3. Route based on value:
-   - `deck` → Continue to Phase 2A (Deck Mode)
-   - `single` → Skip to Phase 2B (Single Mode)
+   - `deck` → Continue to Phase 1A (Deck Mode)
+   - `single` → Skip to Phase 1B (Single Mode)
    - missing/invalid → Stop and inform user to run `/pitchsmith:plan-one` or `/pitchsmith:plan-deck`
 </steps>
 
 ---
 
-## Phase 2A: Deck Mode Setup
+## Phase 1A: Deck Mode Setup
 
 <steps>
 1. Read `decks:` registry from status.yaml
@@ -378,9 +353,11 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 11. Confirm to user: slide number, description/intent, build approach
 </steps>
 
+→ Continue to Phase 1A.5
+
 ---
 
-## Phase 2A.1: Load Section Context
+## Phase 1A.5: Load Section Context
 
 <critical>This step enriches slide generation with discovery data from the agenda section</critical>
 
@@ -395,13 +372,15 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 5. Store as `enriched_section_goals` or `enriched_key_message`
 </steps>
 
-<important>
+<note>
 If slide has no agenda_section_id or section not found, proceed with original slide context (backwards compatible).
-</important>
+</note>
+
+→ Continue to Phase 1C
 
 ---
 
-## Phase 2B: Single Mode Setup
+## Phase 1B: Single Mode Setup
 
 <steps>
 1. Verify `output/singles/plan.yaml` exists (stop if missing)
@@ -412,9 +391,11 @@ If slide has no agenda_section_id or section not found, proceed with original sl
    - `output_path` = `output/singles/{{slug}}.html`
 </steps>
 
+→ Continue to Phase 1C
+
 ---
 
-## Phase 3: Load Brand Asset Catalogs
+## Phase 1C: Load Brand Asset Catalogs
 
 <critical>
 Load ALL brand asset catalogs at workflow start so they are available throughout the build.
@@ -588,9 +569,11 @@ When an asset has incompatible `backgroundAffinity`: warn user, scan same catalo
 
 Assets without `colorMetadata` proceed without warning (backwards compatible). User-requested incompatible assets: warn, then proceed.
 
+→ Continue to Phase 2
+
 ---
 
-## Phase 4: Determine Build Strategy
+## Phase 2: Determine Build Strategy
 
 <critical>
 Template selection is catalog-driven with transparent LLM semantic scoring.
@@ -644,13 +627,13 @@ Score based on: layout type match, content structure fit, presentation purpose a
      - Find in `{{template_candidates}}` by ID
      - If found → use it (pre-selected), show its score in reasoning
      - If not found → warn, use `{{top_candidate}}` instead
-   - If `suggested_template` is "custom" → proceed to Phase 9B
+   - If `suggested_template` is "custom" → proceed to Phase 3B
 7. Match template based on schema (when no suggested_template and no user override):
    - Use `{{top_candidate}}` from LLM scoring as the match
    - **Legacy fallback** (if LLM scoring unavailable): Parse design_plan for layout keywords
 8. Route to build phase:
-   - If user selected "Generate Custom" → proceed to Phase 9B
-   - Otherwise → proceed to Phase 9A with `{{selected_template}}`
+   - If user selected "Generate Custom" → proceed to Phase 3B
+   - Otherwise → proceed to Phase 3A with `{{selected_template}}`
 </steps>
 
 **Report to user:** Template selection reasoning — list top candidates with scores and match reasons. Highlight the selected template with confidence percentage.
@@ -667,16 +650,24 @@ Score based on: layout type match, content structure fit, presentation purpose a
 
 After displaying template selection reasoning, present user with override options:
 
-**Present to user via AskUserQuestion** with these options:
-- **Continue** — Build with the selected template (show ID and confidence %)
-- **Alternative 1** — Switch to the 2nd-ranked template (show ID and confidence %)
-- **Alternative 2** — Switch to the 3rd-ranked template (show ID and confidence %)
-- **Generate Custom** — Create fully custom slide without template
+<ask context="Template selection complete. Would you like to use a different template?
+
+**Selected:** {{selected_template.id}} ({{selected_template.score}}% confidence)
+
+**Alternatives:**
+• {{template_candidates[1].id}} ({{template_candidates[1].score}}%)
+• {{template_candidates[2].id}} ({{template_candidates[2].score}}%)"
+     header="Template">
+  <choice label="Continue" description="Build with {{selected_template.id}} ({{selected_template.score}}% confidence)" />
+  <choice label="{{template_candidates[1].id}}" description="Switch to {{template_candidates[1].id}} ({{template_candidates[1].score}}% confidence)" />
+  <choice label="{{template_candidates[2].id}}" description="Switch to {{template_candidates[2].id}} ({{template_candidates[2].score}}% confidence)" />
+  <choice label="Generate Custom" description="Create fully custom slide without template" />
+</ask>
 
 **Handle user selection:**
-- "Continue" → Proceed to Phase 9A with `{{selected_template}}`
-- Alternative template → Update `{{selected_template}}` to user's choice, log the override, proceed to Phase 9A
-- "Generate Custom" → Log custom selection, proceed to Phase 9B
+- "Continue" → Proceed to Phase 3A with `{{selected_template}}`
+- Alternative template → Update `{{selected_template}}` to user's choice, log the override, proceed to Phase 3A
+- "Generate Custom" → Log custom selection, proceed to Phase 3B
 
 ### Fallback: Low Confidence or No Match
 
@@ -688,8 +679,8 @@ When LLM scoring returns low confidence (<50%) or no clear match:
    - Options 1-3: Top scored templates with confidence percentages
    - Option 4: "Generate Custom" (use frontend-design skill) - prominently offered for low confidence
 3. Route based on selection:
-   - User selects template → proceed to Phase 9A with that template
-   - User selects "Generate Custom" → proceed to Phase 9B
+   - User selects template → proceed to Phase 3A with that template
+   - User selects "Generate Custom" → proceed to Phase 3B
 </steps>
 
 For low confidence: present top 3 templates with scores + "Generate Custom" option via AskUserQuestion. Prominently offer custom generation for low-confidence matches.
@@ -706,7 +697,7 @@ For low confidence: present top 3 templates with scores + "Generate Custom" opti
 | "timeline", "chronological", "phases" | timeline |
 | "grid", "cards", "tiles" | grid |
 
-**Diagram Routing Override:** When `content_type == "diagram"`, run `determineDiagramMethod()` (see Phase 9C) BEFORE template matching. If SVG is determined to be the best fit, route directly to Phase 9C. Otherwise, proceed with normal template matching or Phase 9B fallback.
+**Diagram Routing Override:** When `content_type == "diagram"`, run `determineDiagramMethod()` (see Phase 3C) BEFORE template matching. If SVG is determined to be the best fit, route directly to Phase 3C. Otherwise, proceed with normal template matching or Phase 3B fallback.
 </reference>
 
 <reference title="Legacy Catalog Matching Algorithm">
@@ -717,9 +708,11 @@ For low confidence: present top 3 templates with scores + "Generate Custom" opti
 | 3 | If no match → fallback to custom or prompt user |
 </reference>
 
+→ Continue to Phase 2.5
+
 ---
 
-## Phase 5: Load Design Standards and Validate Theme
+## Phase 2.5: Load Design Standards and Validate Theme
 
 <critical>
 Read and apply design standards BEFORE generating any HTML.
@@ -734,9 +727,9 @@ These standards ensure slides remain readable at 50% zoom (typical laptop viewin
 5. Store as `{{design_constraints}}`
 </steps>
 
-<important>
+<note>
 Design standards take precedence over theme values for readability.
-</important>
+</note>
 
 ### Validate workflowRules (Strict Enforcement)
 
@@ -762,9 +755,11 @@ Theme must contain workflowRules section. No hardcoded fallbacks allowed.
 | dark/light | "❌ colorSchemes must have both 'dark' and 'light' modes defined." |
 </reference>
 
+→ Continue to Phase 2.9
+
 ---
 
-## Phase 6: Content-Template Fit Validation
+## Phase 2.9: Content-Template Fit Validation
 
 <critical>
 Before building, validate that the matched template can actually accommodate the content structure.
@@ -814,7 +809,7 @@ The plan's suggestion is a hint, not a mandate. Content structure determines the
 
 <critical>
 ALWAYS identify 2-3 semantically similar templates regardless of whether a template match was found.
-These provide few-shot examples for custom generation in Phase 9B.
+These provide few-shot examples for custom generation in Phase 3B.
 </critical>
 
 <steps>
@@ -833,15 +828,17 @@ Rank catalog templates by how well their PURPOSE matches the slide intent (descr
 5. Log: "Similar templates identified: [{{similar_templates.join(", ")}}]"
 </steps>
 
-<important>
-This step runs regardless of whether a matching template was found.
+<note>
+This step runs regardless of whether Phase 2.9 found a matching template.
 - If template match found → similar_templates provides validation/alternatives
-- If no match found → similar_templates guides custom generation
-</important>
+- If no match found → similar_templates guides Phase 3B custom generation
+</note>
+
+→ Continue to Phase 2.9.5
 
 ---
 
-## Phase 6A: Extract Few-Shot Patterns
+## Phase 2.9.5: Extract Few-Shot Patterns
 
 <critical>
 Extract abbreviated structural excerpts from similar templates to guide custom generation.
@@ -883,9 +880,11 @@ Keep excerpts ABBREVIATED - extract patterns, not full templates.
 Goal is to show structural conventions, not provide copy-paste code.
 </important>
 
+→ Continue to Phase 2.95 (Design Checkpoint)
+
 ---
 
-## Phase 7: Design Checkpoint
+## Phase 2.95: Design Checkpoint
 
 <critical>
 This checkpoint presents an AI-generated design proposal using context unavailable at planning time:
@@ -897,11 +896,11 @@ Users approve or modify before generation proceeds.
 
 <steps>
 1. Check if `{{skip_all_checkpoints}}` session flag is set (from previous "Skip All Checkpoints" selection)
-   - If set → skip to Phase 9A/9B with current selections, log: "Checkpoint skipped (YOLO mode active)"
+   - If set → skip to Phase 3A/3B with current selections, log: "Checkpoint skipped (YOLO mode active)"
 2. Check if invoked with `--yolo` or `#yolo` flag
-   - If set → skip to Phase 9A/9B, log: "Checkpoint skipped (YOLO flag)"
+   - If set → skip to Phase 3A/3B, log: "Checkpoint skipped (YOLO flag)"
 3. Check if this is build-all context AND `{{yolo_batch}}` is true
-   - If true → skip to Phase 9A/9B, log: "Checkpoint skipped (batch mode)"
+   - If true → skip to Phase 3A/3B, log: "Checkpoint skipped (batch mode)"
 4. Otherwise → proceed to Step 2
 </steps>
 
@@ -970,10 +969,10 @@ Users approve or modify before generation proceeds.
 
 <steps>
 1. Compile proposal components:
-   - `{{proposed_template}}` = `{{selected_template.id}}` from Phase 4 scoring
+   - `{{proposed_template}}` = `{{selected_template.id}}` from Phase 2 scoring
    - `{{proposed_background_mode}}` = `{{optimal_background_mode}}` from Step 4
    - `{{proposed_layout_approach}}` = summarize from `{{slide.design_plan}}` or generate brief description
-   - `{{proposed_assets}}` = list any icons/images identified in Phase 3 catalogs that match slide content
+   - `{{proposed_assets}}` = list any icons/images identified in Phase 1C catalogs that match slide content
 2. Generate confidence indicator:
    - Template confidence: `{{selected_template.score}}%`
    - Background mode: "Based on rhythm rules" or "Plan specified"
@@ -994,18 +993,20 @@ Users approve or modify before generation proceeds.
 
 ### Step 7: Handle User Response
 
-**Present to user via AskUserQuestion** with these options:
-- **Approve** — Build with proposed design (template + background mode)
-- **Change Template** — Select a different template from the catalog
-- **Change Background** — Toggle between dark/light background mode
-- **Edit Layout** — Provide custom layout instructions
-- **Skip All Checkpoints** — Auto-approve all remaining slides (YOLO mode)
+<ask context="Review the design proposal above. How would you like to proceed?"
+     header="Design">
+  <choice label="Approve" description="Build with proposed design ({{proposed_template}}, {{proposed_background_mode}})" />
+  <choice label="Change Template" description="Select a different template from the catalog" />
+  <choice label="Change Background" description="Toggle between dark/light background mode" />
+  <choice label="Edit Layout" description="Provide custom layout instructions" />
+  <choice label="Skip All Checkpoints" description="Auto-approve all remaining slides (YOLO mode)" />
+</ask>
 
 **Handle user selection:**
-- **Approve** → Log approval, set `{{selected_template}}` and `{{background_mode}}` from proposal, proceed to Phase 9A/9B
-- **Change Template** → Display top 5 template matches from Phase 4 scoring via AskUserQuestion (include "Show all templates" option). Update `{{selected_template}}` to choice, log change, proceed to Phase 9A
-- **Change Background** → Toggle dark ↔ light, show rhythm impact ("Changing to X would result in Y consecutive X slides"), confirm with user via AskUserQuestion, update `{{background_mode}}`, proceed to Phase 9A/9B
-- **Edit Layout** → Accept freeform text input for layout adjustments, merge with `{{slide.design_plan}}`, proceed to Phase 9A/9B
+- **Approve** → Log approval, set `{{selected_template}}` and `{{background_mode}}` from proposal, proceed to Phase 3A/3B
+- **Change Template** → Display top 5 template matches from Phase 2 scoring via AskUserQuestion (include "Show all templates" option). Update `{{selected_template}}` to choice, log change, proceed to Phase 3A
+- **Change Background** → Toggle dark ↔ light, show rhythm impact ("Changing to X would result in Y consecutive X slides"), confirm with user via AskUserQuestion, update `{{background_mode}}`, proceed to Phase 3A/3B
+- **Edit Layout** → Accept freeform text input for layout adjustments, merge with `{{slide.design_plan}}`, proceed to Phase 3A/3B
 - **Skip All Checkpoints** → Set `{{skip_all_checkpoints}}` = true (session flag), inform user YOLO mode active, proceed with current proposal
 
 ### Step 8: Update Status with Design Choices
@@ -1018,12 +1019,14 @@ Users approve or modify before generation proceeds.
 2. Proceed to appropriate build phase
 </steps>
 
+→ Continue to Phase 2.99 (Asset Resolution)
+
 ---
 
-## Phase 8: Asset Resolution
+## Phase 2.99: Asset Resolution
 
 <critical>
-This step is MANDATORY before any HTML generation. You MUST resolve ALL asset references against the catalogs loaded in Phase 3 and create a definitive `{{resolved_assets}}` object. Phase 9A and 9B MUST use ONLY assets from this object — no inline catalog searching during HTML generation.
+This step is MANDATORY before any HTML generation. You MUST resolve ALL asset references against the catalogs loaded in Phase 1C and create a definitive `{{resolved_assets}}` object. Phase 3A and 3B MUST use ONLY assets from this object — no inline catalog searching during HTML generation.
 </critical>
 
 ### Step 1: Extract Asset References from Slide Plan
@@ -1050,9 +1053,9 @@ This step is MANDATORY before any HTML generation. You MUST resolve ALL asset re
 ### Step 2: Resolve Each Asset Against Catalogs
 
 <critical>
-For every extracted asset reference, resolve it against the catalogs loaded in Phase 3.
-Use the selection algorithms defined in Phase 3 (icon selection, logo selection, image selection).
-Apply Smart Asset Selection (Phase 3 Step 4) for background compatibility checks.
+For every extracted asset reference, resolve it against the catalogs loaded in Phase 1C.
+Use the selection algorithms defined in Phase 1C (icon selection, logo selection, image selection).
+Apply Smart Asset Selection (Phase 1C Step 4) for background compatibility checks.
 </critical>
 
 <steps>
@@ -1111,9 +1114,11 @@ resolved_assets:
    - "No catalog assets matched this slide's needs. Visual elements will be omitted."
 </steps>
 
+→ Continue to Phase 3A (if template selected) or Phase 3B (if custom generation needed)
+
 ---
 
-## Phase 9A: Template Build
+## Phase 3A: Template Build
 
 <steps>
 1. Read matched template HTML from `.slide-builder/config/catalog/{{matched_template.file}}`
@@ -1126,12 +1131,12 @@ resolved_assets:
    - **New schema**: description → title/messaging, design_plan → layout, enriched_section_goals → content direction
    - **Legacy schema**: intent → title, key_points → body, enriched_key_message → headline guidance
    - Include `available_research` as supporting data if relevant
-7. **Place brand assets from `{{resolved_assets}}`** (created in Phase 8):
+7. **Place brand assets from `{{resolved_assets}}`** (created in Phase 2.99):
    - For each asset placement in the template, look up the corresponding entry in `{{resolved_assets}}`
    - If `catalog_path` exists → use that exact path for the `src` attribute
    - If `action: "OMIT"` → do NOT place any element for that concept (no emoji, no SVG, no substitution)
-   - Do NOT search catalogs inline — all resolution was completed in Phase 8
-   - Apply Smart Asset Selection warnings from Phase 3 Step 4 if any compatibility issues were noted
+   - Do NOT search catalogs inline — all resolution was completed in Phase 2.99
+   - Apply Smart Asset Selection warnings from Phase 1C Step 4 if any compatibility issues were noted
 8. Apply `{{design_constraints}}`: font sizes, spacing, content density limits
 9. Assemble complete HTML following Authoritative Example structure
 10. **Verify compliance** against Critical Requirements table AND design standards
@@ -1218,9 +1223,11 @@ If `background_mode` is missing from the slide, default to `dark` for backwards 
 All color values must be resolved from theme - no hardcoded hex values in this workflow.
 </critical>
 
+→ Continue to Phase 4
+
 ---
 
-## Phase 9B: Custom Build (Frontend Design Skill) — LAST RESORT
+## Phase 3B: Custom Build (Frontend Design Skill) — LAST RESORT
 
 <critical>
 Custom builds should be rare. Only use this path when:
@@ -1238,7 +1245,7 @@ If you reach this phase without explicit `"custom"` in plan, you MUST first pres
    - Option 1: "[Template A] - adapt by [specific changes]"
    - Option 2: "[Template B] - adapt by [specific changes]"
    - Option 3: "Build fully custom (no template base)"
-3. If user selects Option 1 or 2 → return to Phase 9A with that template
+3. If user selects Option 1 or 2 → return to Phase 3A with that template
 4. If user selects Option 3 → proceed with custom build below
 5. Log: "Custom build selected. Closest alternatives were: [A], [B]"
 </steps>
@@ -1309,7 +1316,7 @@ PATTERN REQUIREMENTS (non-negotiable):
 
 TECHNICAL: 1920x1080px, contenteditable on all text, unique data-field, CSS variables, auto-save script
 
-BRAND ASSETS: Use ONLY pre-resolved assets from {{resolved_assets}} (Phase 8).
+BRAND ASSETS: Use ONLY pre-resolved assets from {{resolved_assets}} (Phase 2.99).
 If catalog_path exists → use exact path. If action "OMIT" → leave empty. NEVER substitute.
 
 ═══════════════════════════════════════
@@ -1344,13 +1351,15 @@ After custom generation, validate output against `{{few_shot_excerpts}}` pattern
 | Missing contenteditable | Add contenteditable="true" to text elements |
 </reference>
 
+→ Continue to Phase 4
+
 ---
 
-## Phase 9C: Diagram Build (technical-svg-diagrams Skill)
+## Phase 3C: Diagram Build (technical-svg-diagrams Skill)
 
 <critical>
 Automatically invoked when the agent determines SVG is the best rendering format for a diagram slide.
-This phase is an ALTERNATIVE to Phase 9B — the agent routes here instead of frontend-design when
+This phase is an ALTERNATIVE to Phase 3B — the agent routes here instead of frontend-design when
 the slide content is primarily a visual diagram (architecture, flow, process, network, component).
 </critical>
 
@@ -1391,7 +1400,7 @@ determineDiagramMethod(plan_entry):
 - Network topology diagrams
 - Pipeline/microservice diagrams
 
-### HTML-Appropriate Signals (route to Phase 9B instead)
+### HTML-Appropriate Signals (route to Phase 3B instead)
 - Rich data visualizations with interactive elements
 - Timeline slides with lots of text content
 - Comparison layouts that are more tabular than diagrammatic
@@ -1418,7 +1427,7 @@ determineDiagramMethod(plan_entry):
    - Contenteditable title and subtitle above/below the SVG
    - CSS variables from theme in :root
    - saveEdits() auto-save function
-8. Validate against slide compliance checklist (same as Phase 9B)
+8. Validate against slide compliance checklist (same as Phase 3B)
 </steps>
 
 <important>
@@ -1440,9 +1449,11 @@ Wrap the SVG in standard slide HTML following the Authoritative Example structur
 - data-slide-id on `.slide` div
 </reference>
 
+→ Continue to Phase 4
+
 ---
 
-## Phase 10: Save Output Files
+## Phase 4: Save Output Files
 
 <steps>
 1. Ensure output directory exists
@@ -1455,14 +1466,16 @@ Wrap the SVG in standard slide HTML following the Authoritative Example structur
    ```
 </steps>
 
+→ Continue to Phase 4.5
+
 ---
 
-## Phase 11: Visual Audit
+## Phase 4.5: Visual Audit
 
 <context>
 This phase validates the generated slide in a real browser using the shared visual audit protocol.
 The protocol detects browser MCP availability, performs technical and visual validation, auto-fixes
-common issues (max 2 iterations), and reports findings. Non-blocking: always continues to Phase 12.
+common issues (max 2 iterations), and reports findings. Non-blocking: always continues to Phase 5.
 </context>
 
 ### Set Context Variables
@@ -1477,20 +1490,22 @@ common issues (max 2 iterations), and reports findings. Non-blocking: always con
 
 ### Invoke Visual Audit Protocol
 
-Follow the visual audit protocol from `.slide-builder/workflows/shared/visual-audit-protocol.md`.
+<action>Follow the visual audit protocol from `.slide-builder/workflows/shared/visual-audit-protocol.md`</action>
 
 ### Handle Audit Results
 
-- If audit was skipped → proceed to Phase 12
-- If audit passed → report success, proceed to Phase 12
+- If audit was skipped → proceed to Phase 5
+- If audit passed → report success, proceed to Phase 5
 - If audit failed → present options via AskUserQuestion:
-  - **Accept** → Log acceptance, proceed to Phase 12 as-is
-  - **Fix Issues** → Compile issues from `{{visual_audit_report}}` into `{{regeneration_context}}`, return to Phase 9A/9B with corrections
-  - **Skip** → Log skip, proceed to Phase 12
+  - **Accept** → Log acceptance, proceed to Phase 5 as-is
+  - **Fix Issues** → Compile issues from `{{visual_audit_report}}` into `{{regeneration_context}}`, return to Phase 3A/3B with corrections
+  - **Skip** → Log skip, proceed to Phase 5
+
+→ Continue to Phase 5
 
 ---
 
-## Phase 12: Update Viewer (Deck Mode Only)
+## Phase 5: Update Viewer (Deck Mode Only)
 
 <context>Skip this phase for single mode slides.</context>
 
@@ -1499,9 +1514,11 @@ Follow the visual audit protocol from `.slide-builder/workflows/shared/visual-au
 2. This updates manifest.json
 </steps>
 
+→ Continue to Phase 6
+
 ---
 
-## Phase 13: Update Status
+## Phase 6: Update Status
 
 <critical>
 This phase is MANDATORY — never skip it. The Plan Editor UI reads slide status directly from plan.yaml.
@@ -1510,9 +1527,9 @@ If you skip this step, built slides will still appear as "pending" in the UI.
 
 <steps>
 1. (Deck mode) Update `output/{{deck_slug}}/plan.yaml`:
-   - Read the file, find the slide entry where `number: {{slide_number}}`, change its `status` field from `"pending"` to `"built"`
-   - Write the updated plan.yaml back to disk
-   - Verify: re-read plan.yaml and confirm the slide's status is now `"built"`
+   <action>Read the file, find the slide entry where `number: {{slide_number}}`, change its `status` field from `"pending"` to `"built"`</action>
+   <action>Write the updated plan.yaml back to disk</action>
+   <action>Verify: re-read plan.yaml and confirm the slide's status is now `"built"`</action>
 
 2. (Deck mode) Update `.slide-builder/status.yaml`:
    - `decks.{{deck_slug}}.built_count`: **Recompute from plan.yaml** — re-read `output/{{deck_slug}}/plan.yaml`, count all slides where `status === "built"`, and set `built_count` to that count (do NOT increment by 1). Log: `Status update: built_count recomputed to ${actual_built} (was ${previous_built_count})`.
@@ -1524,9 +1541,11 @@ If you skip this step, built slides will still appear as "pending" in the UI.
 3. Update top-level status.yaml: `last_modified`, append to `history`
 </steps>
 
+→ Continue to Phase 7
+
 ---
 
-## Phase 14: Report Success
+## Phase 7: Report Success
 
 **Report to user based on mode:**
 

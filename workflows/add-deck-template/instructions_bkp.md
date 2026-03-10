@@ -93,8 +93,8 @@ Do not skip ahead to scaffolding. Gather enough context through genuine conversa
    - What use cases or keywords should trigger this template?
 
 8. **Context Requirements** — Ask what information users will provide when instantiating:
-   - What data must the user always provide? (→ `required_context`)
-   - What data can have sensible defaults? (→ `optional_context`)
+   - What data must the user always provide? (maps to `required_context`)
+   - What data can have sensible defaults? (maps to `optional_context`)
    - Examples: company name, project title, quarter, client name, date, presenter
 
 9. **Slide Sequence** — Define the slide structure:
@@ -105,13 +105,11 @@ Do not skip ahead to scaffolding. Gather enough context through genuine conversa
      - **Report:** Title, Executive Summary, Metrics, Highlights, Next Steps
      - **Proposal:** Title, Context, Approach, Timeline, Team, Ask
    - User confirms or adjusts the sequence
-</steps>
 
-<optional>
-10. **Style & Visual Direction** — Ask about visual preferences:
+10. **Style & Visual Direction** (optional) — Ask about visual preferences:
     - Should slides lean into the brand personality or be more neutral?
     - Any specific layout preferences (minimal, data-heavy, image-rich)?
-</optional>
+</steps>
 
 <important>
 Adapt the conversation naturally. If the user provides rich detail, combine questions. If answers are brief, probe deeper. The goal is sufficient context for a well-structured deck template.
@@ -122,7 +120,7 @@ Adapt the conversation naturally. If the user provides rich detail, combine ques
 <steps>
 11. Generate the template specification from the conversation:
     - Template name (descriptive, human-readable)
-    - Template slug (kebab-case: lowercase, replace spaces/special chars with hyphens, strip non-alphanumeric except hyphens, collapse multiple hyphens, trim leading/trailing hyphens)
+    - Template slug (kebab-case from name: lowercase, replace spaces/special chars with hyphens, strip non-alphanumeric except hyphens, collapse multiple hyphens, trim leading/trailing hyphens)
     - Description summarizing purpose
     - Use cases array
     - Required context fields with types, descriptions, prompts
@@ -132,39 +130,26 @@ Adapt the conversation naturally. If the user provides rich detail, combine ques
 12. Check that the slug does not already exist in `deck-templates.json`
     - If duplicate → ask user for a different name
 
-13. Present the scaffold plan to the user:
+13. Present the scaffold plan to the user. Include:
     - Folder structure showing `template-config.yaml` and each `slides/slide-N.html` with its name
     - Context requirements summary (required and optional fields)
     - Ask for confirmation or adjustments
 
-14. On confirmation → create scaffold:
-    - Create folder: `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/`
-    - Write `template-config.yaml` (see Quick Reference for structure)
-    - Add entry to `deck-templates.json` with `id`, `name`, `description`, `use_cases`, `slide_count`, `folder`, `preview: null`, `created_at` (ISO), `source: "add-deck-template"`
-    - Update `lastModified` in `deck-templates.json`
+14. If user confirms → create scaffold:
+    - Create folder: `.slide-builder/config/catalog/deck-templates/{{slug}}/`
+    - Create subfolder: `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/`
+    - Write `template-config.yaml` with:
+      - `name`, `description`, `version: "1.0"`, `slide_count`
+      - `required_context` entries with name, type, description, prompt
+      - `optional_context` entries with name, type, default
+      - `slides[]` with number, name, file path, empty instructions for each planned slide
+      - `checkpoints` section (match sample-pitch pattern)
+    - Add entry to `deck-templates.json`:
+      - `id`: slug, `name`, `description`, `use_cases`, `slide_count`, `folder`: slug
+      - `preview`: null, `created_at`: ISO timestamp, `source`: "add-deck-template"
+    - Update `lastModified` in deck-templates.json
 
 15. If user wants adjustments → update spec and re-confirm
-</steps>
-
-### Step 3B: Pre-Recommend Creation Paths
-
-<steps>
-16. After scaffold is confirmed, compare each planned slide against the slide templates in `catalog.json`:
-    - For each slide in the sequence, score every catalog template on name/role similarity (e.g., a slide named "Title" matches a template tagged "hero-title" or "title-slide")
-    - A catalog template is a **match** if its purpose clearly overlaps with the planned slide's role
-
-17. Present a **Slide Creation Plan** table to the user:
-
-| # | Slide Name | Recommended Path | Reason |
-|---|-----------|-----------------|--------|
-| 1 | Title | From catalog → "hero-title" | Close match — just needs placeholder text adjusted |
-| 2 | Problem | Fresh design | No matching template in catalog |
-| 3 | Solution | From catalog → "feature-showcase" | Layout fits; content swap needed |
-| ... | ... | ... | ... |
-
-    - If no catalog templates exist at all, skip the table and note that all slides will use fresh design
-    - Ask user to confirm or override any recommendations (e.g., "I want slide 3 fresh too")
-    - Store the approved plan for use in Step 4
 </steps>
 
 ---
@@ -175,37 +160,28 @@ Adapt the conversation naturally. If the user provides rich detail, combine ques
 Create slides one at a time. After each slide, ask the user whether to continue or stop. If the user stops, note the progress — they can resume later via `/pitchsmith:edit-deck-template`.
 </critical>
 
-### Step 4: Announce Slide
+### Step 4: For Each Slide in the Sequence
 
 <steps>
-18. Announce which slide is being created (slide number, total, and slide name).
-    - Reference the pre-approved creation plan from Step 3B
-    - If the plan says **From catalog** → proceed to Step 5B with the recommended template (skip the choice prompt)
-    - If the plan says **Fresh design** → proceed to Step 5A
-    - The user can still override at this point by saying they want a different path
+16. Announce which slide is being created (slide number, total, and slide name). Use the AskUserQuestion tool to offer two creation methods:
+    - **Fresh design** — Generate a new slide using the frontend-design skill
+    - **From catalog** — Start from an existing slide template in the catalog
 </steps>
 
-### Step 5A: Fresh Generation via frontend-design
+### Step 5A: Path A — Fresh Generation via frontend-design
 
 <steps>
-19. **Per-Slide Discovery** — Ask 1-2 questions about this specific slide:
+17. **Per-Slide Discovery** — Ask 1-2 questions about this specific slide:
     - What content will this slide typically display?
     - Any specific layout elements (metrics grid, bullet list, image area, comparison)?
     - What is the primary message or purpose of this slide?
 
-20. **Invoke frontend-design skill** with:
+18. **Invoke frontend-design skill** with:
     - Slide name, purpose, and content requirements
     - Technical requirements: 1920x1080, viewport meta, contenteditable on all text, unique data-field attributes
-    - Complete brand CSS variables from theme.json (see example below)
-    - Brand personality and style direction
-    - Design standards (typography minimums, spacing requirements)
-    - Request only the complete HTML — no explanation text
-    - Instruct: "This is a deck TEMPLATE slide. All text content should be generic placeholder text that clearly indicates what content goes there (e.g., 'Company Name', 'Key Metric Value', 'Benefit Description'). The text will be replaced when the template is instantiated."
+    - Complete brand CSS variables from theme.json:
 
-21. **Validate** the generated HTML against the Critical Requirements table — fix any issues before proceeding
-</steps>
-
-<example title="CSS variables to pass to frontend-design">
+<example title="CSS variables to include">
 ```css
 :root {
   --color-primary: {{theme.colors.primary}};
@@ -221,84 +197,82 @@ Create slides one at a time. After each slide, ask the user whether to continue 
 ```
 </example>
 
-### Step 5B: From Catalog Template
+    - Brand personality and style direction
+    - Design standards (typography minimums, spacing requirements)
+    - Request only the complete HTML — no explanation text
+    - Instruct: "This is a deck TEMPLATE slide. All text content should be generic placeholder text that clearly indicates what content goes there (e.g., 'Company Name', 'Key Metric Value', 'Benefit Description'). The text will be replaced when the template is instantiated."
+
+19. **Validate** the generated HTML against the Critical Requirements table
+    - Fix any issues before proceeding
+</steps>
+
+### Step 5B: Path B — From Catalog Template
 
 <steps>
-22. Use the catalog template recommended in the creation plan from Step 3B. If the user overrode the recommendation, list available slide templates from `catalog.json` and let them pick.
+20. List available slide templates from `catalog.json` — show each template's name and description, then ask which one to start from
 
-23. Read the selected template HTML from `.slide-builder/config/catalog/{{template.file}}`
+21. Read the selected template HTML file from `.slide-builder/config/catalog/{{template.file}}`
 
-24. Customize the template for this deck context:
+22. Customize the template for this deck context:
     - Adjust content placeholder text to match slide purpose
     - Modify layout elements if needed
     - Ensure all data-field values are unique across the entire deck (not just this slide)
 
-25. **Validate** the customized HTML against the Critical Requirements table
+23. **Validate** the customized HTML against the Critical Requirements table
 </steps>
 
-### Step 6: Inject Constraint Comments
+### Step 6: Constraint Comment Injection
 
 <critical>
-Every contenteditable element MUST have a constraint comment. This is how `/pitchsmith:use-template` knows how to handle content replacement.
+Every contenteditable element MUST have a constraint comment. This is how the consumer workflow (`/pitchsmith:use-template`) knows how to handle content replacement.
 </critical>
 
 <steps>
-26. For each contenteditable element with a `data-field` attribute, add a constraint comment immediately before it:
-    - Determine content type, max-length, required status, and format from the reference tables below
-    - Ensure the `data-field` value in the comment matches the element's attribute exactly
-27. Ensure data-field names are unique across ALL slides in the deck template (prefix with slide context if needed, e.g., `s2-title` instead of just `title`)
-</steps>
+24. For each contenteditable element with a `data-field` attribute, generate a constraint comment immediately before the element:
+
+    a. **Determine content type** from element context:
+
+    | Element/Class | Type |
+    |---------------|------|
+    | `h1`, `h2`, `.title` | `headline` |
+    | `.subtitle`, `.tagline` | `subhead` |
+    | `p`, `.description`, `.body` | `body` |
+    | `.stat-value`, `.metric`, `.number` | `metric` |
+    | `.label`, `.caption`, `.footnote` | `label` |
+    | `blockquote`, `.quote` | `quote` |
+
+    b. **Determine max-length** from type:
+
+    | Type | Max Length |
+    |------|-----------|
+    | headline | 60 |
+    | subhead | 120 |
+    | body | 250 |
+    | metric | 30 |
+    | label | 50 |
+    | quote | 200 |
+
+    c. **Determine required status:**
+       - Primary content (title, main heading): `required=true`
+       - Secondary content (subtitle, captions): `required=false`
+       - Data/metrics: `required=true`
+
+    d. **Determine format** (if applicable):
+       - Numeric values → `format=currency` or `format=percentage`
+       - Date fields → `format=date`
+
+    e. **Generate comment** immediately before the element:
 
 <example title="Constraint comment format">
 ```html
-<!-- slide-field: hero-title, max-length=60, type=headline, required=true -->
-<h1 contenteditable="true" data-field="hero-title">Company Name</h1>
-
-<!-- slide-field: hero-subtitle, max-length=120, type=subhead, required=false -->
-<p class="subtitle" contenteditable="true" data-field="hero-subtitle">Your tagline here</p>
-
-<!-- slide-field: revenue-value, max-length=30, type=metric, required=true, format=currency -->
-<span class="stat-value" contenteditable="true" data-field="revenue-value">$1.2M</span>
+<!-- slide-field: {data-field-value}, max-length={N}, type={TYPE}, required={BOOL}[, format={FORMAT}] -->
+<element contenteditable="true" data-field="{data-field-value}">Placeholder text</element>
 ```
 </example>
 
-<reference title="Content type detection">
-| Element/Class | Type |
-|---------------|------|
-| `h1`, `h2`, `.title` | `headline` |
-| `.subtitle`, `.tagline` | `subhead` |
-| `p`, `.description`, `.body` | `body` |
-| `.stat-value`, `.metric`, `.number` | `metric` |
-| `.label`, `.caption`, `.footnote` | `label` |
-| `blockquote`, `.quote` | `quote` |
-</reference>
-
-<reference title="Max-length by type">
-| Type | Max Length |
-|------|-----------|
-| headline | 60 |
-| subhead | 120 |
-| body | 250 |
-| metric | 30 |
-| label | 50 |
-| quote | 200 |
-</reference>
-
-<reference title="Required status rules">
-| Content Role | Required |
-|-------------|----------|
-| Primary content (title, main heading) | `true` |
-| Secondary content (subtitle, captions) | `false` |
-| Data/metrics | `true` |
-</reference>
-
-<reference title="Format values (optional, add only when applicable)">
-| Data Type | Format |
-|-----------|--------|
-| Numeric/currency values | `currency` |
-| Percentage values | `percentage` |
-| Date fields | `date` |
-</reference>
+25. Verify the `data-field` value in the comment matches the element's `data-field` attribute
+26. Ensure data-field names are unique across ALL slides in the deck template (prefix with slide context if needed, e.g., `slide2-title` instead of just `title`)
+</steps>
 
 ### Step 7: Save Slide and Validate Design
 
@@ -307,57 +281,61 @@ The slide design MUST be fully finalized and saved before collecting instruction
 </critical>
 
 <steps>
-28. Save the slide HTML to `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/slide-{{N}}.html`
+27. Save the slide HTML to `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/slide-{{N}}.html`
 
-29. Run compliance validation:
+28. Run compliance validation:
     - Viewport meta tag present and correct
     - All text elements have `contenteditable="true"`
     - All contenteditable elements have unique `data-field`
-    - All colors use CSS variables (no hardcoded hex/rgb)
+    - All colors use CSS variables
     - Google Fonts link included
     - All constraint comments present and correctly formatted
     - data-field in comments matches element data-field attributes
 
-30. If Chrome automation tools (`mcp__claude-in-chrome__*`) are available AND user provided a reference image → open slide in browser, capture screenshot, compare, iterate. Otherwise skip silently.
+29. **Visual validation via Chrome** — only when Chrome automation tools (`mcp__claude-in-chrome__*`) are available AND user provided a reference image:
+    - Start local HTTP server: `python3 -m http.server 8432 --directory .slide-builder/config/catalog/deck-templates/{{slug}}/slides &`
+    - Open the slide in Chrome, capture screenshot, compare against reference
+    - Iterate until matching or user satisfied
+    - Stop server when done
+    - If Chrome tools unavailable, skip silently
 
-31. Iterate on design with user until satisfied
-32. Confirm the slide design is finalized before proceeding
+30. Iterate on design with user until they are satisfied
+31. Confirm the slide design is finalized before proceeding to instruction collection
 </steps>
 
 ### Step 8: Collect Per-Slide Instructions (After Design Is Finalized)
 
 <critical>
-This step happens ONLY after the slide design is complete and saved. Do NOT auto-generate instructions. You MUST ask the user directly what the content replacement instructions should be.
+This is a DEDICATED step that happens ONLY after the slide design is complete and saved. Do NOT auto-generate instructions. You MUST ask the user directly what the content replacement instructions should be for this slide.
 </critical>
 
 <steps>
-33. Present the finalized slide's data fields to the user. For each field show:
-    - `data-field` name, type, and required status
-    - Ask: "How should this field be populated when someone uses this template?"
-    - Wait for user response and record their instructions (clean up formatting, preserve intent)
+32. Present the finalized slide's data fields and ask the user for instructions. Show:
+    - Each `data-field` name, its type, and required status
+    - Prompt the user to describe how each field should be populated when someone uses this template (e.g., "Replace title with client name," "Research the company and fill in key metrics via web search," "Ask user for their main value proposition")
+    - Wait for user response
+    - Record the user's instructions verbatim (clean up formatting but preserve intent)
 
-34. Ask about content sources. Explain available types and ask user to specify per field:
-    - `web_search` — research and populate from web results
-    - `file` — read from a local file
-    - `mcp_tool` — use an MCP tool to fetch data
-    - `user_input` — ask user directly at instantiation time
+33. Ask about content sources. Explain the available source types (`web_search`, `file`, `mcp_tool`, `user_input`) and ask the user to specify a source for each data-field. If the user wants everything provided directly, accept "user_input for all."
+    - Wait for user response
 
-35. Update `template-config.yaml` with the slide's `instructions` and `content_sources`
-36. Report slide completion to user
+34. Update `template-config.yaml` with the slide's `instructions` and `content_sources`
+35. Report slide completion to user
 </steps>
 
 ### Step 9: Continue or Stop
 
 <steps>
-37. Report which slide was finished and how many remain. Use the AskUserQuestion tool to offer:
+36. After each slide is completed, report which slide was finished and how many remain. Use the AskUserQuestion tool to offer:
     - **Continue** — Create the next slide now
-    - **Stop for now** — Save progress and resume later
+    - **Stop for now** — Save progress and resume later via `/pitchsmith:edit-deck-template`
 
-38. If **Continue** → return to Step 4 for the next slide
-39. If **Stop for now**:
+37. If **Continue** → return to Step 4 for the next slide
+38. If **Stop for now**:
     - Confirm all progress is saved (folder, config, manifest, completed slides)
     - Report which slides are done and which remain
-    - Tell user: run `/pitchsmith:edit-deck-template {{slug}}` to resume
+    - Tell user they can run `/pitchsmith:edit-deck-template {{slug}}` to resume
+    - Exit workflow
 </steps>
 
 ---
@@ -367,19 +345,20 @@ This step happens ONLY after the slide design is complete and saved. Do NOT auto
 ### Step 10: Complete the Deck Template
 
 <steps>
-40. Verify all slides are created and saved
-41. Update `deck-templates.json`:
-    - Ensure `slide_count` matches actual number of slides
+39. Verify all slides are created and saved
+40. Update `deck-templates.json`:
+    - Ensure `slide_count` matches actual number of slides created
     - Update `lastModified` timestamp
-42. Update `template-config.yaml`:
+41. Update `template-config.yaml`:
     - Ensure `slide_count` matches
     - Verify all slides[] entries have `instructions` and `content_sources`
-43. Update `.slide-builder/status.yaml` with history entry:
+42. Update `.slide-builder/status.yaml` with history entry:
     ```yaml
     - action: "Created deck template '{{slug}}' with {{N}} slides"
       timestamp: "{{ISO timestamp}}"
     ```
-44. **Report to user:**
+
+43. **Report to user:**
     - Template name and slug
     - Number of slides created
     - Folder location
@@ -403,6 +382,16 @@ This step happens ONLY after the slide design is complete and saved. Do NOT auto
 | Template Config | `.slide-builder/config/catalog/deck-templates/{slug}/template-config.yaml` |
 | Slide Files | `.slide-builder/config/catalog/deck-templates/{slug}/slides/slide-N.html` |
 | Status | `.slide-builder/status.yaml` |
+</reference>
+
+<reference title="Constraint comment format">
+```html
+<!-- slide-field: {field-name}, max-length={N}, type={TYPE}, required={BOOL}[, format={FORMAT}] -->
+<element contenteditable="true" data-field="{field-name}">Placeholder text</element>
+```
+
+Types: `headline`, `subhead`, `body`, `metric`, `label`, `quote`
+Formats (optional): `currency`, `percentage`, `date`
 </reference>
 
 <reference title="Template config structure">
@@ -440,22 +429,6 @@ checkpoints:
     on_incomplete: "ask"
     on_uncertain: "ask"
     on_quality_fail: "ask"
-```
-</reference>
-
-<reference title="deck-templates.json entry structure">
-```json
-{
-  "id": "template-slug",
-  "name": "Template Name",
-  "description": "Purpose description",
-  "use_cases": ["keyword1", "keyword2"],
-  "slide_count": 5,
-  "folder": "template-slug",
-  "preview": null,
-  "created_at": "2026-01-15T10:30:00Z",
-  "source": "add-deck-template"
-}
 ```
 </reference>
 
