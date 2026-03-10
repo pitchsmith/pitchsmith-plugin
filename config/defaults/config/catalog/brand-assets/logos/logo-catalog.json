@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "logos": [
+    {
+      "id": "pitchsmith-logo-horizontal",
+      "name": "Pitchsmith Logo (Horizontal)",
+      "description": "PITCH [icon] SMITH horizontal layout with wordmark flanking the anvil icon",
+      "variants": [
+        { "variant_id": "dark", "file": "pitchsmith-logo-horizontal-dark.png" },
+        { "variant_id": "white", "file": "pitchsmith-logo-horizontal-white.png" }
+      ],
+      "tags": ["brand", "pitchsmith", "logo", "horizontal", "wordmark", "primary"]
+    },
+    {
+      "id": "pitchsmith-logo-icon-left",
+      "name": "Pitchsmith Logo (Icon Left)",
+      "description": "Anvil icon on left with PITCH SMITH stacked text on right",
+      "variants": [
+        { "variant_id": "dark", "file": "pitchsmith-logo-icon-left-dark.png" },
+        { "variant_id": "white", "file": "pitchsmith-logo-icon-left-white.png" }
+      ],
+      "tags": ["brand", "pitchsmith", "logo", "icon-left", "wordmark", "stacked"]
+    },
+    {
+      "id": "pitchsmith-logo-stacked",
+      "name": "Pitchsmith Logo (Vertical Stacked)",
+      "description": "PITCH on top, anvil icon in middle, SMITH on bottom - vertical layout",
+      "variants": [
+        { "variant_id": "dark", "file": "pitchsmith-logo-stacked-dark.png" },
+        { "variant_id": "white", "file": "pitchsmith-logo-stacked-white.png" }
+      ],
+      "tags": ["brand", "pitchsmith", "logo", "stacked", "vertical", "wordmark"]
+    }
+  ]
+}

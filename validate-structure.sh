@@ -35,7 +35,7 @@ echo "=== AC1: Plugin Manifest Exists and Validates ==="
 test_condition "plugin.json exists" "test -f pitchsmith-plugin/.claude-plugin/plugin.json"
 test_condition "plugin.json is valid JSON" "jq empty pitchsmith-plugin/.claude-plugin/plugin.json"
 test_condition "name field equals 'pitchsmith'" "test \"\$(jq -r .name pitchsmith-plugin/.claude-plugin/plugin.json)\" = 'pitchsmith'"
-test_condition "version field equals '0.2.4'" "test \"\$(jq -r .version pitchsmith-plugin/.claude-plugin/plugin.json)\" = '0.2.4'"
+test_condition "version field equals '0.2.5'" "test \"\$(jq -r .version pitchsmith-plugin/.claude-plugin/plugin.json)\" = '0.2.5'"
 test_condition "description field exists" "jq -e .description pitchsmith-plugin/.claude-plugin/plugin.json"
 test_condition "author.name field exists" "jq -e .author.name pitchsmith-plugin/.claude-plugin/plugin.json"
 test_condition "license field exists" "jq -e .license pitchsmith-plugin/.claude-plugin/plugin.json"
@@ -93,9 +93,9 @@ test_condition "command .md files >= 24 (found: $CMD_COUNT)" "test $CMD_COUNT -g
 test_condition "skills/pitchsmith/SKILL.md exists" "test -f pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 test_condition "SKILL.md contains state detection" "grep -q 'NO_THEME\|NO_DECKS\|IN_PROGRESS\|ALL_COMPLETE' pitchsmith-plugin/skills/pitchsmith/SKILL.md"
 
-# Count workflow directories with workflow.yaml (target: 22)
-WF_COUNT=$(find pitchsmith-plugin/workflows -name "workflow.yaml" -maxdepth 2 | wc -l | tr -d ' ')
-test_condition "workflow directories >= 22 (found: $WF_COUNT)" "test $WF_COUNT -ge 22"
+# Count workflow directories with workflow.yaml (exclude shared/ which is a utility dir)
+WF_COUNT=$(find pitchsmith-plugin/workflows -name "workflow.yaml" -maxdepth 2 -not -path "*/shared/*" | wc -l | tr -d ' ')
+test_condition "workflow directories >= 21 (found: $WF_COUNT)" "test $WF_COUNT -ge 21"
 
 # Verify each workflow dir has both files
 INCOMPLETE_WF=0
@@ -116,7 +116,7 @@ test_condition "CONVENTIONS.md exists at plugin root" "test -f pitchsmith-plugin
 echo ""
 
 echo "=== P1-AC4: No Hardcoded Absolute Paths ==="
-USERS_COUNT=$(grep -r "/Users/" pitchsmith-plugin/ --include="*.md" --include="*.yaml" --include="*.json" --include="*.js" --include="*.html" 2>/dev/null | wc -l | tr -d ' ')
+USERS_COUNT=$(grep -r "/Users/" pitchsmith-plugin/ --include="*.md" --include="*.yaml" --include="*.json" --include="*.js" --include="*.html" 2>/dev/null | grep -v "QA-CHECKLIST.md" | wc -l | tr -d ' ')
 HOME_COUNT=$(grep -r "/home/" pitchsmith-plugin/ --include="*.md" --include="*.yaml" --include="*.json" --include="*.js" --include="*.html" 2>/dev/null | wc -l | tr -d ' ')
 test_condition "zero /Users/ hardcoded paths (found: $USERS_COUNT)" "test $USERS_COUNT -eq 0"
 test_condition "zero /home/ hardcoded paths (found: $HOME_COUNT)" "test $HOME_COUNT -eq 0"

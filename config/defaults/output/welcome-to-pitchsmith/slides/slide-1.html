@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Welcome to Pitchsmith</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: var(--color-primary, #3a61ff);
+      --color-secondary: var(--color-secondary, #334155);
+      --color-accent: var(--color-accent, #8455ff);
+      --color-bg-default: var(--color-bg-default, #f8fafc);
+      --color-bg-alt: var(--color-bg-alt, #f1f5f9);
+      --color-bg-dark: var(--color-bg-dark, #131023);
+      --color-bg-dark-alt: var(--color-bg-dark-alt, #0d0b1a);
+      --color-bg-light: var(--color-bg-light, #ffffff);
+      --color-text-heading: var(--color-text-heading, #131023);
+      --color-text-body: var(--color-text-body, #334155);
+      --color-text-on-dark: var(--color-text-on-dark, #f0eeff);
+      --color-text-on-light: var(--color-text-on-light, #131023);
+      --color-surface-dark: var(--color-surface-dark, #1a1730);
+      --color-border-dark: var(--color-border-dark, #2d2b45);
+      --font-heading: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--color-bg-dark, #131023);
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      font-family: var(--font-body);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── Left: Image panel ── */
+    .image-panel {
+      position: relative;
+      background-color: var(--color-bg-dark-alt, #0d0b1a);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+    }
+
+    /* ── Right: Content panel ── */
+    .content-panel {
+      background: var(--color-bg-dark, #131023);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 96px 88px 96px 80px;
+      position: relative;
+    }
+
+    /* Thin accent stripe along the left edge of content panel */
+    .content-panel::before {
+      content: '';
+      position: absolute;
+      top: 120px;
+      bottom: 120px;
+      left: 0;
+      width: 3px;
+      background: linear-gradient(180deg,
+        var(--color-primary, #3a61ff) 0%,
+        var(--color-accent, #8455ff) 50%,
+        transparent 100%
+      );
+      opacity: 0.6;
+    }
+
+    /* ── Logo ── */
+    .logo-area {
+      margin-bottom: 48px;
+      width: 160px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .logo-area svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .logo-placeholder {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--color-text-on-dark, #f0eeff);
+      opacity: 0.45;
+      text-transform: uppercase;
+    }
+
+    /* ── Text content ── */
+    .content-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--color-primary, #3a61ff);
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-family: var(--font-heading);
+      font-size: 64px;
+      font-weight: 400;
+      color: var(--color-text-on-dark, #f0eeff);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+
+    .title-accent {
+      width: 64px;
+      height: 3px;
+      background: linear-gradient(90deg,
+        var(--color-primary, #3a61ff),
+        var(--color-accent, #8455ff)
+      );
+      border-radius: 2px;
+      margin-bottom: 32px;
+      opacity: 0.85;
+    }
+
+    .subtitle {
+      font-family: var(--font-body);
+      font-size: 21px;
+      font-weight: 300;
+      color: var(--color-text-on-dark, #f0eeff);
+      opacity: 0.6;
+      line-height: 1.65;
+      letter-spacing: 0.005em;
+    }
+
+    /* ── Editable states ── */
+    [contenteditable]:focus {
+      outline: 2px solid var(--color-primary, #3a61ff);
+      outline-offset: 4px;
+    }
+
+    [contenteditable]:hover {
+      outline: 1px dashed var(--color-primary, #3a61ff);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" data-slide-id="welcome-slide-1">
+
+    <!-- Left: Image panel — branded illustration -->
+    <div class="image-panel" data-field="background-image" data-animatable="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1080" width="960" height="1080" fill="none" style="display:block;">
+        <!-- Background -->
+        <rect width="960" height="1080" fill="var(--color-bg-dark-alt, #0d0b1a)"/>
+
+        <!-- Subtle grid pattern -->
+        <defs>
+          <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="var(--color-surface-dark, #1a1730)" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="960" height="1080" fill="url(#grid)" opacity="0.5"/>
+
+        <!-- Radial glow -->
+        <radialGradient id="glow" cx="50%" cy="45%" r="45%">
+          <stop offset="0%" stop-color="var(--color-primary, #3a61ff)" stop-opacity="0.12"/>
+          <stop offset="60%" stop-color="var(--color-accent, #8455ff)" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+        </radialGradient>
+        <rect width="960" height="1080" fill="url(#glow)"/>
+
+        <!-- Stacked slide cards — representing a deck -->
+        <!-- Card 3 (back) -->
+        <rect x="220" y="340" width="520" height="320" rx="16" fill="var(--color-surface-dark, #1a1730)" opacity="0.5"/>
+        <rect x="220" y="340" width="520" height="320" rx="16" stroke="var(--color-border-dark, #2d2b45)" stroke-width="1" fill="none" opacity="0.5"/>
+
+        <!-- Card 2 (middle) -->
+        <rect x="200" y="360" width="520" height="320" rx="16" fill="var(--color-surface-dark, #1a1730)" opacity="0.7"/>
+        <rect x="200" y="360" width="520" height="320" rx="16" stroke="var(--color-border-dark, #2d2b45)" stroke-width="1" fill="none" opacity="0.7"/>
+        <!-- Content lines on middle card -->
+        <rect x="232" y="400" width="180" height="8" rx="4" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.12"/>
+        <rect x="232" y="424" width="280" height="6" rx="3" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.07"/>
+        <rect x="232" y="444" width="240" height="6" rx="3" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.07"/>
+
+        <!-- Card 1 (front — featured) -->
+        <rect x="180" y="380" width="520" height="320" rx="16" fill="var(--color-bg-dark, #131023)"/>
+        <rect x="180" y="380" width="520" height="320" rx="16" stroke="var(--color-border-dark, #2d2b45)" stroke-width="1.5" fill="none"/>
+        <!-- Top accent bar on front card -->
+        <rect x="180" y="380" width="520" height="4" rx="2" fill="var(--color-primary, #3a61ff)"/>
+        <!-- Title line -->
+        <rect x="216" y="424" width="200" height="10" rx="5" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.25"/>
+        <!-- Body lines -->
+        <rect x="216" y="456" width="320" height="6" rx="3" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.1"/>
+        <rect x="216" y="474" width="280" height="6" rx="3" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.1"/>
+        <rect x="216" y="492" width="300" height="6" rx="3" fill="var(--color-text-on-dark, #f0eeff)" opacity="0.1"/>
+        <!-- Visual placeholder block -->
+        <rect x="216" y="524" width="448" height="140" rx="10" fill="var(--color-surface-dark, #1a1730)"/>
+        <!-- Chart bars inside visual -->
+        <rect x="256" y="604" width="40" height="44" rx="4" fill="var(--color-primary, #3a61ff)" opacity="0.6"/>
+        <rect x="316" y="580" width="40" height="68" rx="4" fill="var(--color-primary, #3a61ff)" opacity="0.75"/>
+        <rect x="376" y="560" width="40" height="88" rx="4" fill="var(--color-accent, #8455ff)" opacity="0.85"/>
+        <rect x="436" y="574" width="40" height="74" rx="4" fill="var(--color-primary, #3a61ff)" opacity="0.7"/>
+        <rect x="496" y="544" width="40" height="104" rx="4" fill="var(--color-accent, #8455ff)" opacity="0.9"/>
+        <rect x="556" y="564" width="40" height="84" rx="4" fill="var(--color-primary, #3a61ff)" opacity="0.65"/>
+
+        <!-- Pitchsmith icon (centered below cards) -->
+        <rect x="436" y="740" width="48" height="48" rx="10" fill="var(--color-primary, #3a61ff)" opacity="0.9"/>
+        <path d="M448 752 L472 752 L472 776 L460 776 L460 764 L448 764 Z" fill="var(--color-bg-light, #ffffff)" opacity="0.9"/>
+
+        <!-- Decorative dots -->
+        <circle cx="160" cy="300" r="3" fill="var(--color-primary, #3a61ff)" opacity="0.2"/>
+        <circle cx="800" cy="800" r="3" fill="var(--color-accent, #8455ff)" opacity="0.2"/>
+        <circle cx="120" cy="780" r="2" fill="var(--color-primary, #3a61ff)" opacity="0.15"/>
+        <circle cx="840" cy="320" r="2" fill="var(--color-accent, #8455ff)" opacity="0.15"/>
+      </svg>
+    </div>
+
+    <!-- Right: Content panel -->
+    <div class="content-panel">
+      <div class="logo-area" data-animatable="true">
+        <img src="../../../.slide-builder/config/catalog/brand-assets/logos/pitchsmith-logo-horizontal-white.png" alt="Pitchsmith" />
+      </div>
+
+      <div class="content-block" data-animatable="true">
+        <span class="eyebrow" contenteditable="true" data-field="eyebrow" data-animatable="true">Welcome</span>
+        <h1 class="title" contenteditable="true" data-field="title" data-animatable="true">Welcome to Pitchsmith</h1>
+        <div class="title-accent" data-animatable="true"></div>
+        <p class="subtitle" contenteditable="true" data-field="subtitle" data-animatable="true">Create beautiful presentations with AI — from idea to polished deck in minutes.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const slideId = document.querySelector('.slide')?.dataset.slideId || 'unknown';
+
+    const saveEdits = () => {
+      try {
+        const edits = [];
+        document.querySelectorAll('[contenteditable]').forEach(el => {
+          const field = el.getAttribute('data-field');
+          if (field) {
+            edits.push({ field, content: el.innerHTML });
+          }
+        });
+        localStorage.setItem(`slide-${slideId}-edits`, JSON.stringify({
+          slide: slideId,
+          edits,
+          lastModified: new Date().toISOString()
+        }));
+      } catch (e) {
+        console.warn('Auto-save failed:', e.message);
+      }
+    };
+
+    const restoreEdits = () => {
+      try {
+        const stored = localStorage.getItem(`slide-${slideId}-edits`);
+        if (stored) {
+          const data = JSON.parse(stored);
+          data.edits?.forEach(edit => {
+            const el = document.querySelector(`[data-field="${edit.field}"]`);
+            if (el) el.innerHTML = edit.content;
+          });
+        }
+      } catch (e) {
+        console.warn('Restore failed:', e.message);
+      }
+    };
+
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.addEventListener('blur', saveEdits);
+      el.addEventListener('input', () => setTimeout(saveEdits, 500));
+    });
+
+    restoreEdits();
+
+    // Animation Builder support
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'getBuilderElements') {
+        const selectors = '[data-animatable], [contenteditable], h1, h2, h3, p, li, img, svg, [class*="-box"], [class*="-card"], [class*="-panel"], [class*="-window"], [class*="-item"]';
+        const elements = [];
+        let idCounter = 1;
+        document.querySelectorAll(selectors).forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.width < 10 || rect.height < 10) return;
+          if (rect.width > 1536 || rect.height > 864) return;
+          let buildId = el.getAttribute('data-build-id') || `build-${idCounter++}`;
+          el.setAttribute('data-build-id', buildId);
+          elements.push({
+            id: buildId,
+            rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+            tagName: el.tagName.toLowerCase(),
+            text: el.textContent?.substring(0, 30) || ''
+          });
+        });
+        window.parent.postMessage({ type: 'builderElements', elements }, '*');
+      }
+    });
+  </script>
+</body>
+</html>

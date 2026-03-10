@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "icons": [
+    {
+      "id": "pitchsmith-icon-dark",
+      "name": "Pitchsmith Icon (Dark)",
+      "description": "Pitchsmith anvil brand mark with purple background, for light backgrounds",
+      "file": "pitchsmith-icon-dark.png",
+      "base_icon": "pitchsmith",
+      "size": 64,
+      "backgroundAffinity": "light",
+      "hasTransparency": true,
+      "dominantColors": ["#7c3aed", "#ffffff"],
+      "contrastNeeds": "high",
+      "tags": ["brand", "pitchsmith", "icon", "dark", "mark", "anvil", "purple"]
+    },
+    {
+      "id": "pitchsmith-icon-white",
+      "name": "Pitchsmith Icon (White)",
+      "description": "Pitchsmith anvil brand mark with purple background, for dark backgrounds",
+      "file": "pitchsmith-icon-white.png",
+      "base_icon": "pitchsmith",
+      "size": 64,
+      "backgroundAffinity": "dark",
+      "hasTransparency": true,
+      "dominantColors": ["#7c3aed", "#ffffff"],
+      "contrastNeeds": "high",
+      "tags": ["brand", "pitchsmith", "icon", "white", "mark", "anvil", "purple"]
+    }
+  ]
+}

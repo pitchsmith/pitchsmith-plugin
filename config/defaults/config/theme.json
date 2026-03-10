@@ -1,0 +1,234 @@
+{
+  "name": "Sticky Note Vision",
+  "version": "1.0",
+  "colors": {
+    "primary": "#3a61ff",
+    "secondary": "#334155",
+    "accent": "#8455ff",
+    "background": {
+      "default": "#f8fafc",
+      "alt": "#f1f5f9",
+      "dark": "#131023",
+      "light": "#ffffff",
+      "darkAlt": "#0d0b1a"
+    },
+    "text": {
+      "heading": "#131023",
+      "body": "#334155",
+      "muted": "#64748b",
+      "onDark": "#f0eeff",
+      "onLight": "#131023",
+      "onPrimary": "#ffffff"
+    },
+    "brand": {
+      "primary": "#3a61ff",
+      "accent": "#8455ff",
+      "dark": "#131023",
+      "surface": "#ffffff",
+      "surfaceDark": "#1a1730",
+      "border": "#e2e8f0",
+      "borderDark": "#2d2b45",
+      "bgSubtle": "#f1f5f9",
+      "bgSubtleDark": "#16132a",
+      "surfaceElevated": "#ffffff",
+      "surfaceElevatedDark": "#231f3a"
+    },
+    "dataViz": {
+      "palette": ["#3a61ff", "#8455ff", "#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#10b981"],
+      "positive": "#22c55e",
+      "negative": "#ef4444"
+    },
+    "semantic": {
+      "success": "#22c55e",
+      "warning": "#f59e0b",
+      "error": "#ef4444",
+      "info": "#3b82f6"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Fraunces",
+      "body": "DM Sans",
+      "mono": "JetBrains Mono"
+    },
+    "scale": {
+      "hero": "72px",
+      "h1": "48px",
+      "h2": "36px",
+      "h3": "24px",
+      "body": "16px",
+      "caption": "14px"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.1,
+      "normal": 1.6,
+      "relaxed": 1.8
+    }
+  },
+  "shapes": {
+    "borderRadius": {
+      "none": "0",
+      "small": "8px",
+      "medium": "10px",
+      "large": "12px",
+      "full": "9999px"
+    },
+    "shadow": {
+      "small": "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+      "medium": "0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)",
+      "large": "0 10px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)"
+    },
+    "border": {
+      "thin": "1px solid #e2e8f0",
+      "medium": "2px solid #e2e8f0"
+    }
+  },
+  "components": {
+    "box": {
+      "default": {
+        "background": "#ffffff",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      },
+      "outlined": {
+        "background": "transparent",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      },
+      "callout": {
+        "background": "#f1f5f9",
+        "border": "1px solid #e2e8f0",
+        "radius": "12px",
+        "padding": "24px"
+      }
+    },
+    "button": {
+      "primary": {
+        "background": "#3a61ff",
+        "color": "#ffffff",
+        "radius": "8px"
+      },
+      "secondary": {
+        "background": "transparent",
+        "color": "#3a61ff",
+        "radius": "8px",
+        "border": "1px solid #3a61ff"
+      },
+      "destructive": {
+        "background": "#ef4444",
+        "color": "#ffffff",
+        "radius": "8px"
+      }
+    }
+  },
+  "gradients": {
+    "brandGradient": "linear-gradient(135deg, #3a61ff, #8455ff)",
+    "darkOverlay": "linear-gradient(180deg, rgba(19,16,35,0) 0%, rgba(19,16,35,0.8) 100%)"
+  },
+  "workflowRules": {
+    "rhythm": {
+      "defaultMode": "mixed",
+      "maxConsecutiveDark": 2,
+      "maxConsecutiveLight": 3,
+      "forceBreakAfter": 3,
+      "roleOverrides": {
+        "title": { "backgroundMode": "dark" },
+        "section-divider": { "backgroundMode": "dark" },
+        "content": { "backgroundMode": "light" },
+        "data": { "backgroundMode": "light" },
+        "comparison": { "backgroundMode": "light" },
+        "callout": { "backgroundMode": "dark" },
+        "closing": { "backgroundMode": "dark" },
+        "agenda": { "backgroundMode": "light" },
+        "process-flow": { "backgroundMode": "light" }
+      }
+    },
+    "colorSchemes": {
+      "dark": {
+        "background": "#131023",
+        "backgroundAlt": "#0d0b1a",
+        "surface": "#1a1730",
+        "text": "#f0eeff",
+        "textSecondary": "#c4bfdf",
+        "textMuted": "#8892a4",
+        "border": "#2d2b45"
+      },
+      "light": {
+        "background": "#f8fafc",
+        "backgroundAlt": "#f1f5f9",
+        "surface": "#ffffff",
+        "text": "#131023",
+        "textSecondary": "#334155",
+        "textMuted": "#64748b",
+        "border": "#e2e8f0"
+      }
+    },
+    "narrativeDefaults": {
+      "openingSlideMode": "dark",
+      "closingSlideMode": "dark",
+      "dataSlideMode": "light"
+    }
+  },
+  "personality": {
+    "classification": "bold",
+    "traits": [
+      "confident",
+      "clear",
+      "human",
+      "encouraging",
+      "data-informed",
+      "action-oriented"
+    ],
+    "guidance": {
+      "do": [
+        "Use bold, direct statements that convey confidence without arrogance",
+        "Write in second person to speak directly to the audience",
+        "Lead with benefits and outcomes rather than features",
+        "Use active voice and strong verbs",
+        "Celebrate meaningful achievements and progress",
+        "Acknowledge complexity while providing clarity",
+        "Use Fraunces for headings and editorial moments for character",
+        "Use DM Sans for body text to ensure readability",
+        "Apply the primary blue for key actions and interactive elements",
+        "Use the dark background for hero and dramatic impact moments"
+      ],
+      "dont": [
+        "Never use jargon or technical terms without explanation",
+        "Never talk down to the audience or be patronizing",
+        "Never use passive voice in calls to action",
+        "Never use both primary blue and accent purple at equal visual weight",
+        "Never use more than two font families in a single slide",
+        "Never use font sizes below 14px for readable slide content",
+        "Never use humor in critical or destructive contexts",
+        "Never place light text on light backgrounds without sufficient contrast",
+        "Never use all-caps for body text or headings longer than 4 words",
+        "Never introduce colors outside the approved palette"
+      ]
+    }
+  },
+  "meta": {
+    "extractedFrom": {
+      "reference": "brand-guidelines.html"
+    },
+    "brandDescription": "Sticky Note Vision (UseCase Hub) transforms fragmented product thinking into focused action. The brand bridges raw ideas and strategic decisions, helping teams prioritize with clarity and confidence.",
+    "confidence": 1.0,
+    "locked": false,
+    "changeNotes": [
+      "Initial extraction from Sticky Note Vision brand-guidelines.html (2026-02-25)"
+    ]
+  },
+  "brandContext": {
+    "voice": "Confident, not arrogant. Human, not robotic. Clear, not simplified. Encouraging, not pushy. We make direct statements without hedging, use real language with warmth, explain complex ideas plainly without dumbing them down, and nudge forward without pressure.",
+    "designPhilosophy": "Clean, modern design with strategic use of bold color as accent. The visual system pairs the expressive serif Fraunces with the functional sans-serif DM Sans to balance character and clarity. Dark backgrounds create dramatic impact moments; light backgrounds maintain readability for data and content. Every element earns its place through visual hierarchy and intentional whitespace.",
+    "colorUsage": "Primary Blue (#3a61ff) is used for primary actions, key interactions, and brand-forward moments. Accent Purple (#8455ff) is used sparingly as a complementary accent. Never use both at equal visual weight. Dark (#131023) is reserved for hero sections and dramatic moments. Semantic colors (green for success, amber for warning, red for error, blue for info) are used consistently. Maintain at least 4.5:1 contrast ratio for all text.",
+    "typographyNotes": "Fraunces is a variable serif inspired by 'wonky' early 20th century type — use for all headings, display text, and editorial moments. DM Sans provides geometric clarity for body copy, UI labels, and interface text. The pairing creates a distinct voice: Fraunces adds character and personality while DM Sans ensures readability. Keep line lengths between 50-80 characters. Maintain 1.6+ line-height for body text."
+  }
+}
