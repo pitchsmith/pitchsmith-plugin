@@ -113,7 +113,7 @@ Result: **9/9 tests passed**
 |-------|--------|
 | Plugin enabled in Claude Code settings | DEFERRED - requires manual execution |
 | Plugin appears in enabled plugins list | DEFERRED - requires manual execution |
-| /sb command recognized | DEFERRED - requires manual execution |
+| /pitchsmith command recognized | DEFERRED - requires manual execution |
 | /pitchsmith:plan-deck command recognized | DEFERRED - requires manual execution |
 
 ## Observations and Follow-up Items

@@ -8,7 +8,7 @@
 <workflow>
 
   <step n="1" goal="Load status data from status.yaml">
-    <action>Read the COMPLETE file: .slide-builder/status.yaml</action>
+    <action>Read the COMPLETE file: {{status_file}}</action>
     <action>Extract the `mode` field (values: setup, ready, single, deck)</action>
     <action>Extract the `decks` object containing all deck entries</action>
     <action>Extract the global `last_modified` timestamp</action>

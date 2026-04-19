@@ -1169,7 +1169,7 @@ You can retry with: `node ${CLAUDE_PLUGIN_ROOT}/scripts/generate-manifest.js {{d
 🌐 **Preview:** Open `{{output_folder}}/{{deck_slug}}/index.html` in browser
 
 **Status tracking:**
-- Deck registered in `.slide-builder/status.yaml` under `decks.{{deck_slug}}`
+- Deck registered in `{{status_file}}` under `decks.{{deck_slug}}`
 - Source template: {{matched_template.id}}
 - Status: complete
   </output>

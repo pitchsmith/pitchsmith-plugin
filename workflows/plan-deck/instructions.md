@@ -41,7 +41,7 @@ Verify ALL of these. These are acceptance criteria from Stories 5.1, 5.2, 13.2-1
 
 | # | Requirement | How to Verify |
 |---|-------------|---------------|
-| 1 | Theme must exist | `.slide-builder/config/theme.json` present before planning |
+| 1 | Theme must exist | `{{theme_file}}` present before planning |
 | 2 | Freeform context collection | Single rich prompt for natural language presentation description |
 | 3 | Agenda before slides | Propose high-level sections, get user approval, THEN generate slides |
 | 4 | Per-section discovery | Each agenda section gets detailed goals via approval flow |
@@ -56,7 +56,7 @@ Verify ALL of these. These are acceptance criteria from Stories 5.1, 5.2, 13.2-1
 ## Phase 1: Verify Prerequisites
 
 <steps>
-1. Check if `.slide-builder/config/theme.json` exists
+1. Check if `{{theme_file}}` exists
    - If missing → tell user to run `/pitchsmith:setup` and **stop**
 2. **Validate workflowRules** — Check if `theme.workflowRules` section exists in theme.json:
    <check if="theme.workflowRules does not exist OR is missing required subsections (rhythm, colorSchemes, narrativeDefaults)">
@@ -74,9 +74,9 @@ Run `/pitchsmith:setup` to create a complete theme, or `/pitchsmith:theme-edit` 
    - Store `theme.workflowRules.narrativeDefaults` as `{{narrative_defaults}}`
    - Store `theme.workflowRules.designPlanPatterns` as `{{design_patterns}}`
 3. **Load Brand Asset Catalogs** — check for available brand assets to reference during visual planning:
-   - Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists → load as `{{icon_catalog}}`, set `{{icon_catalog_available}}` = true
-   - Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists → load as `{{logo_catalog}}`, set `{{logo_catalog_available}}` = true
-   - Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists → load as `{{images_catalog}}`, set `{{images_catalog_available}}` = true
+   - Check if `{{catalog_path}}/brand-assets/icons/icon-catalog.json` exists → load as `{{icon_catalog}}`, set `{{icon_catalog_available}}` = true
+   - Check if `{{catalog_path}}/brand-assets/logos/logo-catalog.json` exists → load as `{{logo_catalog}}`, set `{{logo_catalog_available}}` = true
+   - Check if `{{catalog_path}}/brand-assets/images/images-catalog.json` exists → load as `{{images_catalog}}`, set `{{images_catalog_available}}` = true
    - If any catalog exists, store a summary of available assets for reference in visual suggestions
    - **Color Intelligence Note:** Assets may include `colorMetadata` with `backgroundAffinity` (light, dark, both, any) indicating which slide backgrounds they work best on. Build workflows will use this for smart asset selection and warn about mismatches.
 4. Read `status.yaml` and check the `decks:` registry for existing decks
@@ -1245,7 +1245,7 @@ Would you like to add an Agenda slide?"
 6. **Include planning research** — if `{{planning_research}}` exists and is not empty (from Phase 2.4), include it in plan.yaml at the top level. This persists research findings for downstream use. Do NOT write an empty `planning_research: []` array — omit the field entirely if research was skipped, all queries failed, or `{{planning_research}}` is empty.
 7. **Create marker for Plan Editor auto-open** — Use Bash tool: `touch .slide-builder/.enable-plan-editor-{{deck_slug}}`. This signals the VSCode extension to auto-open the Plan Editor when plan.yaml is written. Must be created BEFORE step 8.
 8. Write `plan.yaml` to `output/{deck_slug}/plan.yaml`
-9. Update `.slide-builder/status.yaml`:
+9. Update `{{status_file}}`:
    - Set mode: "deck"
    - Create (or overwrite) entry in `decks:` registry at `decks.{{deck_slug}}`:
      - name: `{{deck_name}}`

@@ -25,7 +25,7 @@ Verify these before any workflow invocation:
 
 | # | Requirement | How to Verify |
 |---|-------------|---------------|
-| 1 | Deck registry location | Must read `.slide-builder/status.yaml` under `decks:` key |
+| 1 | Deck registry location | Must read `{{status_file}}` under `decks:` key |
 | 2 | In-progress definition | Status = "planned" OR "building" (NOT "complete") |
 | 3 | Correct workflow routing | Single slide → plan-one, Full deck → plan-deck, Continue → plan-deck with continue_from_phase=5 |
 | 4 | Plan path construction | `{{output_folder}}/plan.yaml` for continue deck |
@@ -48,7 +48,7 @@ If a deck's `output_folder` is `"output/q1-strategy"`, then:
 ## Phase 1: Read Deck Registry
 
 <steps>
-1. Read `.slide-builder/status.yaml` file
+1. Read `{{status_file}}` file
 2. If file is missing, cannot be read, or YAML parse fails → Set `in_progress_decks` to empty list and continue to Phase 2
 3. If file exists but `decks:` key is missing → Set `in_progress_decks` to empty list and continue to Phase 2
 4. Parse the `decks:` section completely

@@ -11,6 +11,13 @@ installed_path: "${CLAUDE_PLUGIN_ROOT}/workflows/optimize-instructions"
 # Workflow components
 instructions: "{installed_path}/instructions.md"
 
+# Config paths (shareable brand assets)
+config_path: "{project-root}/.slide-builder/config"
+theme_file: "{config_path}/theme.json"
+
+# State management
+status_file: "{project-root}/.slide-builder/status.yaml"
+
 # Input/Output
 # User provides: path to instructions file to optimize
 # Output: new file with -optimized.md suffix (or user-specified name)

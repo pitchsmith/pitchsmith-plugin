@@ -13,7 +13,7 @@ This workflow captures intent for a single slide through a 5-phase process.
   <!-- PHASE 1: Theme Verification                                              -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <step n="1" goal="Verify theme exists">
-    <action>Check if .slide-builder/config/theme.json exists</action>
+    <action>Check if {{theme_file}} exists</action>
 
     <check if="theme.json does not exist">
       <output>
@@ -30,9 +30,9 @@ Run `/pitchsmith:setup` to create your theme from brand assets.
       <action>Load theme.json to understand available design primitives</action>
       <action>Note the theme personality ({{theme.personality.classification}})</action>
       <action>Load Brand Asset Catalogs for visual element suggestions:
-        - Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists → load as `{{icon_catalog}}`, set `{{icon_catalog_available}}` = true
-        - Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists → load as `{{logo_catalog}}`, set `{{logo_catalog_available}}` = true
-        - Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists → load as `{{images_catalog}}`, set `{{images_catalog_available}}` = true
+        - Check if `{{catalog_path}}/brand-assets/icons/icon-catalog.json` exists → load as `{{icon_catalog}}`, set `{{icon_catalog_available}}` = true
+        - Check if `{{catalog_path}}/brand-assets/logos/logo-catalog.json` exists → load as `{{logo_catalog}}`, set `{{logo_catalog_available}}` = true
+        - Check if `{{catalog_path}}/brand-assets/images/images-catalog.json` exists → load as `{{images_catalog}}`, set `{{images_catalog_available}}` = true
         **Color Intelligence Note:** Assets may include `colorMetadata` with `backgroundAffinity` indicating which slide backgrounds they work best on (light, dark, both, any). Build workflows will use this for smart asset selection.
       </action>
       <output>
@@ -232,7 +232,7 @@ You're creating a data-driven slide. How would you like to source the numbers?"
   <step n="3" goal="Match description to template using catalog">
     <critical>Template matching is now catalog-driven. Read catalog.json first.</critical>
 
-    <action>Read `.slide-builder/config/catalog/slide-templates.json`</action>
+    <action>Read `{{catalog_manifest}}`</action>
     <action>Parse the `templates` array to get available templates</action>
 
     <action>Display available templates from catalog:
@@ -482,7 +482,7 @@ Skipping discovery. Proceeding to save plan...
       ```
     </action>
 
-    <action>Update .slide-builder/status.yaml:
+    <action>Update {{status_file}}:
       - Set mode: "single"
       - Set last_modified: {{current_iso_timestamp}}
       - Append to history array: { action: "Single slide planned", timestamp: {{current_iso_timestamp}} }
@@ -519,7 +519,7 @@ Your slide plan is ready at `output/singles/plan.yaml`
 
 ## Template Reference (Catalog-Driven)
 
-Templates are now loaded dynamically from `.slide-builder/config/catalog/slide-templates.json`.
+Templates are now loaded dynamically from `{{catalog_manifest}}`.
 
 Each template entry includes:
 - **id**: Template identifier used in plan.yaml

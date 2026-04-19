@@ -47,7 +47,7 @@ If `deck_slug` is `"q1-strategy"`, then `output/{{deck_slug}}/` becomes `output/
 ## Phase 1: Deck Selection
 
 <steps>
-1. Read `.slide-builder/status.yaml` completely
+1. Read `{{status_file}}` completely
 2. Parse the `decks:` section to get all deck entries
 3. Filter to decks with status: `planned`, `building`, or `complete`
 4. Proceed based on whether user provided a deck slug argument:
@@ -137,7 +137,7 @@ Where should the new slide go? (e.g., "after 3" or "at end")
    - Store `{{slide_tone}}` as lowercase selection
 5. Ask: "Any visual guidance? (e.g., 'include diagram', 'use icons') - or Enter to skip"
    - Store `{{visual_guidance}}` or null if skipped
-6. Read catalog from `.slide-builder/config/catalog/slide-templates.json`
+6. Read catalog from `{{catalog_manifest}}`
 7. Match slide intent against template use_cases
 8. Store `{{suggested_template}}` = best matching template id or null
 9. If template found → Display template name and description
@@ -240,10 +240,10 @@ This phase generates the slide HTML inline. Follow build-one patterns.
 </critical>
 
 <steps>
-1. Read `.slide-builder/config/theme.json`
-2. Read `.slide-builder/config/design-standards.md`
+1. Read `{{theme_file}}`
+2. Read `{{config_path}}/design-standards.md`
 3. Extract typography minimums (Hero: 64px, h1: 48px, body: 24px, etc.)
-4. Read `.slide-builder/config/catalog/slide-templates.json`
+4. Read `{{catalog_manifest}}`
 5. If `{{suggested_template}}` exists:
    - Find template in catalog where id == `{{suggested_template}}`
    - Read template HTML from catalog file
@@ -379,7 +379,7 @@ After building the new slide, run the shared visual audit protocol to catch rend
 2. Find slide where number == `{{insert_position}}`
 3. Set slide.status = "built"
 4. Save plan.yaml
-5. Read `.slide-builder/status.yaml`
+5. Read `{{status_file}}`
 6. Update deck entry:
    - Set `total_slides` = `{{total_slides}}` + 1
    - Increment `built_count` by 1

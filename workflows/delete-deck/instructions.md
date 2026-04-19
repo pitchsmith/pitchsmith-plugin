@@ -13,7 +13,7 @@ This workflow deletes a deck and all its files from the Slide Builder system.
   <!-- STEP 1: Deck Selection                                                   -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <step n="1" goal="Select deck for deletion">
-    <action>Read .slide-builder/status.yaml completely</action>
+    <action>Read {{status_file}} completely</action>
     <action>Parse the `decks:` section to get all deck entries</action>
 
     <!-- Handle argument provided -->
@@ -124,7 +124,7 @@ Proceeding with registry cleanup...
   <!-- STEP 4: Update status.yaml                                              -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <step n="4" goal="Remove deck from registry, append history, update timestamp">
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
 
     <action>Remove the entire {{deck_slug}} entry block from `decks:` section (all its fields: name, status, total_slides, built_count, current_slide, output_folder, created_at, last_modified, last_action, and source_template if present)</action>
 

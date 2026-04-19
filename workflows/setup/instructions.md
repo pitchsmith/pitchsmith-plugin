@@ -12,8 +12,8 @@ You have expertise in:
 
 <success_criteria>
 A successful setup produces:
-1. A locked `theme.json` at `.slide-builder/config/theme.json` with colors, typography, shapes, and personality
-2. A catalog of 6 template slides at `.slide-builder/config/catalog/slide-templates/` demonstrating all theme primitives
+1. A locked `theme.json` at `{{theme_file}}` with colors, typography, shapes, and personality
+2. A catalog of 6 template slides at `{{catalog_path}}/slide-templates/` demonstrating all theme primitives
 3. A `catalog.json` manifest file for template discovery
 4. User approval through the feedback loop (1-3 iterations typical)
 </success_criteria>
@@ -230,7 +230,7 @@ For each PDF:
      - Arrays: append new items to existing arrays
      - Objects: deep merge, later pages can refine earlier values
      - Hex colors: if new color found, add to palette with usage description
-   - Every 10 pages: save checkpoint to `.slide-builder/config/brand-extraction-temp/batch-N.json`
+   - Every 10 pages: save checkpoint to `{{config_path}}/brand-extraction-temp/batch-N.json`
 5. Store combined analysis
 
 **Brand Knowledge Extraction Prompt** (use after reading each page):
@@ -303,7 +303,7 @@ Return ONLY valid JSON. Omit empty fields. Extract exact hex codes when visible.
 After all PDF pages have been processed:
 
 1. **Merge all batch checkpoints** (if batching was used):
-   - Load all `.slide-builder/config/brand-extraction-temp/batch-*.json` files
+   - Load all `{{config_path}}/brand-extraction-temp/batch-*.json` files
    - Merge into final brand-knowledge structure
    - Delete temp files after successful merge
 
@@ -325,7 +325,7 @@ After all PDF pages have been processed:
    - Add PDF filename(s) to `extracted_from`
 
 5. **Save brand-knowledge.json:**
-   - Write to `.slide-builder/config/brand-knowledge.json`
+   - Write to `{{config_path}}/brand-knowledge.json`
    - Report summary to user:
      - Categories populated
      - Total rules/guidelines extracted
@@ -789,7 +789,7 @@ If any required fields are missing, apply fallback values and re-validate. Log w
 
 ### Step 3.3: Write theme.json
 
-Write to `.slide-builder/config/theme.json` with 2-space indentation.
+Write to `{{theme_file}}` with 2-space indentation.
 
 **Report to user:**
 - Theme file saved
@@ -812,10 +812,10 @@ If the user has no assets to provide, catalogs are emptied (no placeholders left
 Remove the default Pitchsmith brand assets before importing user assets. This ensures no placeholder branding leaks into the user's presentations.
 </critical>
 
-1. Delete all SVG/PNG files from `.slide-builder/config/catalog/brand-assets/logos/` (keep the directory)
-2. Delete all SVG/PNG files from `.slide-builder/config/catalog/brand-assets/icons/` (keep the directory)
-3. Write empty logo catalog: `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` → `{"version":"1.0","logos":[]}`
-4. Write empty icon catalog: `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` → `{"version":"1.0","icons":[]}`
+1. Delete all SVG/PNG files from `{{catalog_path}}/brand-assets/logos/` (keep the directory)
+2. Delete all SVG/PNG files from `{{catalog_path}}/brand-assets/icons/` (keep the directory)
+3. Write empty logo catalog: `{{catalog_path}}/brand-assets/logos/logo-catalog.json` → `{"version":"1.0","logos":[]}`
+4. Write empty icon catalog: `{{catalog_path}}/brand-assets/icons/icon-catalog.json` → `{"version":"1.0","icons":[]}`
 
 ### Step 3.5.1: Ask About Logo Files
 
@@ -845,7 +845,7 @@ For each logo the user provides:
    - Whether they have additional variants to add
 6. Ask for placement rules (suggest: "Bottom-right corner preferred", "Max height 60px on content slides")
 7. Ask for semantic tags (5-8 recommended)
-8. Copy file to `.slide-builder/config/catalog/brand-assets/logos/`
+8. Copy file to `{{catalog_path}}/brand-assets/logos/`
 9. Build logo catalog entry following this schema:
 ```json
 {
@@ -866,7 +866,7 @@ For each logo the user provides:
 10. If user has more logo variants or additional logos, repeat steps 1-9
 11. Load existing `logo-catalog.json` (or create new with `{"version":"1.0","logos":[]}`)
 12. Merge new entries, check for duplicate IDs
-13. Write updated catalog to `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json`
+13. Write updated catalog to `{{catalog_path}}/brand-assets/logos/logo-catalog.json`
 
 </check>
 
@@ -898,7 +898,7 @@ For each icon the user provides:
 6. Determine variant from filename or ask user:
    - dark variant → backgroundAffinity: "light"
    - white/light variant → backgroundAffinity: "dark"
-7. Copy file to `.slide-builder/config/catalog/brand-assets/icons/`
+7. Copy file to `{{catalog_path}}/brand-assets/icons/`
 8. Build icon catalog entry:
 ```json
 {
@@ -918,7 +918,7 @@ For each icon the user provides:
 9. If user has more icon files, repeat steps 1-8
 10. Load existing `icon-catalog.json` (or create new with `{"version":"1.0","icons":[]}`)
 11. Merge new entries, check for duplicate IDs
-12. Write updated catalog to `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json`
+12. Write updated catalog to `{{catalog_path}}/brand-assets/icons/icon-catalog.json`
 
 </check>
 
@@ -939,8 +939,8 @@ Report brand asset catalog status:
 - Logos imported: {{logo_count}} (list names if any)
 - Icons imported: {{icon_count}} (list names if any)
 - Catalog locations:
-  - `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json`
-  - `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json`
+  - `{{catalog_path}}/brand-assets/logos/logo-catalog.json`
+  - `{{catalog_path}}/brand-assets/icons/icon-catalog.json`
 
 ---
 
@@ -1040,11 +1040,11 @@ For each template:
 ```
 </example>
 
-3. Write to `.slide-builder/config/catalog/slide-templates/{filename}.html`
+3. Write to `{{catalog_path}}/slide-templates/{filename}.html`
 
 ### Step 4.3: Generate catalog.json
 
-Create manifest at `.slide-builder/config/catalog/slide-templates.json` with:
+Create manifest at `{{catalog_manifest}}` with:
 - Version and timestamps
 - Array of template objects with id, name, description, use_cases, file, source
 
@@ -1149,8 +1149,8 @@ Update theme.json:
 ### Step 6.2: Clean Up Deprecated Directories
 
 Remove if they exist:
-- `.slide-builder/config/samples/`
-- `.slide-builder/config/templates/`
+- `{{config_path}}/samples/`
+- `{{config_path}}/templates/`
 
 These are superseded by the unified catalog system.
 
@@ -1160,7 +1160,7 @@ Update theme.json layouts to reference catalog templates with catalog_id.
 
 ### Step 6.4: Save Version History
 
-1. Create `.slide-builder/config/theme-history/` if needed
+1. Create `{{config_path}}/theme-history/` if needed
 2. Determine version number
 3. Save snapshot as `theme-v{version}-{date}.json`
 
@@ -1172,7 +1172,7 @@ Update status.yaml:
 - theme status: "generated"
 - theme version: "extracted-{date}" (format: extracted-YYYY-MM-DD)
 - theme personality: {extracted_personality classification from theme.json}
-- catalog path (just the manifest path: `catalog: .slide-builder/config/catalog/slide-templates.json`)
+- catalog path (just the manifest path: `catalog: {{catalog_manifest}}`)
 
 **Report completion to user:**
 
@@ -1183,9 +1183,9 @@ Check if existing decks exist in `output/` directory:
 ✅ Brand theme extracted and installed
 
 Files created:
-- `.slide-builder/config/theme.json` (overwrites previous theme)
-- `.slide-builder/config/catalog/` (6 slide templates)
-- `.slide-builder/config/theme-history/theme-v{version}-{date}.json`
+- `{{theme_file}}` (overwrites previous theme)
+- `{{catalog_path}}/` (6 slide templates)
+- `{{config_path}}/theme-history/theme-v{version}-{date}.json`
 
 Theme summary:
 - Personality: {personality}
@@ -1216,9 +1216,9 @@ Next steps:
 ✅ Brand theme extracted and installed
 
 Files created:
-- `.slide-builder/config/theme.json`
-- `.slide-builder/config/catalog/` (6 slide templates)
-- `.slide-builder/config/theme-history/theme-v{version}-{date}.json`
+- `{{theme_file}}`
+- `{{catalog_path}}/` (6 slide templates)
+- `{{config_path}}/theme-history/theme-v{version}-{date}.json`
 
 Theme summary:
 - Personality: {personality}
@@ -1241,11 +1241,11 @@ Next steps:
 <reference title="File paths">
 | File | Path |
 |------|------|
-| Theme | `.slide-builder/config/theme.json` |
-| Catalog directory | `.slide-builder/config/catalog/` |
-| Catalog manifest | `.slide-builder/config/catalog/slide-templates.json` |
-| Theme history | `.slide-builder/config/theme-history/` |
-| Status | `.slide-builder/status.yaml` |
+| Theme | `{{theme_file}}` |
+| Catalog directory | `{{catalog_path}}/` |
+| Catalog manifest | `{{catalog_manifest}}` |
+| Theme history | `{{config_path}}/theme-history/` |
+| Status | `{{status_file}}` |
 </reference>
 
 <reference title="CSS variable mapping">

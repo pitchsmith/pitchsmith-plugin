@@ -8,7 +8,7 @@ You have access to the `frontend-design` skill for HTML generation and understan
 
 <success_criteria>
 A successful run produces:
-1. A new folder at `.slide-builder/config/catalog/deck-templates/{slug}/` with `slides/` subdirectory
+1. A new folder at `{{catalog_path}}/deck-templates/{slug}/` with `slides/` subdirectory
 2. A `template-config.yaml` with `required_context`, `optional_context`, and `slides[]` entries
 3. An entry in `deck-templates.json` manifest
 4. One or more slide HTML files with constraint comments, passing all compliance checks
@@ -26,7 +26,7 @@ Verify ALL of these before writing any slide HTML file.
 
 | # | Requirement | How to Verify |
 |---|-------------|---------------|
-| 1 | Theme exists | `theme.json` present at `.slide-builder/config/theme.json` |
+| 1 | Theme exists | `theme.json` present at `{{theme_file}}` |
 | 2 | Viewport | `<meta name="viewport" content="width=1920, height=1080">` |
 | 3 | Editable text | Every text element has `contenteditable="true"` |
 | 4 | Data fields | Every contenteditable element has a unique `data-field` attribute |
@@ -67,12 +67,12 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 ### Step 1: Initialize and Validate
 
 <steps>
-1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
+1. Check that `theme.json` exists at `{{theme_file}}`
    - If missing → stop and tell user to run `/pitchsmith:setup`
 2. Read `theme.json` to understand brand context (colors, typography, personality)
 3. Read `deck-templates.json` to see existing deck templates
 4. Read `catalog.json` to see available slide templates (for Path B later)
-5. Read `.slide-builder/config/design-standards.md` for typography/spacing rules
+5. Read `{{config_path}}/design-standards.md` for typography/spacing rules
 6. Welcome the user and share:
    - Their theme name and personality classification
    - How many deck templates currently exist (list names)
@@ -138,7 +138,7 @@ Adapt the conversation naturally. If the user provides rich detail, combine ques
     - Ask for confirmation or adjustments
 
 14. On confirmation → create scaffold:
-    - Create folder: `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/`
+    - Create folder: `{{catalog_path}}/deck-templates/{{slug}}/slides/`
     - Write `template-config.yaml` (see Quick Reference for structure)
     - Add entry to `deck-templates.json` with `id`, `name`, `description`, `use_cases`, `slide_count`, `folder`, `preview: null`, `created_at` (ISO), `source: "add-deck-template"`
     - Update `lastModified` in `deck-templates.json`
@@ -226,7 +226,7 @@ Create slides one at a time. After each slide, ask the user whether to continue 
 <steps>
 22. Use the catalog template recommended in the creation plan from Step 3B. If the user overrode the recommendation, list available slide templates from `catalog.json` and let them pick.
 
-23. Read the selected template HTML from `.slide-builder/config/catalog/{{template.file}}`
+23. Read the selected template HTML from `{{catalog_path}}/{{template.file}}`
 
 24. Customize the template for this deck context:
     - Adjust content placeholder text to match slide purpose
@@ -307,7 +307,7 @@ The slide design MUST be fully finalized and saved before collecting instruction
 </critical>
 
 <steps>
-28. Save the slide HTML to `.slide-builder/config/catalog/deck-templates/{{slug}}/slides/slide-{{N}}.html`
+28. Save the slide HTML to `{{catalog_path}}/deck-templates/{{slug}}/slides/slide-{{N}}.html`
 
 29. Run compliance validation:
     - Viewport meta tag present and correct
@@ -374,7 +374,7 @@ This step happens ONLY after the slide design is complete and saved. Do NOT auto
 42. Update `template-config.yaml`:
     - Ensure `slide_count` matches
     - Verify all slides[] entries have `instructions` and `content_sources`
-43. Update `.slide-builder/status.yaml` with history entry:
+43. Update `{{status_file}}` with history entry:
     ```yaml
     - action: "Created deck template '{{slug}}' with {{N}} slides"
       timestamp: "{{ISO timestamp}}"
@@ -395,14 +395,14 @@ This step happens ONLY after the slide design is complete and saved. Do NOT auto
 <reference title="File paths">
 | Item | Path |
 |------|------|
-| Theme | `.slide-builder/config/theme.json` |
-| Design Standards | `.slide-builder/config/design-standards.md` |
-| Slide Catalog | `.slide-builder/config/catalog/slide-templates.json` |
-| Deck Templates Manifest | `.slide-builder/config/catalog/deck-templates.json` |
-| Deck Template Folder | `.slide-builder/config/catalog/deck-templates/{slug}/` |
-| Template Config | `.slide-builder/config/catalog/deck-templates/{slug}/template-config.yaml` |
-| Slide Files | `.slide-builder/config/catalog/deck-templates/{slug}/slides/slide-N.html` |
-| Status | `.slide-builder/status.yaml` |
+| Theme | `{{theme_file}}` |
+| Design Standards | `{{config_path}}/design-standards.md` |
+| Slide Catalog | `{{catalog_manifest}}` |
+| Deck Templates Manifest | `{{catalog_path}}/deck-templates.json` |
+| Deck Template Folder | `{{catalog_path}}/deck-templates/{slug}/` |
+| Template Config | `{{catalog_path}}/deck-templates/{slug}/template-config.yaml` |
+| Slide Files | `{{catalog_path}}/deck-templates/{slug}/slides/slide-N.html` |
+| Status | `{{status_file}}` |
 </reference>
 
 <reference title="Template config structure">

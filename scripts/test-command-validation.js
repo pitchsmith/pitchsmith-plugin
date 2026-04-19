@@ -99,7 +99,7 @@ const pluginJson = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_DIR, '.claude-plugin', 'plugin.json'), 'utf8')
 );
 test('Plugin name is "pitchsmith"', pluginJson.name === 'pitchsmith');
-test('Plugin version is "0.2.9"', pluginJson.version === '0.2.9');
+test('Plugin version is "0.2.10"', pluginJson.version === '0.2.10');
 
 // Check all required directories
 const requiredDirs = ['.claude-plugin', 'commands', 'skills', 'workflows', 'templates', 'config/defaults', 'scripts'];
@@ -149,7 +149,7 @@ for (const [group, config] of Object.entries(COMMAND_GROUPS)) {
 test('No old .claude/commands/ or .claude/skills/ paths in command files', oldPathsFound === 0);
 
 // ============================================================
-// TASK 3: /sb Commands (3 interaction points)
+// TASK 3: /pitchsmith Commands (3 interaction points)
 // ============================================================
 
 section('TASK 3: /pitchsmith Commands (core interaction points)');
@@ -172,7 +172,7 @@ if (fs.existsSync(statusPath)) {
     statusContent.includes('CLAUDE_PLUGIN_ROOT'));
 }
 
-// /sb skill router (SKILL.md)
+// /pitchsmith skill router (SKILL.md)
 const skillPath = path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md');
 test('/pitchsmith skill router exists', fs.existsSync(skillPath));
 if (fs.existsSync(skillPath)) {
@@ -397,7 +397,7 @@ console.log(`  ${'─'.repeat(55)}`);
 
 const commandResults = [];
 
-// /sb skill router
+// /pitchsmith skill router
 const sbSkillExists = fs.existsSync(path.join(SKILLS_DIR, 'pitchsmith', 'SKILL.md'));
 commandResults.push({ name: '/pitchsmith (skill router)', pass: sbSkillExists });
 console.log(`  ${sbSkillExists ? 'PASS' : 'FAIL'} | /pitchsmith (skill router)`);

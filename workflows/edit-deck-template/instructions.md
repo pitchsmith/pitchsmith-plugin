@@ -26,7 +26,7 @@ Verify ALL of these before writing any slide HTML file.
 
 | # | Requirement | How to Verify |
 |---|-------------|---------------|
-| 1 | Theme exists | `theme.json` present at `.slide-builder/config/theme.json` |
+| 1 | Theme exists | `theme.json` present at `{{theme_file}}` |
 | 2 | Viewport | `<meta name="viewport" content="width=1920, height=1080">` |
 | 3 | Editable text | Every text element has `contenteditable="true"` |
 | 4 | Data fields | Every contenteditable element has a unique `data-field` attribute |
@@ -68,14 +68,14 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 ## Phase 1: Template Selection and Initialization
 
 <steps>
-1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
+1. Check that `theme.json` exists at `{{theme_file}}`
    - If missing → stop and tell user to run `/pitchsmith:setup`
 
 2. Read these configuration files:
-   - `theme.json` from `.slide-builder/config/theme.json` (brand context)
-   - `deck-templates.json` from `.slide-builder/config/catalog/deck-templates.json`
-   - `catalog.json` from `.slide-builder/config/catalog/slide-templates.json`
-   - `design-standards.md` from `.slide-builder/config/design-standards.md`
+   - `theme.json` from `{{theme_file}}` (brand context)
+   - `deck-templates.json` from `{{catalog_path}}/deck-templates.json`
+   - `catalog.json` from `{{catalog_manifest}}`
+   - `design-standards.md` from `{{config_path}}/design-standards.md`
 
 3. Determine the target template:
    - If slug argument was provided → search deck-templates.json for matching template
@@ -423,14 +423,14 @@ For each contenteditable element with a `data-field` attribute:
 <reference title="File paths">
 | Item | Path |
 |------|------|
-| Theme | `.slide-builder/config/theme.json` |
-| Design Standards | `.slide-builder/config/design-standards.md` |
-| Slide Catalog | `.slide-builder/config/catalog/slide-templates.json` |
-| Deck Templates Manifest | `.slide-builder/config/catalog/deck-templates.json` |
-| Deck Template Folder | `.slide-builder/config/catalog/deck-templates/{slug}/` |
-| Template Config | `.slide-builder/config/catalog/deck-templates/{slug}/template-config.yaml` |
-| Slide Files | `.slide-builder/config/catalog/deck-templates/{slug}/slides/slide-N.html` |
-| Status | `.slide-builder/status.yaml` |
+| Theme | `{{theme_file}}` |
+| Design Standards | `{{config_path}}/design-standards.md` |
+| Slide Catalog | `{{catalog_manifest}}` |
+| Deck Templates Manifest | `{{catalog_path}}/deck-templates.json` |
+| Deck Template Folder | `{{catalog_path}}/deck-templates/{slug}/` |
+| Template Config | `{{catalog_path}}/deck-templates/{slug}/template-config.yaml` |
+| Slide Files | `{{catalog_path}}/deck-templates/{slug}/slides/slide-N.html` |
+| Status | `{{status_file}}` |
 </reference>
 
 <reference title="Two-phase rename pattern">

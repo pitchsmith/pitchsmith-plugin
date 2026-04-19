@@ -17,7 +17,7 @@ This workflow enables slide layout editing via natural language while preserving
   <!-- PHASE 1: Mode Detection and Slide Targeting (AC4.1.1, AC4.1.2, AC4.1.6) -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <step n="1" goal="Detect mode and determine target slide">
-    <action>Read .slide-builder/status.yaml to get current mode and decks registry</action>
+    <action>Read {{status_file}} to get current mode and decks registry</action>
     <action>Extract: mode (single|deck)</action>
     <action>Parse command arguments for optional slide_number</action>
 
@@ -271,11 +271,11 @@ No problem. Let's try again.
     </output>
 
     <!-- AC4.2.3: Load theme for style consistency -->
-    <action>Read .slide-builder/config/theme.json</action>
+    <action>Read {{theme_file}}</action>
     <action>Parse theme JSON to extract colors, typography, shapes, components, and personality</action>
 
     <!-- Story 11.4: Load catalog for template awareness -->
-    <action>Read .slide-builder/config/catalog/slide-templates.json</action>
+    <action>Read {{catalog_manifest}}</action>
     <action>Parse catalog to understand available template patterns:
       - Extract template IDs, names, and descriptions
       - Note use_cases for each template
@@ -438,7 +438,7 @@ See slide-state.json for full orphaned content.
     <action>Write updated state JSON to target_state_path</action>
 
     <!-- AC4.2.9, AC4.3.7: Update status.yaml with orphan details -->
-    <action>Read current .slide-builder/status.yaml</action>
+    <action>Read current {{status_file}}</action>
     <action>Update status.yaml:
       - Set last_action: "Layout edited: {{edit_request_summary}}"
       - Set last_modified: current ISO timestamp

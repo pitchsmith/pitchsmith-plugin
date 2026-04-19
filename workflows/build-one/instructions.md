@@ -155,7 +155,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 ## Authoritative Example
 
 <important>
-This is the exact structure your output must follow. The catalog templates in `.slide-builder/config/catalog/` show visual design patterns and ARE fully compliant with contenteditable/data-field attributes. Use them as the primary structural reference.
+This is the exact structure your output must follow. The catalog templates in `{{catalog_path}}/` show visual design patterns and ARE fully compliant with contenteditable/data-field attributes. Use them as the primary structural reference.
 
 **Background Mode:** The example below shows a dark-mode slide. For `background_mode: light` slides, resolve colors from `theme.workflowRules.colorSchemes.light`:
 - Use resolved `background` value for body/slide background
@@ -340,7 +340,7 @@ Read status.yaml FIRST. Do not proceed without knowing the mode.
 </critical>
 
 <steps>
-1. Read `.slide-builder/status.yaml`
+1. Read `{{status_file}}`
 2. Extract the `mode` field
 3. Route based on value:
    - `deck` → Continue to Phase 2A (Deck Mode)
@@ -425,7 +425,7 @@ Icons, logos, and images MUST come from catalogs — never generated or substitu
 ### Step 1: Load Icon Catalog
 
 <steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json` exists
+1. Check if `{{catalog_path}}/brand-assets/icons/icon-catalog.json` exists
 2. If exists:
    - Load catalog, store as `{{icon_catalog}}`
    - Set `{{icon_catalog_available}}` = true
@@ -462,7 +462,7 @@ All icon files are in the flat `icons/` directory (no variant subfolders).
 ### Step 2: Load Logo Catalog
 
 <steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json` exists
+1. Check if `{{catalog_path}}/brand-assets/logos/logo-catalog.json` exists
 2. If exists:
    - Load catalog, store as `{{logo_catalog}}`
    - Set `{{logo_catalog_available}}` = true
@@ -494,7 +494,7 @@ All icon files are in the flat `icons/` directory (no variant subfolders).
 ### Step 3: Load Images Catalog
 
 <steps>
-1. Check if `.slide-builder/config/catalog/brand-assets/images/images-catalog.json` exists
+1. Check if `{{catalog_path}}/brand-assets/images/images-catalog.json` exists
 2. If exists:
    - Load catalog, store as `{{images_catalog}}`
    - Set `{{images_catalog_available}}` = true
@@ -624,7 +624,7 @@ Score based on: layout type match, content structure fit, presentation purpose a
 </reference>
 
 <steps>
-1. Load `.slide-builder/config/catalog/slide-templates.json`
+1. Load `{{catalog_manifest}}`
 2. **LLM Semantic Scoring** (run for all template selections):
    - Build slide context string from description/intent, design_plan, storyline_role, background_mode
    - Call LLM with the Template Scoring Prompt (evaluates ALL templates in single call)
@@ -727,7 +727,7 @@ These standards ensure slides remain readable at 50% zoom (typical laptop viewin
 </critical>
 
 <steps>
-1. Read `.slide-builder/config/design-standards.md`
+1. Read `{{config_path}}/design-standards.md`
 2. Extract typography minimums: Hero 64px, h1 48px, h2 36px, h3 28px, Body 24px, Labels 18px, Captions 16px
 3. Extract spacing constraints: Slide padding 60px, Section gap 40px, Element gap 16px, Line-height 1.4
 4. Extract content density limits: Max 6 bullets, Max 15 words/bullet, Max 3 columns
@@ -745,7 +745,7 @@ Theme must contain workflowRules section. No hardcoded fallbacks allowed.
 </critical>
 
 <steps>
-1. Read `.slide-builder/config/theme.json`
+1. Read `{{theme_file}}`
 2. Verify `theme.workflowRules` section exists
 3. Verify `theme.workflowRules.colorSchemes` section exists
 4. Verify both `colorSchemes.dark` and `colorSchemes.light` are defined
@@ -851,7 +851,7 @@ These excerpts provide concrete examples of CSS patterns, layout structure, and 
 <steps>
 1. For each template ID in `{{similar_templates}}`:
    - Look up template in catalog by ID
-   - Read HTML file from `.slide-builder/config/catalog/{{template.file}}`
+   - Read HTML file from `{{catalog_path}}/{{template.file}}`
 2. Extract abbreviated structural excerpt from each template:
    - **CSS :root block**: First 10-12 custom property declarations
    - **Layout structure**: `.slide` CSS rules (display, grid/flex, padding)
@@ -1116,8 +1116,8 @@ resolved_assets:
 ## Phase 9A: Template Build
 
 <steps>
-1. Read matched template HTML from `.slide-builder/config/catalog/{{matched_template.file}}`
-2. Read theme from `.slide-builder/config/theme.json`
+1. Read matched template HTML from `{{catalog_path}}/{{matched_template.file}}`
+2. Read theme from `{{theme_file}}`
 3. Study template structure: layout, spacing, decorative elements, typography
 3b. **If template has `instructions` field**, read and follow as PRIMARY build guidance. Instructions describe the exact layout technique, element hierarchy, and decorative patterns to reproduce. Instructions take precedence over generic inference from HTML structure.
 4. **If `{{adaptation_required}}` is true**, apply template adaptations (see rules below)
@@ -1246,7 +1246,7 @@ If you reach this phase without explicit `"custom"` in plan, you MUST first pres
 ### Custom Build Steps
 
 <steps>
-1. Read `.slide-builder/config/theme.json`
+1. Read `{{theme_file}}`
 2. Read design standards from `{{design_constraints}}`
 3. Invoke frontend-design skill with slide requirements (see prompt below)
 4. Validate skill output against checklist and design standards
@@ -1400,7 +1400,7 @@ determineDiagramMethod(plan_entry):
 ### Diagram Build Steps
 
 <steps>
-1. Read `.slide-builder/config/theme.json` for brand colors
+1. Read `{{theme_file}}` for brand colors
 2. Read plan entry for diagram components and connections from `{{content_type_details}}`
 3. Determine diagram subtype from content:
    - **Architecture:** horizontal left-to-right, system components (800x350-400)
@@ -1514,7 +1514,7 @@ If you skip this step, built slides will still appear as "pending" in the UI.
    - Write the updated plan.yaml back to disk
    - Verify: re-read plan.yaml and confirm the slide's status is now `"built"`
 
-2. (Deck mode) Update `.slide-builder/status.yaml`:
+2. (Deck mode) Update `{{status_file}}`:
    - `decks.{{deck_slug}}.built_count`: **Recompute from plan.yaml** — re-read `output/{{deck_slug}}/plan.yaml`, count all slides where `status === "built"`, and set `built_count` to that count (do NOT increment by 1). Log: `Status update: built_count recomputed to ${actual_built} (was ${previous_built_count})`.
    - `decks.{{deck_slug}}.current_slide`: Slide number just built
    - `decks.{{deck_slug}}.last_action`: Description

@@ -10,7 +10,7 @@ This workflow displays the current theme summary with ANSI color swatches.
 <workflow>
 
   <step n="1" goal="Phase 1: Load Theme">
-    <action>Check if theme.json exists at .slide-builder/config/theme.json</action>
+    <action>Check if theme.json exists at {{theme_file}}</action>
 
     <check if="theme.json does not exist">
       <output>
@@ -93,7 +93,7 @@ LAYOUTS ({{layout_count}} templates)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Created: {{theme_created}}
 Sources: {{sources_list}}
-Full theme: .slide-builder/config/theme.json
+Full theme: {{theme_file}}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     </output>
 
@@ -102,7 +102,7 @@ Full theme: .slide-builder/config/theme.json
 
   <step n="2.5" goal="Phase 2.5: Display Version History Summary">
     <!-- Version Manager: List Versions -->
-    <action>Scan .slide-builder/config/theme-history/ directory for theme-v*.json files</action>
+    <action>Scan {{config_path}}/theme-history/ directory for theme-v*.json files</action>
     <action>For each file found, parse version number and date from filename:
       - Pattern: theme-v{N}-{YYYY-MM-DD}.json
       - Extract: version = N, date = YYYY-MM-DD
@@ -129,7 +129,7 @@ VERSION HISTORY
   </step>
 
   <step n="3" goal="Phase 3: Log Action">
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Update last_action: "Theme viewed via /theme"</action>
     <action>Update last_modified with current ISO 8601 timestamp</action>
     <action>Append to history array:

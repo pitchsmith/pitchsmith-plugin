@@ -77,11 +77,11 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 | 1 | Verify `.slide-builder/` absent (or remove) | Clean state | MANUAL - Documented for human tester |
 | 2 | Verify `output/` absent (or remove) | Clean state | MANUAL - Documented for human tester |
 
-### 2.2: Scaffold Execution (`/sb`)
+### 2.2: Scaffold Execution (`/pitchsmith`)
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb` in Claude Code | Scaffolding message appears | MANUAL - Requires Claude Code CLI |
+| 1 | Run `/pitchsmith` in Claude Code | Scaffolding message appears | MANUAL - Requires Claude Code CLI |
 | 2 | Verify `.slide-builder/config/theme.json` created | File exists with colors/typography/shapes | VALIDATED VIA VITEST |
 | 3 | Verify `.slide-builder/config/catalog/` created | Directory with manifests | VALIDATED VIA VITEST |
 | 4 | Verify `.slide-builder/status.yaml` created | Valid YAML | VALIDATED VIA VITEST |
@@ -97,7 +97,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | Run `/sb` a second time | Scaffold skipped, state-based routing | VALIDATED VIA VITEST (ScaffoldService mock) |
+| 1 | Run `/pitchsmith` a second time | Scaffold skipped, state-based routing | VALIDATED VIA VITEST (ScaffoldService mock) |
 | 2 | Verify no files overwritten | copyDirectory uses overwrite: false | VALIDATED VIA VITEST |
 | 3 | ScaffoldService returns copiedOutput: false on second run | Skip path confirmed | VALIDATED VIA VITEST |
 
@@ -157,7 +157,7 @@ These checks are validated programmatically via vitest tests in `slide-builder/t
 | Check | Method | Status |
 |-------|--------|--------|
 | `checkSlideBuilderDirectory` shows guidance notification when directory missing | Vitest mock test | PASS |
-| Notification text: "Enable the pitchsmith plugin in Claude Code and run /sb to get started." | Vitest assertion | PASS |
+| Notification text: "Enable the pitchsmith plugin in Claude Code and run /pitchsmith to get started." | Vitest assertion | PASS |
 | Function never crashes on errors | Vitest error handling test | PASS |
 
 ### 4.2: WITH `.slide-builder/` (AC-6)
@@ -273,7 +273,7 @@ Edge case results documented in this section. Manual tests deferred to human tes
 
 The following tests require interactive Claude Code CLI and VS Code UI and cannot be fully automated in vitest:
 
-1. **Task 2.2-2.3:** Running `/sb` in Claude Code and verifying scaffolding message + NO_DECKS options
+1. **Task 2.2-2.3:** Running `/pitchsmith` in Claude Code and verifying scaffolding message + NO_DECKS options
 2. **Task 3.1-3.6:** Full E2E chain (plan-deck, build-all, viewer, export) through Claude Code CLI
 3. **Task 4.4:** Installing .vsix in Extension Development Host and verifying notifications
 4. **Task 7.1-7.4:** Edge cases requiring live CLI/UI interaction

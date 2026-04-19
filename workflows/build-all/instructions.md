@@ -41,7 +41,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 ## Phase 1: Prerequisites Check
 
 <steps>
-1. Read `.slide-builder/status.yaml` to get mode and decks registry
+1. Read `{{status_file}}` to get mode and decks registry
 2. If `mode` is NOT `"deck"` → stop and tell user to run `/pitchsmith:plan-deck` first
 3. Filter decks by eligible statuses: `planned` or `building`
 4. Route based on eligible deck count:

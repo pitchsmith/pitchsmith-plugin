@@ -9,7 +9,7 @@ Version 3.0 implements the full 6-phase workflow per Epic 6 Tech Spec, plus roll
 <critical>Regenerate samples after EVERY feedback round for visual validation</critical>
 <critical>Never save theme.json until user approves - cancel restores from version</critical>
 <critical>Rollback flow: User can request "rollback" to restore a previous theme version</critical>
-<critical>Validate typography against design standards minimums (.slide-builder/config/design-standards.md)</critical>
+<critical>Validate typography against design standards minimums ({{config_path}}/design-standards.md)</critical>
 
 <workflow>
 
@@ -18,7 +18,7 @@ Version 3.0 implements the full 6-phase workflow per Epic 6 Tech Spec, plus roll
        ═══════════════════════════════════════════════════════════════════════════ -->
 
   <step n="1" goal="Phase 1: Load and Backup Current Theme">
-    <action>Check if .slide-builder/config/theme.json exists</action>
+    <action>Check if {{theme_file}} exists</action>
 
     <check if="theme.json does not exist">
       <output>
@@ -65,10 +65,10 @@ CURRENT SHAPES
     </output>
 
     <!-- Version Manager: Save current theme to history -->
-    <action>Check if .slide-builder/config/theme-history/ directory exists, create if missing</action>
+    <action>Check if {{config_path}}/theme-history/ directory exists, create if missing</action>
     <action>Calculate next version: {{backup_version}} = {{version_num}}</action>
     <action>Generate backup filename: theme-v{{backup_version}}-{{date}}.json</action>
-    <action>Write {{original_theme}} to .slide-builder/config/theme-history/theme-v{{backup_version}}-{{date}}.json</action>
+    <action>Write {{original_theme}} to {{config_path}}/theme-history/theme-v{{backup_version}}-{{date}}.json</action>
 
     <output>
 📦 Current theme saved to history as v{{backup_version}}
@@ -76,7 +76,7 @@ CURRENT SHAPES
     </output>
 
     <!-- Status Logger: Log edit started -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Update last_action: "Theme edit started"</action>
     <action>Update last_modified with current ISO 8601 timestamp</action>
     <action>Append to history: { action: "Theme edit started", timestamp: "{{iso_timestamp}}" }</action>
@@ -102,7 +102,7 @@ CURRENT SHAPES
 You've provided {{feedback_round}} rounds of feedback.
 
 If you need more precise control, you can edit
-`.slide-builder/config/theme.json` directly.
+`{{theme_file}}` directly.
 
 Continue with gestalt feedback, or type "edit json"
 to open the file for direct editing.
@@ -329,7 +329,7 @@ Are you asking about:" header="Clarify">
 
     <!-- Validate against design standards minimums -->
     <action>Check typography scale against design standards:
-      **Design Standards Minimums (.slide-builder/config/design-standards.md):**
+      **Design Standards Minimums ({{config_path}}/design-standards.md):**
       - Hero/Title: 64px minimum
       - h1: 48px minimum
       - h2: 36px minimum
@@ -529,7 +529,7 @@ Your response:
     <action>Verify that existing `brandContext` data has been preserved during theme edits. Do not remove or overwrite `brandContext` unless the user specifically requested changes to brand context fields. If {{original_theme}} had a `brandContext` object, ensure {{working_theme}} still contains it.</action>
 
     <!-- Save theme.json -->
-    <action>Write {{working_theme}} to .slide-builder/config/theme.json</action>
+    <action>Write {{working_theme}} to {{theme_file}}</action>
 
     <!-- Template Updater: Check if templates need regeneration -->
     <check if="{{shapes_changed}} is true">
@@ -560,7 +560,7 @@ Your response:
     </check>
 
     <!-- Status Logger: Log completion -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Update theme.status: "locked"</action>
     <action>Update last_action: "Theme edited: {{feedback_summary}}"</action>
     <action>Update last_modified with current ISO 8601 timestamp</action>
@@ -611,7 +611,7 @@ Backup still available: theme-history/theme-v{{backup_version}}-{{date}}.json
     </output>
 
     <!-- Status Logger: Log cancellation -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Update last_action: "Theme edit cancelled"</action>
     <action>Append to history: { action: "Theme edit cancelled - changes discarded", timestamp: "{{iso_timestamp}}" }</action>
     <action>Save status.yaml</action>
@@ -627,7 +627,7 @@ Backup still available: theme-history/theme-v{{backup_version}}-{{date}}.json
     <critical>Version Manager: List all available theme versions from history</critical>
 
     <!-- Scan theme-history directory for version files -->
-    <action>Scan .slide-builder/config/theme-history/ directory for files matching pattern: theme-v*.json</action>
+    <action>Scan {{config_path}}/theme-history/ directory for files matching pattern: theme-v*.json</action>
 
     <check if="no theme-v*.json files found in theme-history/">
       <output>
@@ -890,10 +890,10 @@ Please respond with "y" (yes) to proceed or "n" (no) to cancel.
 📦 Saving current theme to history...
     </output>
 
-    <action>Read current .slide-builder/config/theme.json as {{current_theme_backup}}</action>
+    <action>Read current {{theme_file}} as {{current_theme_backup}}</action>
     <action>Set backup version number: {{backup_v}} = {{current_ver}} + 1</action>
     <action>Generate backup filename: theme-v{{backup_v}}-{{date}}.json</action>
-    <action>Write {{current_theme_backup}} to .slide-builder/config/theme-history/theme-v{{backup_v}}-{{date}}.json</action>
+    <action>Write {{current_theme_backup}} to {{config_path}}/theme-history/theme-v{{backup_v}}-{{date}}.json</action>
     <action>Verify backup file exists and is valid JSON</action>
 
     <output>
@@ -901,7 +901,7 @@ Please respond with "y" (yes) to proceed or "n" (no) to cancel.
     </output>
 
     <!-- Log backup to status.yaml -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Append to history: { action: "Theme v{{backup_v}} saved to history (pre-rollback backup)", timestamp: "{{iso_timestamp}}" }</action>
     <action>Save status.yaml</action>
 
@@ -917,7 +917,7 @@ Please respond with "y" (yes) to proceed or "n" (no) to cancel.
 🔄 Restoring v{{selected_version.version}} theme settings...
     </output>
 
-    <action>Write {{final_theme}} to .slide-builder/config/theme.json</action>
+    <action>Write {{final_theme}} to {{theme_file}}</action>
     <action>Verify save succeeded by reading back and validating JSON</action>
 
     <!-- STEP 4: Check if templates need regeneration (AC 6.4.9) -->
@@ -953,7 +953,7 @@ Please respond with "y" (yes) to proceed or "n" (no) to cancel.
       </output>
 
       <!-- Log template regeneration -->
-      <action>Read .slide-builder/status.yaml</action>
+      <action>Read {{status_file}}</action>
       <action>Append to history: { action: "Templates regenerated after rollback (shapes changed)", timestamp: "{{iso_timestamp}}" }</action>
       <action>Save status.yaml</action>
     </check>
@@ -965,7 +965,7 @@ Please respond with "y" (yes) to proceed or "n" (no) to cancel.
     </check>
 
     <!-- STEP 5: Update status.yaml with rollback completion -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Update theme.status: "locked"</action>
     <action>Update last_action: "Theme rolled back to v{{selected_version.version}}"</action>
     <action>Update last_modified with current ISO 8601 timestamp</action>

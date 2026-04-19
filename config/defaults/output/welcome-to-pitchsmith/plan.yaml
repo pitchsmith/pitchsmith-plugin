@@ -57,6 +57,6 @@ slides:
     agenda_section_id: welcome
     key_points:
       - "Ready to start?"
-      - "Run /sb to begin your first deck"
+      - "Run /pitchsmith to begin your first deck"
       - "Your first presentation in minutes"
     background_mode: dark

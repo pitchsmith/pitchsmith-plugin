@@ -9,9 +9,9 @@ Your job is to maintain three catalog manifests that ensure only approved brand 
 - `images-catalog.json` - Decorative images, backgrounds, and illustrations
 
 **Asset Storage Locations:**
-- Icons: `.slide-builder/config/catalog/brand-assets/icons/` (flat directory, variant suffix in filename)
-- Logos: `.slide-builder/config/catalog/brand-assets/logos/`
-- Images: `.slide-builder/config/catalog/brand-assets/images/`
+- Icons: `{{catalog_path}}/brand-assets/icons/` (flat directory, variant suffix in filename)
+- Logos: `{{catalog_path}}/brand-assets/logos/`
+- Images: `{{catalog_path}}/brand-assets/images/`
 </context>
 
 <success_criteria>
@@ -351,7 +351,7 @@ Logos support variants (dark/light) with usage descriptions and placement rules.
   "tags": {{tags_array}}
 }
 ```
-10. Copy file to logos folder: `.slide-builder/config/catalog/brand-assets/logos/{{filename}}`
+10. Copy file to logos folder: `{{catalog_path}}/brand-assets/logos/{{filename}}`
 11. Add logo entry to pending list
 12. Continue to Phase 5 with `{{asset_type}}` = "logo"
 </steps>
@@ -405,7 +405,7 @@ Images are categorized and include dimension metadata.
   "tags": {{tags_array}}
 }
 ```
-8. Copy file to images folder: `.slide-builder/config/catalog/brand-assets/images/{{filename}}`
+8. Copy file to images folder: `{{catalog_path}}/brand-assets/images/{{filename}}`
 9. Add image entry to pending list
 10. Continue to Phase 5 with `{{asset_type}}` = "image"
 </steps>
@@ -453,9 +453,9 @@ Route save operation to the correct catalog based on `{{asset_type}}`.
 
 <steps>
 1. Determine target catalog based on `{{asset_type}}`:
-   - "icon" → `.slide-builder/config/catalog/brand-assets/icons/icon-catalog.json`
-   - "logo" → `.slide-builder/config/catalog/brand-assets/logos/logo-catalog.json`
-   - "image" → `.slide-builder/config/catalog/brand-assets/images/images-catalog.json`
+   - "icon" → `{{catalog_path}}/brand-assets/icons/icon-catalog.json`
+   - "logo" → `{{catalog_path}}/brand-assets/logos/logo-catalog.json`
+   - "image" → `{{catalog_path}}/brand-assets/images/images-catalog.json`
 
 2. Load existing catalog if it exists, or create new structure:
 
@@ -467,7 +467,7 @@ Route save operation to the correct catalog based on `{{asset_type}}`.
   "generated": "{{date}}",
   "lastModified": "{{timestamp}}",
   "folder_structure": {
-    "base_path": ".slide-builder/config/catalog/brand-assets/icons"
+    "base_path": "{{catalog_path}}/brand-assets/icons"
   },
   "fallback_behavior": "omit",
   "icons": []
@@ -497,7 +497,7 @@ Each icon entry uses v2.0 format:
   "generated": "{{date}}",
   "lastModified": "{{timestamp}}",
   "folder_structure": {
-    "base_path": ".slide-builder/config/catalog/brand-assets/logos"
+    "base_path": "{{catalog_path}}/brand-assets/logos"
   },
   "fallback_behavior": "omit",
   "logos": []
@@ -511,7 +511,7 @@ Each icon entry uses v2.0 format:
   "generated": "{{date}}",
   "lastModified": "{{timestamp}}",
   "folder_structure": {
-    "base_path": ".slide-builder/config/catalog/brand-assets/images"
+    "base_path": "{{catalog_path}}/brand-assets/images"
   },
   "categories": ["decorative", "hero", "background", "diagram", "photo", "illustration"],
   "fallback_behavior": "omit",
@@ -610,7 +610,7 @@ Note: dark icons (backgroundAffinity: "light") work on light backgrounds; white 
   "generated": "2026-02-12",
   "lastModified": "2026-02-12T00:00:00Z",
   "folder_structure": {
-    "base_path": ".slide-builder/config/catalog/brand-assets/logos"
+    "base_path": "{{catalog_path}}/brand-assets/logos"
   },
   "fallback_behavior": "omit",
   "logos": [
@@ -637,7 +637,7 @@ Note: dark icons (backgroundAffinity: "light") work on light backgrounds; white 
   "generated": "2026-02-12",
   "lastModified": "2026-02-12T00:00:00Z",
   "folder_structure": {
-    "base_path": ".slide-builder/config/catalog/brand-assets/images"
+    "base_path": "{{catalog_path}}/brand-assets/images"
   },
   "categories": ["decorative", "hero", "background", "diagram", "photo", "illustration"],
   "fallback_behavior": "omit",

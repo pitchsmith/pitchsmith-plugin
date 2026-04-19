@@ -13,7 +13,7 @@
       <action>Skip the status.yaml deck selection protocol below</action>
     </check>
     <check if="no 'Deck:' context line found (e.g., manual /pitchsmith:animate invocation)">
-      <action>Read .slide-builder/status.yaml to get the deck registry from the `decks` field</action>
+      <action>Read {{status_file}} to get the deck registry from the `decks` field</action>
       <action>Follow deck selection protocol:
         - If zero decks registered: output "No decks found. Run /pitchsmith:plan-deck or /pitchsmith:plan-one first." and HALT
         - If one deck registered: auto-select that deck slug
@@ -334,7 +334,7 @@ Found {element_count} animatable elements.
     <action>Verify the command completed successfully (exit code 0)</action>
 
     <!-- Sub-step 5d: Update status.yaml -->
-    <action>Read .slide-builder/status.yaml</action>
+    <action>Read {{status_file}}</action>
     <action>Add a history entry:
       - action: "Generated {group_count}-group animation for slide {slide_number} ({slide_title})"
       - deck: {deck_slug}

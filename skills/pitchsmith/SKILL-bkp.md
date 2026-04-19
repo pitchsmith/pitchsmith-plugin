@@ -2,46 +2,45 @@
 name: pitchsmith
 description: Smart entry point with context detection - routes to appropriate workflow based on current state
 ---
-
 # Slide Builder - Smart Entry Point
 
 This skill provides a single entry point to the Slide Builder system. It reads the current state from status.yaml and presents context-aware options for the most common next actions.
 
 <steps CRITICAL="TRUE">
 1. Read the current state from @.slide-builder/status.yaml
-   - If file does not exist or cannot be parsed: detected_state = NO_THEME
-   - Store the parsed YAML as `status_data`
+  - If file does not exist or cannot be parsed: detected_state = NO_THEME
+  - Store the parsed YAML as `status_data`
 
 2. Execute State Detection Algorithm (in priority order - STOP at first match):
 
-   **Check 1: NO_THEME Detection (Priority 1)**
-   - IF `status_data.theme` does not exist OR `status_data.theme.status` is null/missing/empty
-   - THEN detected_state = NO_THEME
-   - STOP detection
+   **Check 1: NO\_THEME Detection (Priority 1)**
+  - IF `status_data.theme` does not exist OR `status_data.theme.status` is null/missing/empty
+  - THEN detected_state = NO_THEME
+  - STOP detection
 
-   **Check 2: NO_DECKS Detection (Priority 2)**
-   - IF `status_data.decks` does not exist OR `status_data.decks` is null OR `status_data.decks` is empty object ({})
-   - THEN detected_state = NO_DECKS
-   - STOP detection
+   **Check 2: NO\_DECKS Detection (Priority 2)**
+  - IF `status_data.decks` does not exist OR `status_data.decks` is null OR `status_data.decks` is empty object ({})
+  - THEN detected_state = NO_DECKS
+  - STOP detection
 
-   **Check 3: IN_PROGRESS Detection (Priority 3)**
-   - Iterate through all entries in `status_data.decks`
-   - Filter to decks where `deck.status == "planned"` OR `deck.status == "building"`
-   - Store matching decks as `eligible_decks` array with: slug, name, status, built_count, total_slides
-   - IF `eligible_decks.length >= 1`
-   - THEN detected_state = IN_PROGRESS
-   - STOP detection
+   **Check 3: IN\_PROGRESS Detection (Priority 3)**
+  - Iterate through all entries in `status_data.decks`
+  - Filter to decks where `deck.status == "planned"` OR `deck.status == "building"`
+  - Store matching decks as `eligible_decks` array with: slug, name, status, built_count, total_slides
+  - IF `eligible_decks.length >= 1`
+  - THEN detected_state = IN_PROGRESS
+  - STOP detection
 
-   **Check 4: ALL_COMPLETE Detection (Priority 4)**
-   - IF all decks in `status_data.decks` have `deck.status == "complete"`
-   - THEN detected_state = ALL_COMPLETE
-   - Store all decks as `complete_decks` array
+   **Check 4: ALL\_COMPLETE Detection (Priority 4)**
+  - IF all decks in `status_data.decks` have `deck.status == "complete"`
+  - THEN detected_state = ALL_COMPLETE
+  - Store all decks as `complete_decks` array
 
 3. Output context-specific status message based on detected_state (see state_handling below)
 
 4. Present appropriate options using AskUserQuestion based on detected_state
-   - For IN_PROGRESS with multiple eligible_decks: show deck picker first (max 3 + "Plan New Deck")
-   - For ALL_COMPLETE: store deck list for potential Edit/Export picker
+  - For IN_PROGRESS with multiple eligible_decks: show deck picker first (max 3 + "Plan New Deck")
+  - For ALL_COMPLETE: store deck list for potential Edit/Export picker
 
 5. Route to the selected workflow using the Skill tool with appropriate arguments
 </steps>
@@ -50,7 +49,7 @@ This skill provides a single entry point to the Slide Builder system. It reads t
 ## Priority Order
 
 | Priority | Condition | State |
-|----------|-----------|-------|
+| --- | --- | --- |
 | 1 | `theme.status` is null/missing | NO_THEME |
 | 2 | `decks` is empty/null | NO_DECKS |
 | 3 | Any deck has status `planned` or `building` | IN_PROGRESS |
@@ -81,9 +80,9 @@ Then determine sub-state:
 
 - **status.yaml missing:** Treat as NO_THEME state
 - **Corrupted YAML:** Show error, suggest `/pitchsmith:help`
-- **Empty decks object `{}`:** Treat as NO_DECKS state
+- **Empty decks object ****`{}`****:** Treat as NO_DECKS state
 - **Mixed deck states (some complete, some building):** IN_PROGRESS (filter to non-complete)
-- **Single deck with status `planned`:** IN_PROGRESS (single deck mode)
+- **Single deck with status ****`planned`****:** IN_PROGRESS (single deck mode)
 </state_detection>
 
 <state_handling>
@@ -97,21 +96,21 @@ No brand theme detected — perform auto-scaffold from defaults, then transition
 Perform all of the following copy operations using Claude Code's Read and Write tools. Read each source file from `${CLAUDE_PLUGIN_ROOT}/config/defaults/` and write it to the corresponding destination path in the workspace. Do NOT overwrite any files that already exist — only write if the destination file is missing.
 
 1. **Config directory** — copy all files from `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/` to `.slide-builder/config/`:
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/theme.json` → `.slide-builder/config/theme.json`
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/slide-templates.json` → `.slide-builder/config/catalog/slide-templates.json`
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/slide-templates/` → `.slide-builder/config/catalog/slide-templates/` (all `.html` files)
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/brand-assets/` → `.slide-builder/config/catalog/brand-assets/` (all subdirectories and files: logos/, icons/, images/)
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/deck-templates/` → `.slide-builder/config/catalog/deck-templates/` (preserve `.gitkeep`)
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/theme-history/` → `.slide-builder/config/theme-history/` (preserve `.gitkeep`)
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/theme.json` → `.slide-builder/config/theme.json`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/slide-templates.json` → `.slide-builder/config/catalog/slide-templates.json`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/slide-templates/` → `.slide-builder/config/catalog/slide-templates/` (all `.html` files)
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/brand-assets/` → `.slide-builder/config/catalog/brand-assets/` (all subdirectories and files: logos/, icons/, images/)
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/catalog/deck-templates/` → `.slide-builder/config/catalog/deck-templates/` (preserve `.gitkeep`)
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/config/theme-history/` → `.slide-builder/config/theme-history/` (preserve `.gitkeep`)
 
 2. **Status file** — copy the status tracking file:
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/status.yaml` → `.slide-builder/status.yaml`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/status.yaml` → `.slide-builder/status.yaml`
 
 3. **Sample deck output** — copy the welcome deck to output:
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/plan.yaml` → `output/welcome-to-pitchsmith/plan.yaml`
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-1.html` → `output/welcome-to-pitchsmith/slides/slide-1.html`
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-2.html` → `output/welcome-to-pitchsmith/slides/slide-2.html`
-   - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-3.html` → `output/welcome-to-pitchsmith/slides/slide-3.html`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/plan.yaml` → `output/welcome-to-pitchsmith/plan.yaml`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-1.html` → `output/welcome-to-pitchsmith/slides/slide-1.html`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-2.html` → `output/welcome-to-pitchsmith/slides/slide-2.html`
+  - `${CLAUDE_PLUGIN_ROOT}/config/defaults/output/welcome-to-pitchsmith/slides/slide-3.html` → `output/welcome-to-pitchsmith/slides/slide-3.html`
 </scaffold>
 
 <output>
@@ -123,7 +122,7 @@ Perform all of the following copy operations using Claude Code's Read and Write 
 Ready to create slides! What would you like to do?
 </output>
 
-After displaying the above message, **immediately transition to the NO_DECKS options below** (do NOT re-run state detection — present the NO_DECKS ask block directly so the user can choose their next action).
+After displaying the above message, **immediately transition to the NO\_DECKS options below** (do NOT re-run state detection — present the NO_DECKS ask block directly so the user can choose their next action).
 
 ## NO_DECKS State (AC #2)
 
@@ -249,7 +248,7 @@ All decks complete! You have {{complete_decks.length}} finished deck(s):
 ## Skill Routing Table
 
 | Selection | Target Skill | Arguments |
-|-----------|-------------|-----------|
+| --- | --- | --- |
 | Full Deck | pitchsmith:plan-deck | none |
 | Single Slide | pitchsmith:plan-one | none |
 | Use Template | pitchsmith:use-template | none |

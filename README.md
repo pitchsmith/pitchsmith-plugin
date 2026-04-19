@@ -30,7 +30,7 @@ pitchsmith-plugin/
 
 - **`.claude-plugin/`**: Contains the plugin manifest (`plugin.json`) that declares the plugin to Claude Code's plugin system
 - **`commands/`**: Slash commands that users invoke via Claude Code CLI (e.g., `/pitchsmith:plan-deck`)
-- **`skills/`**: Smart router skill (`/sb`) that detects workspace state and routes to appropriate workflows
+- **`skills/`**: Smart router skill (`/pitchsmith`) that detects workspace state and routes to appropriate workflows
 - **`workflows/`**: Complete workflow definitions with instructions and templates for multi-step operations
 - **`templates/`**: HTML templates used for rendering slides and presentations
 - **`config/defaults/`**: Default theme and brand assets shipped with the plugin
@@ -83,7 +83,7 @@ Power users can "eject" specific workflows to customize behavior. Ejected workfl
 /plugin install pitchsmith@pitchsmith-marketplace
 
 # Step 3: Start building slides
-/sb
+/pitchsmith
 ```
 
 **Alternative: Install from your terminal** without starting a Claude Code session:
@@ -109,7 +109,7 @@ This is useful when developing or testing changes to the plugin before publishin
 ## Usage
 
 ### First-Time Setup
-Run `/sb` in your project. The smart router will:
+Run `/pitchsmith` in your project. The smart router will:
 1. Detect that this is your first run
 2. Create `.slide-builder/config/` structure
 3. Copy default theme to your workspace
@@ -119,7 +119,7 @@ You can immediately start creating slides with the default theme. Brand customiz
 
 ### Core Commands
 
-- **`/sb`** - Smart router (auto-detects state and presents context-aware options)
+- **`/pitchsmith`** - Smart router (auto-detects state and presents context-aware options)
 - **`/pitchsmith:plan-deck`** - Plan a full presentation deck
 - **`/pitchsmith:build-one`** - Build a single slide
 - **`/pitchsmith:build-all`** - Build all planned slides
@@ -152,7 +152,7 @@ To see which workflows are ejected:
 ### Zero-Config First Run
 
 Pitchsmith works immediately with zero external dependencies:
-- Run `/sb` to auto-initialize your workspace with a professional default theme
+- Run `/pitchsmith` to auto-initialize your workspace with a professional default theme
 - Plan slides, build slides, and view slides — all with no setup required
 - Brand customization and export are optional enhancements you can add later
 
@@ -330,7 +330,7 @@ Elastic License v2 (ELv2)
 
 ## Version
 
-Current version: 0.2.9
+Current version: 0.2.10
 
 ---
 

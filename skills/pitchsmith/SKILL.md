@@ -2,7 +2,6 @@
 name: pitchsmith
 description: Smart entry point with context detection - routes to appropriate workflow based on current state
 ---
-
 # Slide Builder - Smart Entry Point
 
 <context>
@@ -38,14 +37,14 @@ A successful run:
 
 <steps>
 1. **Pre-check: Clean stale state**
-   - Try to read `.slide-builder/config/theme.json`
-   - If theme.json does NOT exist AND `.slide-builder/status.yaml` EXISTS → delete status.yaml, log "Cleaned stale status.yaml"
-   - If theme.json EXISTS → skip this pre-check entirely
-   - If neither exists → continue (no action needed)
+  - Try to read `.slide-builder/config/theme.json`
+  - If theme.json does NOT exist AND `.slide-builder/status.yaml` EXISTS → delete status.yaml, log "Cleaned stale status.yaml"
+  - If theme.json EXISTS → skip this pre-check entirely
+  - If neither exists → continue (no action needed)
 
-2. **Read state from `.slide-builder/status.yaml`**
-   - If file doesn't exist or can't be parsed → detected_state = NO_THEME
-   - Store parsed YAML as `status_data`
+2. **Read state from ****`.slide-builder/status.yaml`**
+  - If file doesn't exist or can't be parsed → detected_state = NO_THEME
+  - Store parsed YAML as `status_data`
 
 3. **Detect state** — evaluate in priority order, stop at first match:
 
@@ -96,7 +95,7 @@ cp -rn "${CLAUDE_PLUGIN_ROOT}/config/defaults/output/" "output/"
 
 **Report to user:** Welcome message — workspace initialized with default theme, config created, ready to create slides.
 
-Then **immediately present NO_DECKS options below** (do NOT re-run state detection).
+Then **immediately present NO\_DECKS options below** (do NOT re-run state detection).
 
 ---
 
@@ -105,7 +104,7 @@ Then **immediately present NO_DECKS options below** (do NOT re-run state detecti
 Present using AskUserQuestion with context: "Theme is ready! No decks created yet. Ready to start creating slides?" and header: "Create"
 
 | Option | Label | Description |
-|--------|-------|-------------|
+| --- | --- | --- |
 | 1 | Plan Full Deck | Plan a complete presentation with multiple slides |
 | 2 | Plan Single Slide | Create just one slide |
 | 3 | Use Template | Start from a pre-built deck template |
@@ -126,7 +125,7 @@ Report to user: Deck name(s), progress (built_count/total_slides), status.
 Present using AskUserQuestion with header: "Action"
 
 | Option | Description |
-|--------|-------------|
+| --- | --- |
 | Continue Building | Build the next slide in the selected deck |
 | Build All Remaining | Batch build all unbuilt slides |
 | Edit a Slide | Modify an existing slide's layout |
@@ -143,7 +142,7 @@ Report to user: All decks complete, list deck names and slide counts.
 Present using AskUserQuestion with header: "Action"
 
 | Option | Description |
-|--------|-------------|
+| --- | --- |
 | Plan New Deck | Create a new presentation |
 | Edit Existing | Modify slides in a completed deck (show deck picker) |
 | Show All Commands | View complete command reference |
@@ -156,7 +155,7 @@ Route selected option per routing table below.
 
 <reference title="Error responses">
 | Problem | Action |
-|---------|--------|
+| --- | --- |
 | status.yaml missing | Treat as NO_THEME state |
 | Corrupted/unparseable YAML | Show error, suggest `/pitchsmith:help` |
 | Empty decks object `{}` | Treat as NO_DECKS state |
@@ -170,7 +169,7 @@ Route selected option per routing table below.
 
 <reference title="Skill routing">
 | Selection | Skill | Arguments |
-|-----------|-------|-----------|
+| --- | --- | --- |
 | Plan Full Deck | pitchsmith:plan-deck | none |
 | Plan Single Slide | pitchsmith:plan-one | none |
 | Use Template | pitchsmith:use-template | none |

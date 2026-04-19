@@ -8,7 +8,7 @@ You have access to the `frontend-design` skill for HTML generation and deep know
 
 <success_criteria>
 A successful run produces:
-1. A new HTML template file saved to `.slide-builder/config/catalog/{template-id}.html`
+1. A new HTML template file saved to `{{catalog_path}}/{template-id}.html`
 2. An updated `catalog.json` manifest with the new template entry
 3. The template passes all compliance checks (viewport, contenteditable, CSS variables)
 4. The user had at least 3-5 conversational exchanges before generation
@@ -25,7 +25,7 @@ Verify ALL of these before writing any template file.
 
 | # | Requirement | How to Verify |
 |---|-------------|---------------|
-| 1 | Theme exists | `theme.json` present at `.slide-builder/config/theme.json` |
+| 1 | Theme exists | `theme.json` present at `{{theme_file}}` |
 | 2 | Viewport | `<meta name="viewport" content="width=1920, height=1080">` |
 | 3 | Editable text | Every text element has `contenteditable="true"` |
 | 4 | Data fields | Every contenteditable element has a unique `data-field` attribute |
@@ -43,7 +43,7 @@ Throughout these instructions, `{{variable}}` means "substitute the actual value
 </context>
 
 <example>
-If the template name is "Metrics Dashboard", then `{{template_id}}` becomes `metrics-dashboard` and the file path becomes `.slide-builder/config/catalog/slide-templates/metrics-dashboard.html`.
+If the template name is "Metrics Dashboard", then `{{template_id}}` becomes `metrics-dashboard` and the file path becomes `{{catalog_path}}/slide-templates/metrics-dashboard.html`.
 </example>
 
 ---
@@ -65,7 +65,7 @@ If the template name is "Metrics Dashboard", then `{{template_id}}` becomes `met
 ## Phase 1: Initialize and Validate
 
 <steps>
-1. Check that `theme.json` exists at `.slide-builder/config/theme.json`
+1. Check that `theme.json` exists at `{{theme_file}}`
    - If missing → stop and tell user to run `/pitchsmith:setup`
 2. Read `theme.json` to understand brand context (colors, typography, personality)
 3. Read `catalog.json` to see existing templates and their count
@@ -166,7 +166,7 @@ Adapt the conversation naturally. If the user provides rich detail in one answer
     - CSS uses `--color-*` variables, not hardcoded colors
     - Google Fonts link is included
 14. Fix any validation issues before proceeding
-15. Save the HTML file to `.slide-builder/config/catalog/{{template_id}}.html`
+15. Save the HTML file to `{{catalog_path}}/{{template_id}}.html`
 </steps>
 
 ---
@@ -184,7 +184,7 @@ When the user provided a reference image or slide to recreate, use Chrome browse
 17. **Start a local HTTP server** to serve the template file:
     - Run a Python HTTP server in the background on an available port (e.g., 8432):
       ```bash
-      python3 -m http.server 8432 --directory .slide-builder/config/catalog &
+      python3 -m http.server 8432 --directory {{config_path}}/catalog &
       ```
     - Note the PID so you can stop it later
 18. **Open the served template in Chrome:**
@@ -254,10 +254,10 @@ If Chrome tools are unavailable, skip this phase silently and proceed to Phase 6
 <reference title="File paths">
 | Item | Path |
 |------|------|
-| Theme | `.slide-builder/config/theme.json` |
-| Catalog manifest | `.slide-builder/config/catalog/slide-templates.json` |
-| Template files | `.slide-builder/config/catalog/slide-templates/{template-id}.html` |
-| Status | `.slide-builder/status.yaml` |
+| Theme | `{{theme_file}}` |
+| Catalog manifest | `{{catalog_manifest}}` |
+| Template files | `{{catalog_path}}/slide-templates/{template-id}.html` |
+| Status | `{{status_file}}` |
 </reference>
 
 <reference title="Common mistakes">

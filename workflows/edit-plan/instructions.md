@@ -47,7 +47,7 @@ These are non-negotiable for every edit-plan invocation.
     <action>Extract the user's instruction from the "User Request" section (or from $ARGUMENTS)</action>
     <action>Extract the deck name from the "Deck Overview" section</action>
     <action>Derive the plan.yaml path:
-      - Check .slide-builder/status.yaml for current_deck_slug
+      - Check {{status_file}} for current_deck_slug
       - Plan path: .slide-builder/decks/{deck_slug}/plan.yaml OR output/{deck_slug}/plan.yaml
       - If multiple decks exist, match deck name from context file</action>
     <action>Read and parse the FULL plan.yaml file — preserve all fields</action>
